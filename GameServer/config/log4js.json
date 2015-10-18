@@ -1,0 +1,16 @@
+{
+    "appenders": [
+        {"type" : "console", "category" : "console"},
+        {
+            "type": "dateFile",
+            "filename": "log/gmserver_",
+            "pattern" : "yyyyMMdd.log",
+            "alwaysIncludePattern": true,
+            "maxLogSize": 20480,
+            "backups": 10,
+            "category": "logInfo"
+        }
+    ],
+    "levels" : {"logInfo" : "DEBUG"},
+    "replaceConsole" : true
+}

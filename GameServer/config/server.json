@@ -1,0 +1,36 @@
+{
+    "development" : {
+        "port" : "8000",
+        "appId" : "12000143",
+        "consumerKey" : "d4d932d32fb3478845",
+        "consumerSecret" : "88a47362ceb729925b783fdd8e8c7d3facbcf166",
+        "sdkHost" : "http://sp.sb.mobage-platform.cn",
+        "oauthURL" : "/social/api/oauth/v2.01",
+        "tempTokenURL" : "/request_temporary_credential",
+        "tokenURL" : "/request_token",
+        "bankBaseURL" : "http://sp.sb.mobage-platform.cn/social/api/restful/v2.02",
+        "noticePub" : [
+            { "host" : "10.96.29.36", "port" : 22, "user" : "bin.hou" , "dir" : "/home/bin.hou/bleachAreaServer/public/upload"},
+            { "host" : "10.96.29.52", "port" : 22, "user" : "bin.hou" , "dir" : "/home/bin.hou/bin.hou/bleachAreaServer/public/upload"},
+            { "host" : "10.96.29.52", "port" : 22, "user" : "bin.hou" , "dir" : "/home/bin.hou/bin.hou/bleachAreaServer1/public/upload"}
+        ],
+        "mails" : ["799027425@qq.com"]
+    },
+    "production" : {
+        "port" : "8001",
+        "appId" : "12000143",
+        "consumerKey" : "d4d932d32fb3478845",
+        "consumerSecret" : "88a47362ceb729925b783fdd8e8c7d3facbcf166",
+        "sdkHost" : "http://sp.mobage-platform.cn",
+        "oauthURL" : "/social/api/oauth/v2.01",
+        "tempTokenURL" : "/request_temporary_credential",
+        "tokenURL" : "/request_token",
+        "bankBaseURL" : "http://sp.mobage-platform.cn/social/api/restful/v2.02",
+        "noticePub" : [
+            { "host" : "10.96.29.36", "port" : 22, "user" : "bin.hou" , "dir" : "/home/bin.hou/bleachAreaServer/public/upload"},
+            { "host" : "10.96.29.52", "port" : 22, "user" : "bin.hou" , "dir" : "/home/bin.hou/bin.hou/bleachAreaServer/public/upload"},
+            { "host" : "10.96.29.52", "port" : 22, "user" : "bin.hou" , "dir" : "/home/bin.hou/bin.hou/bleachAreaServer1/public/upload"}
+        ],
+        "mails" : ["799027425@qq.com","50296363@qq.com", "137122316@qq.com"]
+    }
+}
