@@ -9,9 +9,9 @@ enum Code {
     USER_ERROR_RET = 4; //错误返回
 
 
-};
+}
 
 //错误码
 enum ErrorCode {
     PROTO_NOT_FOUND = 1; //协议不存在
-};
+}
