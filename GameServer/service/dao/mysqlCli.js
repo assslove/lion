@@ -1,6 +1,7 @@
 /* @brief 提供游戏mysql查询类
  */
 var mysql = require('mysql');
+
 module.exports = function(app, conf) {
    return new MysqlCli(app, conf);
 }
@@ -18,7 +19,7 @@ function MysqlCli(app, conf) {
         port : conf.port,
         user : conf.user,
         password : conf.password,
-        database : conf.database,
+        database : conf.db,
         supportBigNumbers : true,
         debug : debug
     });
