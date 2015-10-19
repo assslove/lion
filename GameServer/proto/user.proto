@@ -2,8 +2,6 @@
 
 package game;
 
-import "code.proto";
-
-message UserLoginReq {
-	optional Code protoid = 1  [default = USER_LOGIN];
+message UserCreateReq {
+    required uint32 uid = 1;    //用户id
 }
