@@ -13,6 +13,11 @@
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
     "node-protobuf": "^1.2.10",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "express-session": "^1.11.3",
+    "connect-redis": "^3.0.1",
+    "config.json": "0.0.4",
+    "commander": "^2.9.0",
+    "protobufjs": "^4.1.2"
   }
 }

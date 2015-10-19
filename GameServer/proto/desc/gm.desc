@@ -1,270 +1,0 @@
-
-˛%
-gm.protogm";
-ItemNotiType
-type (
-itemid (
-count ("*
-ItemList
-item (2.gm.ItemNotiType"Z
-SysMailConf
-sender (	
-title (	
-text (	
-item (2.gm.ItemNotiType"R
-CopyData
-copyid (
-status (
-
-fighttimes (
-
-resettimes ("&
-CopyList
-list (2.gm.CopyData"9
-	QuestData
-questid (
-type (
-count ("-
-DoingQuestList
-list (2.gm.QuestData"$
-SubmitQuestIDList
-questid ("
-RolePermission
-flag ("
-
-ServerList
-
-id ("7
-ActivityTaskConds"
-cond (2.gm.ActivityTaskCond"Ñ
-ActivityTaskCond
-type (
-cond (	
-items (2.gm.ItemNotiType
-comment (	
-cycle_count (
-cycle ("9
-ActivityLoginConds#
-cond (2.gm.ActivityLoginCond"»
-ActivityLoginCond
-
-id (
-order (
-type (
-cond (	
-items (2.gm.ItemNotiType
-comment (	
-cycle_count (
-cycle (
-
-login_type	 (
-
-login_days
- ("9
-ActivityLevelConds#
-cond (2.gm.ActivityLevelCond"Ø
-ActivityLevelCond
-
-id (
-order (
-type (
-cond (	
-items (2.gm.ItemNotiType
-comment (	
-cycle_count (
-cycle (
-level	 ("7
-ActivityStarConds"
-cond (2.gm.ActivityStarCond"≠
-ActivityStarCond
-
-id (
-order (
-type (
-cond (	
-items (2.gm.ItemNotiType
-comment (	
-cycle_count (
-cycle (
-star	 ("A
-ActivityClearCopyConds'
-cond (2.gm.ActivityClearCopyCond"‹
-ActivityClearCopyCond
-
-id (
-order (
-type (
-cond (	
-items (2.gm.ItemNotiType
-comment (	
-cycle_count (
-cycle (
-
-copy_count	 (
-	copy_type
- (
-copy_id ("C
-ActivityTotalGachaConds(
-cond (2.gm.ActivityTotalGachaCond"Œ
-ActivityTotalGachaCond
-
-id (
-order (
-type (
-cond (	
-items (2.gm.ItemNotiType
-comment (	
-cycle_count (
-cycle (
-gacha_count	 (
-
-gacha_type
- ("G
-ActivityTotalConsumeConds*
-cond (2.gm.ActivityTotalConsumeCond"π
-ActivityTotalConsumeCond
-
-id (
-order (
-type (
-cond (	
-items (2.gm.ItemNotiType
-comment (	
-cycle_count (
-cycle (
-cash_num	 ("I
-ActivityTotalRechargeConds+
-cond (2.gm.ActivityTotalRechargeCond"∫
-ActivityTotalRechargeCond
-
-id (
-order (
-type (
-cond (	
-items (2.gm.ItemNotiType
-comment (	
-cycle_count (
-cycle (
-cash_num	 ("K
-ActivitySingleRechargeConds,
-cond (2.gm.ActivitySingleRechargeCond"’
-ActivitySingleRechargeCond
-
-id (
-order (
-type (
-cond (	
-items (2.gm.ItemNotiType
-comment (	
-cycle_count (
-cycle (
-
-product_id	 (
-recharge_count
- ("=
-ActivityCollectConds%
-cond (2.gm.ActivityCollectCond"°
-ActivityCollectCond
-
-id (
-order (
-type (
-cond (	
-items (2.gm.ItemNotiType
-comment (	
-cycle_count (
-cycle (
-collect_num	 (
-	item_type
- (
-item_sub_type (
-levelup_type (
-levelup_param (
-	item_list ("?
-ActivityBtlpowerConds&
-cond (2.gm.ActivityBtlpowerCond"µ
-ActivityBtlpowerCond
-
-id (
-order (
-type (
-cond (	
-items (2.gm.ItemNotiType
-comment (	
-cycle_count (
-cycle (
-btlpower	 ("A
-ActivityCopyRatioConds'
-cond (2.gm.ActivityCopyRatioCond"ö
-ActivityCopyRatioCond
-
-id (
-order (
-ratio (
-	copy_type (
-copy_id (
-	item_type (
-item_id (
-comment	 (	"M
-ActivityGachaExtraRatioConds-
-cond (2.gm.ActivityGachaExtraRatioCond"á
-ActivityGachaExtraRatioCond
-
-id (
-order (
-comment (	
-gacha_count (
-gacha_ratio (
-
-gacha_type ("E
-ActivityGachaProbUpConds)
-cond (2.gm.ActivityGachaProbUpCond"j
-ActivityGachaProbUpCond
-
-id (
-order (
-comment (	
-
-gacha_type (
-pack_id ("?
-ActivityShopSaleConds&
-cond (2.gm.ActivityShopSaleCond"ê
-ActivityShopSaleCond
-
-id (
-order (
-comment (	
-discount (
-shop_item_type (
-	shop_type (
-item_id ("C
-ActivityShaoDoubleConds(
-cond (2.gm.ActivityShaoDoubleCond"è
-ActivityShaoDoubleCond
-
-id (
-order (
-comment (	
-ratio (
-shop_item_type (
-	shop_type (
-item_id ("=
-ActivityShopNewConds%
-cond (2.gm.ActivityShopNewCond"e
-ActivityShopNewCond
-
-id (
-order (
-comment (	
-	shop_type (
-item_id ("E
-ActivityConsumeSaleConds)
-cond (2.gm.ActivityConsumeSaleCond"}
-ActivityConsumeSaleCond
-
-id (
-order (
-comment (	
-count (
-discount (
-consume_point (

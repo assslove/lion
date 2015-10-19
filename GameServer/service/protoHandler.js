@@ -2,16 +2,21 @@
  * @brief 协议处理
  * Created by houbin on 15-10-18.
  */
+var fs = require('fs');
+var Schema = require('node-protobuf');
+var codePb = new Schema(fs.readFileSync('./../proto/desc/code.desc'));
+
 var protoHanlder = module.exports;
+
 var protoHandlers = {};
 
-var user_controller = require('./../service/controller/user_controller.js');
+var userController = require('./controller/userController.js');
 
 /* @brief init proto
  */
 protoHanlder.init = function(app) {
-    protoHandlers[] = user_controller.login;
-    protoHandlers[] = user_controller.logout;
+    protoHandlers[codePb.info("USER_LOGIN")] = userController.login;
+    protoHandlers[codePb.USER_LOGOUT] = userController.logout;
 }
 
 

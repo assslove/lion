@@ -1,16 +1,10 @@
 {
-	"development" : {
-		"host" : "10.96.29.36",
-		"port" : "3306",
-		"database" : "bleach_global",
-		"user" : "houbin",
-		"password" : "123456"
-	},
-	"production" : {
-		"host" : "10.96.29.36",
-		"port" : "3306",
-		"database" : "bleach_global",
-		"user" : "houbin",
-		"password" : "123456"
-	}
+	"development" : [
+        {range : [0, 50], host : "10.96.29.36", port : 3306, user : "houbin", password : '123456', db : 'bleach_global'},
+        {range : [51, 99], host : "10.96.29.36", port : 3306, user : "houbin", password : '123456', db : 'bleach_global'}
+	],
+	"production" : [
+        {range : [0, 50], host : "10.96.29.36", port : 3306, user : "houbin", password : '123456', db : 'bleach_global'},
+        {range : [51, 99], host : "10.96.29.36", port : 3306, user : "houbin", password : '123456', db : 'bleach_global'}
+	]
 }

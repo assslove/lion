@@ -13,6 +13,7 @@ log4js.configure("./config/log4js.json");
 var logger = log4js.getLogger("logInfo");
 logger.debug("test log4js");
 
+
 program.version('0.0.1')
 	   .option("-p --port [port]", "Listen Port")
 	   .option("-h --help", "Output usage");
@@ -21,6 +22,8 @@ program.parse(process.argv);
 
 var mysqlClient = require('./service/dao/mysql_cli.js');
 var redisClient = require('./utils/redis.js');
+var protoHandler = require('./service/protoHandler.js');
+var mysqlManager = require('./service/dao/mysqlManager.js');
 
 var routes = require('./routes/index');
 
@@ -74,22 +77,21 @@ app.use(session({
 }));
 
 app.use('/', routes);
-app.use('/client_tool', client_tool);
+//app.use('/client_tool', client_tool);
 
 var listen_port = program.port;
 
 
 //store mysql pool to app
-var mysqlCli = mysqlClient.init(app);
-if (!!mysqlCli) {
-    app.set('mysqlclient', mysqlCli);
-}
+mysqlManager.init(app);
 
 var redisCli = redisClient.init(app);
 if (!!redisCli) {
 	logger.info("redis init success");
 	app.set("redisclient", redisCli);
 }
+
+protoHandler.init(app);
 
 var server = app.listen(listen_port, function() {
     var host = server.address().address;

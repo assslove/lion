@@ -26,3 +26,7 @@ mysqlManager.delMysqlCli = function(id) {
 mysqlManager.getMysqlCli = function(id) {
     return mysqlList[id];
 }
+
+mysqlManager.init = function(app) {
+
+}
