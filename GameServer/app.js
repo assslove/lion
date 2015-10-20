@@ -89,7 +89,7 @@ mysqlManager.init(app);
 
 var redisCli = redisClient.init(app);
 if (!!redisCli) {
-	logger.info("redis init success");
+	logger.info("init redis success");
 	app.set("redisclient", redisCli);
 }
 

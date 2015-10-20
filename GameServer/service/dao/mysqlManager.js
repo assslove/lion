@@ -12,8 +12,10 @@ var mysqlList = {};
 var mysqlManager = module.exports;
 
 mysqlManager.addMysqlCli = function(id, obj) {
-    if (mysqlList[id] != null) {
-        mysqlManager.delMysqlCli(id);
+    for (var i in mysqlList) {
+        if (i[0].start == id[0] && i[1] == id[1]) {
+            mysqlManager.delMysqlCli(id);
+        }
     }
     mysqlList[id] = obj;
     logger.info("add game mysql connnect success [%d,%d]", id[0], id[1]);

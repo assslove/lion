@@ -109,3 +109,13 @@ utils.clone = function(obj) {
     }
     return o;
 }
+
+utils.toArray = function(obj) {
+    var arr = [];
+    if (obj == null || obj.length == 0) return arr;
+
+    for (var i in obj.length) {
+        arr.push(obj[i]);
+    }
+    return arr;
+}

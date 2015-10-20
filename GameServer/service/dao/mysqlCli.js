@@ -27,8 +27,6 @@ function MysqlCli(app, conf) {
     if (!!this.pool) {
         console.log('mysql is connected to [%s:%d]', conf.host, conf.port);
     }
-
-    return this.pool;
 }
 
 MysqlCli.prototype.query = function(sql, args, cb) {
