@@ -4,7 +4,8 @@
  */
 
 var util = require("util");
-var MysqlCli = require("mysqlCli.js");
+var logger = require("./../../utils/log.js");
+var MysqlCli = require("./mysqlCli.js");
 
 var mysqlList = {};
 
@@ -15,7 +16,7 @@ mysqlManager.addMysqlCli = function(id, obj) {
         mysqlManager.delMysqlCli(id);
     }
     mysqlList[id] = obj;
-    app.get("logger").info(util.format("add game mysql connnect success [%d,%d]", id[0], id[1]));
+    logger.info("add game mysql connnect success [%d,%d]", id[0], id[1]);
 }
 
 mysqlManager.delMysqlCli = function(id) {
@@ -49,7 +50,7 @@ mysqlManager.init = function(app) {
             app.get('logger').error(util.format("mysql init error [%d,%d]", conf[i].range[0], conf[i].range[1]));
             return false;
         }
-        mysqlManager.addMysqlCli(config[i].range, mysqlCli);
+        mysqlManager.addMysqlCli(conf[i].range, mysqlCli);
     }
 
     app.get('logger').info("init mysql success");

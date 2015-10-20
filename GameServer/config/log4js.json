@@ -3,7 +3,7 @@
         {"type" : "console", "category" : "console"},
         {
             "type": "dateFile",
-            "filename": "log/gmserver_",
+            "filename": "log/gameserver_",
             "pattern" : "yyyyMMdd.log",
             "alwaysIncludePattern": true,
             "maxLogSize": 20480,

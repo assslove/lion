@@ -24,6 +24,7 @@ var mysqlClient = require('./service/dao/mysql_cli.js');
 var redisClient = require('./utils/redis.js');
 var protoHandler = require('./service/protoHandler.js');
 var mysqlManager = require('./service/dao/mysqlManager.js');
+var log = require('./utils/log.js');
 
 var routes = require('./routes/index');
 
@@ -31,6 +32,7 @@ var app = express();
 
 //init logger
 app.set("logger", logger);
+log.init(app, logger);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
