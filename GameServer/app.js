@@ -27,6 +27,7 @@ var mysqlManager = require('./service/dao/mysqlManager.js');
 var log = require('./utils/log.js');
 
 var routes = require('./routes/index');
+var proto = require('./routes/proto.js');
 
 var app = express();
 
@@ -79,7 +80,7 @@ app.use(session({
 }));
 
 app.use('/', routes);
-//app.use('/client_tool', client_tool);
+app.use('/proto', proto);
 
 var listen_port = program.port;
 

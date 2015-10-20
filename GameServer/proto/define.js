@@ -13,6 +13,7 @@ var proto = {
 var error_code =  {
     PROTO_NOT_FOUND : [1, "协议不存在"],
     USER_NOT_LOGIN :  [2,  "用户没有登录"],
+    PROTO_LEN_INVALID:  [3,  "协议长度不正确"],
 
 };
 

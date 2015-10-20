@@ -4,21 +4,35 @@
  */
 
 var express = require('express');
-var router = express.Router();
+var ProtoBuf = require("protobufjs");
+
 var protoHandler = require('./../service/protoHandler.js');
+var DEFINE = require('./../proto/define.js');
 
-router.post('/proto', function(req, res, next) {
+var builder = ProtoBuf.loadProtoFile("tests/user.proto");
+var router = express.Router();
+
+function send_error_to_user(res, err) {
+    var ErrorCodeRet = builder.build("ErrorCodeRet");
+    var error = new ErrorCodeRet({
+        err_code : err
+    });
+
+    var ret = JSON.stringify([DEFINE.PROTO.ERROR_CODE, error.encode().toBuffer()]);
+    res.send(ret);
+}
+
+router.post('/', function(req, res, next) {
     //check proto pkg
-    if (req.body.length < 2) {
+    var pkg = JSON.parse(req.body);
 
+    if (pkg.length == undefined || pkg.length == 0) {
+        send_error_to_user(res, DEFINE.ERROR_CODE.PROTO_LEN_INVALID);
     }
-
-    var userid = req.body[0];
-    var protoid = req.body[1];
 
     protoHandler.handle(req, res, function(err) {
         if (err != null) {
-            var ret = [userid];
+            send_error_to_user(res, err);
         }
     });
 });
