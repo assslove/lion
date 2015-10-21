@@ -13,21 +13,26 @@ log4js.configure("./config/log4js.json");
 var logger = log4js.getLogger("logInfo");
 logger.debug("test log4js");
 
+
 program.version('0.0.1')
 	   .option("-p --port [port]", "Listen Port")
 	   .option("-h --help", "Output usage");
 
 program.parse(process.argv);
 
-var mysqlClient = require('./service/dao/mysql_cli.js');
 var redisClient = require('./utils/redis.js');
+var protoHandler = require('./service/protoHandler.js');
+var mysqlManager = require('./service/dao/mysqlManager.js');
+var log = require('./utils/log.js');
 
 var routes = require('./routes/index');
+var proto = require('./routes/proto.js');
 
 var app = express();
 
 //init logger
 app.set("logger", logger);
+log.init(app, logger);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,9 +41,21 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 //app.use(logger('dev'));
-app.use(bodyParser.json());
+app.use(function(req, res, next) {
+    var data = '';
+    req.setEncoding('utf8');
+    req.on('data', function(chunk) {
+        data += chunk;
+    });
+    req.on('end', function() {
+        req.rawBody = data;
+        next();
+    });
+});
+
+//app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+//app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -58,7 +75,7 @@ app.use(session({
         host : app.get('redis').host,
         port : app.get('redis').port,
         ttl  : 3600,
-        db : 2
+        db : 3
     }),
     secret : 'keyboard cat',
     resave : false,
@@ -74,22 +91,21 @@ app.use(session({
 }));
 
 app.use('/', routes);
-app.use('/client_tool', client_tool);
+app.use('/proto', proto);
 
 var listen_port = program.port;
 
 
 //store mysql pool to app
-var mysqlCli = mysqlClient.init(app);
-if (!!mysqlCli) {
-    app.set('mysqlclient', mysqlCli);
-}
+mysqlManager.init(app);
 
 var redisCli = redisClient.init(app);
 if (!!redisCli) {
-	logger.info("redis init success");
+	logger.info("init redis success");
 	app.set("redisclient", redisCli);
 }
+
+protoHandler.init(app);
 
 var server = app.listen(listen_port, function() {
     var host = server.address().address;

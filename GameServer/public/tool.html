@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name='description' content=''>
+    <meta name='author' content=''>
+    <link rel='icon' href='../../favicon.ico'>
+
+    <title>工具</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='css/jquery-ui.min.css' rel='stylesheet'>
+    <link href='js/datetimepicker/css/bootstrap-datetimepicker.min.css' rel='stylesheet'>
+    <link href='css/mystyle.css' rel='stylesheet'>
+
+    <!-- Custom styles for this template -->
+    <!--<link href='css/dashboard.css' rel='stylesheet'>-->
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]>
+    <!--<script src='../../assets/js/ie8-responsive-file-warning.js'></script>-->
+    <!--<![endif]&ndash;&gt;-->
+    <!--<script src='../../assets/js/ie-emulation-modes-warning.js'></script>-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src='http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js'></script>
+    <script src='http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js'></script>
+    <![endif]-->
+</head>
+<body>
+
+<div role="tabpanel">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist" id="server_tool_tab">
+        <li role="presentation"><a href="#proto_cmd" aria-controls="proto_cmd" role="tab" data-toggle="tab">协议测试</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="proto_cmd" style="width: 95%;">
+            <br/>
+            <form class='form-horizontal'>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">获取位置:</label>
+                    <div class="col-sm-2">
+                        <select class="form-control" id="src_list"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">服务器列表:</label>
+                    <div class="col-sm-2">
+                        <select id="server_list" class="form-control"></select>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type='button' class='btn btn-default' value="添加" id="btn_add_reload_server">
+                        <input type='button' class='btn btn-default' value="清除" id="btn_del_all_server">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">待操作服务器列表:</label>
+                    <div class="col-sm-4">
+                        <div id="check_server_list"></div>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <hr/>
+                    <label class="col-sm-2 control-label">工具列表:</label>
+                    <div class='col-sm-10'>
+                        <input type='button' class='btn btn-primary' value="上传配置文件" onclick="uploadConf()" data-toggle="tooltip" title="上传后台配置文件到所选服务器">
+                        <input type='button' class='btn btn-primary' value="一键重载" onclick="reloadConf()" data-toggle="tooltip" title="重载后台配置文件,全更新">●
+                        <input type='button' class='btn btn-primary' value="上传版本" onclick="uploadVersion()" data-toggle="tooltip" title="上传新版本文件到所选服务器">
+                        <input type='button' class='btn btn-primary' value="上传config.xml" onclick="uploadConfigXml()" data-toggle="tooltip" title="上传项目配置文件config.xml到所选服务器">
+                        <input type='button' class='btn btn-primary' value="一键关闭" onclick="stopServer()" data-toggle="tooltip" title="关闭所选服务器">
+                        <input type='button' class='btn btn-primary' value="一键启动" onclick="startServer()" data-toggle="tooltip" title="启动所选服务器">
+                        <small style="color:red;">(请您务必确认好再进行操作!)</small>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <hr/>
+                    <label class="col-sm-2 control-label">操作日志:</label>
+                    <div class='col-sm-10'>
+                        <div id="server_op_log" style="color:red;"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="info_title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="info_title">信息标题</h4>
+            </div>
+            <div class="modal-body" id="info_content">
+            </div>
+            <div class="modal-footer" id="info_footer">
+                <button type='button' class='btn btn-default' onclick='savePassword()'>保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src='http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js'></script>
+<script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+<script src='js/jquery.cookies.2.2.0.min.js'></script>
+<script src='js/jquery-ui.min.js'></script>
+<script type="text/javascript" src="js/datetimepicker/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<script src='js/jquery.isloading.min.js'></script>
+<script src='js/local/utils.js'></script>
+<script src="js/protobufjs/Long.js"></script>
+<script src="js/protobufjs/ByteBufferAB.js"></script>
+<script src="js/protobufjs/ProtoBuf.js"></script>
+<script src='js/local/tool.js'></script>
+</body>
+</html>
+
