@@ -13,7 +13,8 @@ $(document).ready(function() {
     ProtoBuf = dcodeIO.ProtoBuf;
 
     var builder = ProtoBuf.loadProtoFile("js/local/user.proto");
-    var UserCreateReq = builder.build("game")["UserCreateReq"];
+    var Game = builder.build("game");
+    var UserCreateReq = Game["UserCreateReq"];
     var userCreateReq = new UserCreateReq({
         uid : 10,
         type : 20,
@@ -24,15 +25,11 @@ $(document).ready(function() {
 
     var head = new Uint32Array(2);
     head[0] = buff.byteLength + 8; //长度
-    head[1] = 3; //协议号
+    head[1] = 1; //协议号
 
     var total = arrayBufferConcat(head.buffer, buff);
 
     var msg = UserCreateReq.decode(buff);
-
-//    $.post('/proto', buff, function(data, textStatus) {
-//        alert(textStatus);
-//    }, "json");
 
     $.ajax({
         url: '/proto',
@@ -40,9 +37,24 @@ $(document).ready(function() {
         data : total,
         contentType : false,
         processData : false,
-        dataType: 'arraybuffer',
+        dataType: 'text',
         success: function (data) {
-            console.log(data.byteLength);
+            var ret = strToArrayBuffer(data);
+            if (ret.length < 8) {
+                console.log("error len");
+            }
+
+            var head = new Uint32Array(ret, 0, 2);
+            console.log(head[0]);
+            console.log(head[1]);
+            var msg = ret.slice(8);
+            var UserErrorRet = Game.UserErrorRet;
+            var error = UserErrorRet.decode(msg);
+
+            console.log(error.err_code);
+        },
+        error : function(xhr, textStatus, errorThrown){
+            console.log(textStatus);
         }
     });
 });

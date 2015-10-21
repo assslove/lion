@@ -22,14 +22,14 @@ function send_error_to_user(res, err) {
     var userProtoStr = fs.readFileSync(PROTO_FILE).toString();
     var builder = ProtoBuf.loadProto(userProtoStr);
     var Game = builder.build("game");
-    var ErrorCodeRet = Game.ErrorCodeRet;
-    var error = new ErrorCodeRet({
+    var UserErrorRet = Game.UserErrorRet;
+    var errorRet = new UserErrorRet({
         err_code : err
     });
 
-    var msg = error.encode().toBuffer();
+    var msg = errorRet.encode().toBuffer();
     var len = msg.length + 8;
-    var head = bufferpack("<II", [len, DEFINE.PROTO.ERROR_CODE]);
+    var head = bufferpack.pack("<II", [len, DEFINE.PROTO.USER_ERROR]);
     var buffer = Buffer.concat([head, msg], len);
     res.send(buffer);
 }
@@ -39,7 +39,7 @@ router.post('/', function(req, res, next) {
     var buffer = new Buffer(req.rawBody);
     if (buffer.length < 8) {
         logger.error("proto len is too small [len=%d]", buffer.length);
-        send_error_to_user(res, DEFINE.ERROR_CODE.PROTO_LEN_INVALID);
+        send_error_to_user(res, DEFINE.ERROR_CODE.PROTO_LEN_INVALID[0]);
     }
     var len = buffer.readUInt32LE(0);
     var protoid = buffer.readUInt32LE(4);
@@ -47,7 +47,7 @@ router.post('/', function(req, res, next) {
 
     if (msg.length + 8 !== len) {
         logger.error("proto len is not right [total_len=%d,, real_len=%d, pkg_len=%d]", buffer.length, len, msg.length);
-        send_error_to_user(res, DEFINE.ERROR_CODE.PROTO_LEN_INVALID);
+        send_error_to_user(res, DEFINE.ERROR_CODE.PROTO_LEN_INVALID[0]);
     }
 
     protoHandler.handle(protoid, msg, req, res, function(err) {

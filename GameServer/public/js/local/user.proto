@@ -11,7 +11,7 @@ message UserCreateReq {
 message UserCreateRet {
 	required uint32 uid = 1;    // 用户id
 	optional uint32 qq  = 2;	// 
-	optional string webchat = 3;
+	optional string wechat = 3;
 }
 
 message UserLoginReq {	
