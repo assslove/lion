@@ -27,7 +27,7 @@ function send_error_to_user(res, err) {
         err_code : err
     });
 
-    var msg = err.encode().toBuffer();
+    var msg = error.encode().toBuffer();
     var len = msg.length + 8;
     var head = bufferpack("<II", [len, DEFINE.PROTO.ERROR_CODE]);
     var buffer = Buffer.concat([head, msg], len);
