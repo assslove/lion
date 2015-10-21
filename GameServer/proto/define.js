@@ -14,6 +14,8 @@ var error_code =  {
     PROTO_NOT_FOUND : [1, "协议不存在"],
     USER_NOT_LOGIN :  [2,  "用户没有登录"],
     PROTO_LEN_INVALID:  [3,  "协议长度不正确"],
+    PROTO_DATA_INVALID:  [4,  "协议数据不正确"],
+    USER_SESSION_EXPIRE:  [5,  "用户session过期"],
 
 };
 

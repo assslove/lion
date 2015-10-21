@@ -8,12 +8,13 @@ var ProtoBuf = require("protobufjs");
 
 var protoHandler = require('./../service/protoHandler.js');
 var DEFINE = require('./../proto/define.js');
+var user = require('./../service/model/user.js');
 
-var builder = ProtoBuf.loadProtoFile("tests/user.proto");
+var builder = ProtoBuf.loadProtoFile("./../proto/user.proto");
 var router = express.Router();
 
 function send_error_to_user(res, err) {
-    var ErrorCodeRet = builder.build("ErrorCodeRet");
+    var ErrorCodeRet = builder.build("game.ErrorCodeRet");
     var error = new ErrorCodeRet({
         err_code : err
     });
@@ -30,7 +31,7 @@ router.post('/', function(req, res, next) {
         send_error_to_user(res, DEFINE.ERROR_CODE.PROTO_LEN_INVALID);
     }
 
-    protoHandler.handle(req, res, function(err) {
+    protoHandler.handle(pkg, req, res, function(err) {
         if (err != null) {
             send_error_to_user(res, err);
         }

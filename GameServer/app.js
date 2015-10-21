@@ -20,7 +20,6 @@ program.version('0.0.1')
 
 program.parse(process.argv);
 
-var mysqlClient = require('./service/dao/mysql_cli.js');
 var redisClient = require('./utils/redis.js');
 var protoHandler = require('./service/protoHandler.js');
 var mysqlManager = require('./service/dao/mysqlManager.js');
@@ -64,7 +63,7 @@ app.use(session({
         host : app.get('redis').host,
         port : app.get('redis').port,
         ttl  : 3600,
-        db : 2
+        db : 3
     }),
     secret : 'keyboard cat',
     resave : false,
