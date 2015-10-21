@@ -13,7 +13,7 @@ $(document).ready(function() {
     ProtoBuf = dcodeIO.ProtoBuf;
 
     var builder = ProtoBuf.loadProtoFile("js/local/user.proto");
-    var UserCreateReq = builder.build("game").UserCreateReq;
+    var UserCreateReq = builder.build("game")["UserCreateReq"];
     var userCreateReq = new UserCreateReq({
         uid : 10,
         type : 20,
@@ -22,9 +22,29 @@ $(document).ready(function() {
 
     var buff = userCreateReq.encode().toArrayBuffer();
 
+    var head = new Uint32Array(2);
+    head[0] = buff.byteLength + 8; //长度
+    head[1] = 3; //协议号
+
+    var total = arrayBufferConcat(head.buffer, buff);
+
     var msg = UserCreateReq.decode(buff);
 
+//    $.post('/proto', buff, function(data, textStatus) {
+//        alert(textStatus);
+//    }, "json");
 
+    $.ajax({
+        url: '/proto',
+        type: 'post',
+        data : total,
+        contentType : false,
+        processData : false,
+        dataType: 'arraybuffer',
+        success: function (data) {
+            console.log(data.byteLength);
+        }
+    });
 });
 
 
