@@ -21,7 +21,7 @@ program.version('0.0.1')
 program.parse(process.argv);
 
 var redisClient = require('./utils/redis.js');
-var protoHandler = require('./service/protoHandler.js');
+var ProtoHandler = require('./service/ProtoHandler.js');
 var mysqlManager = require('./service/dao/mysqlManager.js');
 var log = require('./utils/log.js');
 
@@ -106,7 +106,8 @@ if (!!redisCli) {
 	app.set("redisclient", redisCli);
 }
 
-protoHandler.init(app);
+var protoHandler = new ProtoHandler(app);
+app.set("proto_handler", protoHandler);
 
 var server = app.listen(listen_port, function() {
     var host = server.address().address;

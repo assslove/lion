@@ -16,12 +16,17 @@ var error_code =  {
     PROTO_LEN_INVALID:  [3,  "协议长度不正确"],
     PROTO_DATA_INVALID:  [4,  "协议数据不正确"],
     USER_SESSION_EXPIRE:  [5,  "用户session过期"],
-
 };
 
 var ret = {
     PROTO : proto,
     ERROR_CODE : error_code
+};
+
+var head = {
+    len : '长度',
+    protoid : '协议id',
+    seq : '序列号或者返回码'
 };
 
 module.exports = ret;

@@ -8,7 +8,6 @@ var ProtoBuf = require("protobufjs");
 var fs = require("fs");
 var path = require("path");
 
-var protoHandler = require('./../service/protoHandler.js');
 var DEFINE = require('./../proto/define.js');
 var user = require('./../service/model/user.js');
 var logger = require("./../utils/log.js");
@@ -17,22 +16,6 @@ var bufferpack = require("bufferpack");
 var router = express.Router();
 
 var PROTO_FILE = path.join(__dirname, "../proto/user.proto");
-
-function send_error_to_user(res, err) {
-    var userProtoStr = fs.readFileSync(PROTO_FILE).toString();
-    var builder = ProtoBuf.loadProto(userProtoStr);
-    var Game = builder.build("game");
-    var UserErrorRet = Game.UserErrorRet;
-    var errorRet = new UserErrorRet({
-        err_code : err
-    });
-
-    var msg = errorRet.encode().toBuffer();
-    var len = msg.length + 8;
-    var head = bufferpack.pack("<II", [len, DEFINE.PROTO.USER_ERROR]);
-    var buffer = Buffer.concat([head, msg], len);
-    res.send(buffer);
-}
 
 router.post('/', function(req, res, next) {
     //check proto pkg
