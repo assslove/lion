@@ -28,6 +28,5 @@ userController.userLogout = function(pkg, req, res, cb) {
 }
 
 userController.userCreate = function(pkg, req, res, cb) {
-
     logger.info("%d user create", pkg.uid);
 }
