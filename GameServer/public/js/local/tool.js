@@ -31,6 +31,7 @@ function initProtoHandlers()
 
 
 function sendMsg() {
+    $("#res").val("");
     var protoid = $("#protoids").val();
     var jsonStr = $("#req").val();
 
