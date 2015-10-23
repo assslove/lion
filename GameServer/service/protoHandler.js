@@ -14,20 +14,19 @@ module.exports = function(app) {
     return new ProtoHandler(app);
 }
 
-
 function ProtoHandler(app) {
     this.app = app;
     this.protoFile = path.join(__dirname, "../proto/user.proto");
     this.protoHandlers = {};
     this.builder = ProtoBuf.loadProtoFile(this.protoFile);
-    this.rootMsg = builder.build("game");
+    this.rootMsg = this.builder.build("game");
 }
 
 
 /* @brief init proto
  */
 ProtoHandler.init = function(app) {
-    this.protoHandlers[DEFINE.PROTO.USER_LOGIN] =  [userController.userLogin, "UserLoginReq"];
+    this.protoHandlers[DEFINE.PROTO.USER_LOGIN] =  [userController.userLogin, "UserLoginReq", "UserLoginRet"];
     this.protoHandlers[DEFINE.PROTO.USER_LOGOUT] = [userController.userLogout, "UserLogoutReq"];
     this.protoHandlers[DEFINE.PROTO.USER_CREATE] = [userController.userCreate, "UserCreateReq"];
 
@@ -45,9 +44,7 @@ ProtoHandler.handle = function(protoid, msg, req, res, cb) {
         return ;
     }
     try {
-        var builder = ProtoBuf.loadProtoFile(this.protoFile);
-        var Game = builder.build("game");
-        var Msg = Game[this.protoHandlers[protoid][1]];
+        var Msg = this.rootMsg[this.protoHandlers[protoid][1]];
         var pkg = Msg.decode(msg);
 
 //        if (req.ses("sion == null || req.session.uid != pkg.uid) { //检测session是否过期
@@ -55,7 +52,7 @@ ProtoHandler.handle = function(protoid, msg, req, res, cb) {
 //            return ;
 //        }
 
-        this.protoHandlers[protoid][0](pkg, req, res, cb);
+        this.protoHandlers[protoid][0](protoid, pkg, req, res, cb);
     } catch (e) {
         logger.error("proto error %s", e);
         cb(DEFINE.ERROR_CODE.PROTO_NOT_FOUND[0]);
@@ -73,4 +70,20 @@ ProtoHandler.getProtoBuilder = function() {
 
 ProtoHandler.getRootMsg = function() {
     return this.rootMsg;
+}
+
+ProtoHandler.sendMsgToUser = function(res, proto_id, msg) {
+    var len = msg + 8;
+    var head = bufferpack.pack("<IHH", [len, proto_id, 0]);
+    var buffers = Buffer.concat([head, msg], len);
+    res.send(buffers);
+}
+
+ProtoHandler.getResponseStr = function(proto_id) {
+    var str = this.protoHandlers[proto_id][2];
+    if (str == null || str == undefined) {
+        return null;
+    }
+
+    return this.rootMsg(str);
 }

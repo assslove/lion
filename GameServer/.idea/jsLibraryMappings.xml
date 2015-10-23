@@ -2,7 +2,7 @@
 <project version="4">
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$" libraries="{GameServer node_modules}" />
-    <file url="PROJECT" libraries="{Library, jquery}" />
+    <file url="PROJECT" libraries="{jquery}" />
     <includedPredefinedLibrary name="Node.js Globals" />
   </component>
 </project>

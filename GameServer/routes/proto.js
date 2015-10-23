@@ -15,17 +15,19 @@ var bufferpack = require("bufferpack");
 
 var router = express.Router();
 
-var PROTO_FILE = path.join(__dirname, "../proto/user.proto");
-
 router.post('/', function(req, res, next) {
     //check proto pkg
     var buffer = new Buffer(req.rawBody);
     if (buffer.length < 8) {
         logger.error("proto len is too small [len=%d]", buffer.length);
-        send_error_to_user(res, DEFINE.ERROR_CODE.PROTO_LEN_INVALID[0]);
+        res.send(500);
     }
     var len = buffer.readUInt32LE(0);
-    var protoid = buffer.readUInt32LE(4);
+    var protoid = buffer.readUInt16LE(4);
+    var seq = buffer.readUInt16LE(6);
+
+    //check seq
+
     var msg = buffer.slice(8);
 
     if (msg.length + 8 !== len) {
@@ -33,9 +35,9 @@ router.post('/', function(req, res, next) {
         send_error_to_user(res, DEFINE.ERROR_CODE.PROTO_LEN_INVALID[0]);
     }
 
-    protoHandler.handle(protoid, msg, req, res, function(err) {
+    this.app.get("proto_handler").handle(protoid, msg, req, res, function(err) {
         if (err != null) {
-            send_error_to_user(res, err);
+            this.app.get("proto_handler").sendErrorToUser(res, protoid, err);
         }
     });
 });

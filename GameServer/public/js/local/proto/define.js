@@ -19,7 +19,7 @@ var error_code =  {
     MSG_NOT_FOUND:  [6,  "返回消息体没有找到"],
 };
 
-var ret = {
+var DEFINE = {
     PROTO : proto,
     ERROR_CODE : error_code
 };
@@ -30,5 +30,5 @@ var head = {
     seq : '序列号或者返回码'
 };
 
-module.exports = ret;
+module.exports = DEFINE;
 

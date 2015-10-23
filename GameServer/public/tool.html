@@ -46,45 +46,27 @@
             <br/>
             <form class='form-horizontal'>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">获取位置:</label>
+                    <label class="col-sm-2 control-label">协议编号:</label>
                     <div class="col-sm-2">
-                        <select class="form-control" id="src_list"></select>
+                        <select class="form-control" id="protoids"></select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">服务器列表:</label>
-                    <div class="col-sm-2">
-                        <select id="server_list" class="form-control"></select>
+                    <label class="col-sm-2 control-label">输入消息:</label>
+                    <div class="col-sm-10">
+                        <textarea id="req" cols="100" rows="10"></textarea>
                     </div>
-                    <div class="col-sm-2">
-                        <input type='button' class='btn btn-default' value="添加" id="btn_add_reload_server">
-                        <input type='button' class='btn btn-default' value="清除" id="btn_del_all_server">
+                </div>
+                <div class='form-group'>
+                    <div class="col-sm-6"></div>
+                    <div class="col-sm-1">
+                        <input type='button' class='btn btn-default' value="发送" onclick="sendMsg()">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">待操作服务器列表:</label>
-                    <div class="col-sm-4">
-                        <div id="check_server_list"></div>
-                    </div>
-                </div>
-                <div class='form-group'>
-                    <hr/>
-                    <label class="col-sm-2 control-label">工具列表:</label>
-                    <div class='col-sm-10'>
-                        <input type='button' class='btn btn-primary' value="上传配置文件" onclick="uploadConf()" data-toggle="tooltip" title="上传后台配置文件到所选服务器">
-                        <input type='button' class='btn btn-primary' value="一键重载" onclick="reloadConf()" data-toggle="tooltip" title="重载后台配置文件,全更新">●
-                        <input type='button' class='btn btn-primary' value="上传版本" onclick="uploadVersion()" data-toggle="tooltip" title="上传新版本文件到所选服务器">
-                        <input type='button' class='btn btn-primary' value="上传config.xml" onclick="uploadConfigXml()" data-toggle="tooltip" title="上传项目配置文件config.xml到所选服务器">
-                        <input type='button' class='btn btn-primary' value="一键关闭" onclick="stopServer()" data-toggle="tooltip" title="关闭所选服务器">
-                        <input type='button' class='btn btn-primary' value="一键启动" onclick="startServer()" data-toggle="tooltip" title="启动所选服务器">
-                        <small style="color:red;">(请您务必确认好再进行操作!)</small>
-                    </div>
-                </div>
-                <div class='form-group'>
-                    <hr/>
-                    <label class="col-sm-2 control-label">操作日志:</label>
-                    <div class='col-sm-10'>
-                        <div id="server_op_log" style="color:red;"></div>
+                    <label class="col-sm-2 control-label">返回消息:</label>
+                    <div class="col-sm-10">
+                        <span id="res"></span>
                     </div>
                 </div>
             </form>
@@ -103,7 +85,7 @@
             <div class="modal-body" id="info_content">
             </div>
             <div class="modal-footer" id="info_footer">
-                <button type='button' class='btn btn-default' onclick='savePassword()'>保存</button>
+                <button type='button' class='btn btn-default'>保存</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
@@ -124,6 +106,7 @@
 <script src="js/protobufjs/Long.js"></script>
 <script src="js/protobufjs/ByteBufferAB.js"></script>
 <script src="js/protobufjs/ProtoBuf.js"></script>
+<script src='js/local/proto/define.js'></script>
 <script src='js/local/tool.js'></script>
 </body>
 </html>
