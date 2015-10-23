@@ -21,7 +21,7 @@ program.version('0.0.1')
 program.parse(process.argv);
 
 var redisClient = require('./utils/redis.js');
-var protoHandler = require('./service/protoHandler.js');
+var ProtoHandler = require('./service/ProtoHandler.js');
 var mysqlManager = require('./service/dao/mysqlManager.js');
 var log = require('./utils/log.js');
 
@@ -41,9 +41,22 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 //app.use(logger('dev'));
-app.use(bodyParser.json());
+//add rawBody to req
+app.use(function(req, res, next) {
+    var data = '';
+    req.setEncoding('utf8');
+    req.on('data', function(chunk) {
+        data += chunk;
+    });
+    req.on('end', function() {
+        req.rawBody = data;
+        next();
+    });
+});
+
+//app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+//app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -93,7 +106,9 @@ if (!!redisCli) {
 	app.set("redisclient", redisCli);
 }
 
-protoHandler.init(app);
+var protoHandler = new ProtoHandler(app);
+protoHandler.init();
+app.set("proto_handler", protoHandler);
 
 var server = app.listen(listen_port, function() {
     var host = server.address().address;

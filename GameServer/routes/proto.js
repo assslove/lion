@@ -5,35 +5,39 @@
 
 var express = require('express');
 var ProtoBuf = require("protobufjs");
+var fs = require("fs");
+var path = require("path");
 
-var protoHandler = require('./../service/protoHandler.js');
 var DEFINE = require('./../proto/define.js');
 var user = require('./../service/model/user.js');
+var logger = require("./../utils/log.js");
+var bufferpack = require("bufferpack");
 
-var builder = ProtoBuf.loadProtoFile("./../proto/user.proto");
 var router = express.Router();
-
-function send_error_to_user(res, err) {
-    var ErrorCodeRet = builder.build("game.ErrorCodeRet");
-    var error = new ErrorCodeRet({
-        err_code : err
-    });
-
-    var ret = JSON.stringify([DEFINE.PROTO.ERROR_CODE, error.encode().toBuffer()]);
-    res.send(ret);
-}
 
 router.post('/', function(req, res, next) {
     //check proto pkg
-    var pkg = JSON.parse(req.body);
+    var buffer = new Buffer(req.rawBody);
+    if (buffer.length < 8) {
+        logger.error("proto len is too small [len=%d]", buffer.length);
+        res.send(500);
+    }
+    var len = buffer.readUInt32LE(0);
+    var protoid = buffer.readUInt16LE(4);
+    var seq = buffer.readUInt16LE(6);
 
-    if (pkg.length == undefined || pkg.length == 0) {
-        send_error_to_user(res, DEFINE.ERROR_CODE.PROTO_LEN_INVALID);
+    //check seq
+
+    var msg = buffer.slice(8);
+
+    if (msg.length + 8 !== len) {
+        logger.error("proto len is not right [total_len=%d,, real_len=%d, pkg_len=%d]", buffer.length, len, msg.length);
+        req.app.get("proto_handler").sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PROTO_LEN_INVALID[0]);
     }
 
-    protoHandler.handle(pkg, req, res, function(err) {
+    req.app.get("proto_handler").handle(protoid, msg, req, res, function(err) {
         if (err != null) {
-            send_error_to_user(res, err);
+            req.app.get("proto_handler").sendErrorToUser(res, protoid, err);
         }
     });
 });

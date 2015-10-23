@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name='description' content=''>
+    <meta name='author' content=''>
+    <link rel='icon' href='../../favicon.ico'>
+
+    <title>工具</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='css/jquery-ui.min.css' rel='stylesheet'>
+    <link href='js/datetimepicker/css/bootstrap-datetimepicker.min.css' rel='stylesheet'>
+    <link href='css/mystyle.css' rel='stylesheet'>
+
+    <!-- Custom styles for this template -->
+    <!--<link href='css/dashboard.css' rel='stylesheet'>-->
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]>
+    <!--<script src='../../assets/js/ie8-responsive-file-warning.js'></script>-->
+    <!--<![endif]&ndash;&gt;-->
+    <!--<script src='../../assets/js/ie-emulation-modes-warning.js'></script>-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src='http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js'></script>
+    <script src='http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js'></script>
+    <![endif]-->
+</head>
+<body>
+
+<div role="tabpanel">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist" id="server_tool_tab">
+        <li role="presentation"><a href="#proto_cmd" aria-controls="proto_cmd" role="tab" data-toggle="tab">协议测试</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="proto_cmd" style="width: 95%;">
+            <br/>
+            <form class='form-horizontal'>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">协议编号:</label>
+                    <div class="col-sm-2">
+                        <select class="form-control" id="protoids"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">输入消息:</label>
+                    <div class="col-sm-10">
+                        <textarea id="req" cols="100" rows="10"></textarea>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <div class="col-sm-6"></div>
+                    <div class="col-sm-1">
+                        <input type='button' class='btn btn-default' value="发送" onclick="sendMsg()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">返回消息:</label>
+                    <div class="col-sm-10">
+                        <textarea id="res" cols="100" rows="10"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="info_title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="info_title">信息标题</h4>
+            </div>
+            <div class="modal-body" id="info_content">
+            </div>
+            <div class="modal-footer" id="info_footer">
+                <button type='button' class='btn btn-default'>保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src='http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js'></script>
+<script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+<script src='js/jquery.cookies.2.2.0.min.js'></script>
+<script src='js/jquery-ui.min.js'></script>
+<script type="text/javascript" src="js/datetimepicker/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="js/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+<script src='js/jquery.isloading.min.js'></script>
+<script src='js/local/utils.js'></script>
+<script src="js/protobufjs/Long.js"></script>
+<script src="js/protobufjs/ByteBufferAB.js"></script>
+<script src="js/protobufjs/ProtoBuf.js"></script>
+<script src='js/local/proto/define.js'></script>
+<script src='js/local/tool.js'></script>
+</body>
+</html>
+

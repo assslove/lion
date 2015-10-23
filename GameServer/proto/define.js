@@ -6,7 +6,7 @@ var proto = {
     USER_ERROR : 4,     //错误返回
     USER_SYNC_INFO : 5, //同步玩家数据
     USER_SYNC_ITEM : 6, //同步物品
-    USER_SYNC_COPY : 7, //同步关卡
+    USER_SYNC_COPY : 7 //同步关卡
 };
 
 //错误码 编号与描述，方便客户端显示
@@ -16,12 +16,18 @@ var error_code =  {
     PROTO_LEN_INVALID:  [3,  "协议长度不正确"],
     PROTO_DATA_INVALID:  [4,  "协议数据不正确"],
     USER_SESSION_EXPIRE:  [5,  "用户session过期"],
-
+    MSG_NOT_FOUND:  [6,  "返回消息体没有找到"],
 };
 
 var ret = {
     PROTO : proto,
     ERROR_CODE : error_code
+};
+
+var head = {
+    len : '长度',
+    protoid : '协议id',
+    seq : '序列号或者返回码'
 };
 
 module.exports = ret;
