@@ -21,7 +21,7 @@ program.version('0.0.1')
 program.parse(process.argv);
 
 var redisClient = require('./utils/redis.js');
-var ProtoHandler = require('./service/ProtoHandler.js');
+var ProtoHandler = require('./service/protoHandler.js');
 var mysqlManager = require('./service/dao/mysqlManager.js');
 var log = require('./utils/log.js');
 
