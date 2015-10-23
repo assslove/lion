@@ -42,7 +42,8 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
 
     var jsonObj = {
         uid : pkg.uid,
-        qq : parseInt(pkg.bind_id)
+        qq : 0,
+        wechat : pkg.bind_id
     };
     var msg = new Msg(jsonObj);
     handle.sendMsgToUser(res, protoid, msg);

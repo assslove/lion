@@ -81,7 +81,7 @@ ProtoHandler.prototype.sendMsgToUser = function(res, protoid, msg) {
     var len = buffer.length + 8;
     var head = bufferpack.pack("<IHH", [len, protoid, 0]);
     var buffers = Buffer.concat([head, buffer], len);
-    res.send(buffers);
+    res.send(buffers.toString('UTF-8'));
 }
 
 ProtoHandler.prototype.getResponseMsg = function(proto_id) {

@@ -116,7 +116,7 @@ function sendMsg() {
         data : totalBuffer,
         contentType : false,
         processData : false,
-        dataType: 'binary',
+        dataType: 'text',
         success: function (data) {
             handleResponse(data);
         },
@@ -127,7 +127,7 @@ function sendMsg() {
 }
 
 function handleResponse(data) {
-    var ret = strToArrayBuffer(data);
+    var ret = dcodeIO.ByteBuffer.fromUTF8(data).buffer;
     if (ret.length < 8) {
         alert("server error len");
     }
@@ -156,5 +156,5 @@ function handleResponse(data) {
 
     obj["msg"] = JSON.parse(msg.encodeJSON());
 
-    $("#res").html(JSON.stringify(obj, null, '\n'));
+    $("#res").val(JSON.stringify(obj, null, '\t'));
 }
