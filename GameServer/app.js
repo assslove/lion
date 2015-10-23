@@ -107,6 +107,7 @@ if (!!redisCli) {
 }
 
 var protoHandler = new ProtoHandler(app);
+protoHandler.init();
 app.set("proto_handler", protoHandler);
 
 var server = app.listen(listen_port, function() {

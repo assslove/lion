@@ -25,12 +25,12 @@ function ProtoHandler(app) {
 
 /* @brief init proto
  */
-ProtoHandler.init = function(app) {
+ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_LOGIN] =  [userController.userLogin, "UserLoginReq", "UserLoginRet"];
     this.protoHandlers[DEFINE.PROTO.USER_LOGOUT] = [userController.userLogout, "UserLogoutReq"];
-    this.protoHandlers[DEFINE.PROTO.USER_CREATE] = [userController.userCreate, "UserCreateReq"];
+    this.protoHandlers[DEFINE.PROTO.USER_CREATE] = [userController.userCreate, "UserCreateReq", "UserCreateRet"];
 
-    app.get('logger').info("init proto handlers success");
+    logger.info("init proto handlers success");
 }
 
 
@@ -38,7 +38,7 @@ ProtoHandler.init = function(app) {
  * @param res 返回
  * @cb 回调函数
  */
-ProtoHandler.handle = function(protoid, msg, req, res, cb) {
+ProtoHandler.prototype.handle = function(protoid, msg, req, res, cb) {
     if (this.protoHandlers[protoid] == null || this.protoHandlers[protoid] == undefined) {
         cb(DEFINE.ERROR_CODE.PROTO_NOT_FOUND[0]);
         return ;
@@ -59,31 +59,36 @@ ProtoHandler.handle = function(protoid, msg, req, res, cb) {
     }
 }
 
-ProtoHandler.sendErrorToUser = function(res, proto_id, err) {
+ProtoHandler.prototype.sendErrorToUser = function(res, proto_id, err) {
     var head = bufferpack.pack("<IHH", [8, proto_id, err]);
     res.send(head);
 }
 
-ProtoHandler.getProtoBuilder = function() {
+ProtoHandler.prototype.getProtoBuilder = function() {
     return this.builder;
 }
 
-ProtoHandler.getRootMsg = function() {
+ProtoHandler.prototype.getRootMsg = function() {
     return this.rootMsg;
 }
 
-ProtoHandler.sendMsgToUser = function(res, proto_id, msg) {
-    var len = msg + 8;
-    var head = bufferpack.pack("<IHH", [len, proto_id, 0]);
-    var buffers = Buffer.concat([head, msg], len);
+ProtoHandler.prototype.sendMsgToUser = function(res, protoid, msg) {
+    if (msg == null) {
+        this.sendErrorToUser(res, protoid, 0);
+        return ;
+    }
+    var buffer = msg.encode().toBuffer();
+    var len = buffer.length + 8;
+    var head = bufferpack.pack("<IHH", [len, protoid, 0]);
+    var buffers = Buffer.concat([head, buffer], len);
     res.send(buffers);
 }
 
-ProtoHandler.getResponseStr = function(proto_id) {
+ProtoHandler.prototype.getResponseMsg = function(proto_id) {
     var str = this.protoHandlers[proto_id][2];
     if (str == null || str == undefined) {
         return null;
     }
 
-    return this.rootMsg(str);
+    return this.rootMsg[str];
 }

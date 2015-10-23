@@ -10,24 +10,15 @@ var logger = require("./../../utils/log.js");
 var userController = module.exports;
 
 userController.userLogin = function(protoid, pkg, req, res, cb) {
-    var handle = req.app.get("proto_handler");
 
     req.session.uid = pkg.uid;
     req.session.cookie.expires = false;
     req.session.save();
 
-    var Msg = handle.getResponseMsg(protoid);
-    if (Msg == null) {
-        handle.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.MSG_NOT_FOUND);
-        return ;
-    }
 
-    var jsonObj = null;
-    var msg = new Msg({});
 
     logger.info("%d user login", pkg.uid);
 
-    handle.sendMsgToUser(res, protoid, msg);
 }
 
 userController.userLogout = function(protoid, pkg, req, res, cb) {
@@ -41,5 +32,18 @@ userController.userLogout = function(protoid, pkg, req, res, cb) {
 }
 
 userController.userCreate = function(protoid, pkg, req, res, cb) {
+    var handle = req.app.get("proto_handler");
     logger.info("%d user create", pkg.uid);
+    var Msg = handle.getResponseMsg(protoid);
+    if (Msg == null) {
+        handle.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.MSG_NOT_FOUND);
+        return ;
+    }
+
+    var jsonObj = {
+        uid : pkg.uid,
+        qq : parseInt(pkg.bind_id)
+    };
+    var msg = new Msg(jsonObj);
+    handle.sendMsgToUser(res, protoid, msg);
 }

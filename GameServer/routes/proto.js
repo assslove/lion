@@ -32,12 +32,12 @@ router.post('/', function(req, res, next) {
 
     if (msg.length + 8 !== len) {
         logger.error("proto len is not right [total_len=%d,, real_len=%d, pkg_len=%d]", buffer.length, len, msg.length);
-        send_error_to_user(res, DEFINE.ERROR_CODE.PROTO_LEN_INVALID[0]);
+        req.app.get("proto_handler").sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PROTO_LEN_INVALID[0]);
     }
 
-    this.app.get("proto_handler").handle(protoid, msg, req, res, function(err) {
+    req.app.get("proto_handler").handle(protoid, msg, req, res, function(err) {
         if (err != null) {
-            this.app.get("proto_handler").sendErrorToUser(res, protoid, err);
+            req.app.get("proto_handler").sendErrorToUser(res, protoid, err);
         }
     });
 });

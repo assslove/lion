@@ -75,22 +75,20 @@ function initProtoHandlers()
 {
     protoHandlers[DEFINE.PROTO.USER_LOGIN] =  ["UserLoginReq", "UserLoginRet"];
     protoHandlers[DEFINE.PROTO.USER_LOGOUT] = ["UserLogoutReq"];
-    protoHandlers[DEFINE.PROTO.USER_CREATE] = ["UserCreateReq"];
+    protoHandlers[DEFINE.PROTO.USER_CREATE] = ["UserCreateReq", "UserCreateRet"];
 }
 
 
 function sendMsg() {
-
-
     var protoid = $("#protoids").val();
-
     var jsonStr = $("#req").val();
 
     var msgLen = 0;
     var buffer = null;
     var totalBuffer = null;
+    var msg = null;
 
-    if (protoHandlers[protoid][0] != null || protoHandlers[protoid][1] != undefined) {
+    if (protoHandlers[protoid][0] == null || protoHandlers[protoid][0] == undefined) {
         msgLen = 0;
     } else {
         var jsonObj = JSON.parse(jsonStr);
@@ -118,7 +116,7 @@ function sendMsg() {
         data : totalBuffer,
         contentType : false,
         processData : false,
-        dataType: 'text',
+        dataType: 'binary',
         success: function (data) {
             handleResponse(data);
         },
@@ -129,7 +127,6 @@ function sendMsg() {
 }
 
 function handleResponse(data) {
-
     var ret = strToArrayBuffer(data);
     if (ret.length < 8) {
         alert("server error len");
@@ -141,17 +138,23 @@ function handleResponse(data) {
     var protoid = tmp[0];
     var seq = tmp[1]
 
+     var obj = {
+        len : len,
+        protoid : protoid,
+        seq : seq
+    }
+
+    if (seq != 0 || protoHandlers[protoid] == undefined) {
+        $("#res").html(obj.toString());
+        return ;
+    }
+
     var buffer = ret.slice(8);
 
     var Msg = Game[protoHandlers[protoid][1]];
     var msg = Msg.decode(buffer);
 
-    var obj = {
-        len : len,
-        protoid : protoid,
-        seq : seq,
-        msg : msg.toJSON()
-    }
+    obj["msg"] = JSON.parse(msg.encodeJSON());
 
-    $("#res").html(obj.toString());
+    $("#res").html(JSON.stringify(obj, null, '\n'));
 }

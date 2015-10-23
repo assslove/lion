@@ -6,7 +6,7 @@ var proto = {
     USER_ERROR : 4,     //错误返回
     USER_SYNC_INFO : 5, //同步玩家数据
     USER_SYNC_ITEM : 6, //同步物品
-    USER_SYNC_COPY : 7, //同步关卡
+    USER_SYNC_COPY : 7 //同步关卡
 };
 
 //错误码 编号与描述，方便客户端显示
