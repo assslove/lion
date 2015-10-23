@@ -30,5 +30,5 @@ var head = {
     seq : '序列号或者返回码'
 };
 
-module.exports = DEFINE;
+//module.exports = DEFINE;
 
