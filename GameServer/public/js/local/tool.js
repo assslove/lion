@@ -1,8 +1,3 @@
-var protoHandlers = {};
-
-ProtoBuf = dcodeIO.ProtoBuf;
-var builder = ProtoBuf.loadProtoFile("js/local/proto/user.proto");
-var Game = builder.build("game");
 
 $(document).ready(function() {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -19,55 +14,25 @@ $(document).ready(function() {
         $("#protoids").append("<option value='" + proto[i] + "'>" + i + "</option>");
     }
 
-    initProtoHandlers();
 });
-
-function initProtoHandlers()
-{
-    protoHandlers[DEFINE.PROTO.USER_LOGIN] =  ["UserLoginReq", "UserLoginRet"];
-    protoHandlers[DEFINE.PROTO.USER_LOGOUT] = ["UserLogoutReq"];
-    protoHandlers[DEFINE.PROTO.USER_CREATE] = ["UserCreateReq", "UserCreateRet"];
-}
-
 
 function sendMsg() {
     $("#res").val("");
     var protoid = $("#protoids").val();
     var jsonStr = $("#req").val();
 
-    var msgLen = 0;
-    var buffer = null;
-    var totalBuffer = null;
-    var msg = null;
+    var jsonObj = JSON.parse(jsonStr);
 
-    if (protoHandlers[protoid][0] == null || protoHandlers[protoid][0] == undefined) {
-        msgLen = 0;
-    } else {
-        var jsonObj = JSON.parse(jsonStr);
-        var Msg = Game[protoHandlers[protoid][0]];
-        msg = new Msg(jsonObj);
-        buffer = msg.encode().toArrayBuffer();
-        msgLen = buffer.byteLength;
-    }
-
-    var head = new Uint32Array(2);
-    head[0] = msgLen + 8; //长度
-    var tmp = new Uint16Array(head.buffer, 4, 2);
-    tmp[0] = protoid;
-    tmp[1] = 0;
-
-    if (msgLen == 0) {
-        totalBuffer = head.buffer;
-    } else {
-        totalBuffer = arrayBufferConcat(head.buffer, buffer);
-    }
+    var obj = {
+        p: protoid, //协议号
+        s: 0, //序列号
+        m: jsonObj //json对象
+    };
 
     $.ajax({
         url: '/proto',
         type: 'post',
-        data : totalBuffer,
-        contentType : false,
-        processData : false,
+        data : {b : JSON.stringify(obj)}, //消息体
         dataType: 'text',
         success: function (data) {
             handleResponse(data);
@@ -78,35 +43,26 @@ function sendMsg() {
     });
 }
 
+function getErrorStr(code)
+{
+    for (var i in DEFINE.ERROR_CODE) {
+        if (DEFINE.ERROR_CODE[i][0] == code) {
+           return DEFINE.ERROR_CODE[i][1];
+        }
+    }
+
+    return "错误未定义";
+}
+
 function handleResponse(data) {
-    var ret = dcodeIO.ByteBuffer.fromUTF8(data).buffer;
-    if (ret.length < 8) {
-        alert("server error len");
-    }
-
-    var head = new Uint32Array(ret, 0, 2);
-    var len = head[0];
-    var tmp = new Uint16Array(ret, 4, 2);
-    var protoid = tmp[0];
-    var seq = tmp[1]
-
-     var obj = {
-        len : len,
-        protoid : protoid,
-        seq : seq
-    }
-
-    if (seq != 0 || protoHandlers[protoid] == undefined) {
-        $("#res").html(obj.toString());
+    var rdata = JSON.parse(data);
+    if (rdata.r != 0) { //返回码
+        rdata.r = getErrorStr[rdata.r];
+        $("#res").val(JSON.stringify(rdata), null, '\t');
         return ;
     }
 
-    var buffer = ret.slice(8);
-
-    var Msg = Game[protoHandlers[protoid][1]];
-    var msg = Msg.decode(buffer);
-
-    obj["msg"] = JSON.parse(msg.encodeJSON());
-
-    $("#res").val(JSON.stringify(obj, null, '\t'));
+    //rdata.p 为协议id
+    //rdata.m 为包体
+    $("#res").val(JSON.stringify(rdata), null, '\t');
 }
