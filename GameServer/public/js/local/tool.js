@@ -16,6 +16,9 @@ $(document).ready(function() {
 
 });
 
+
+/* @brief 发送消息 可以封装
+ */
 function sendMsg() {
     $("#res").val("");
     var protoid = $("#protoids").val();
@@ -53,6 +56,7 @@ function getErrorStr(code)
 
     return "错误未定义";
 }
+
 
 function handleResponse(data) {
     var rdata = JSON.parse(data);
