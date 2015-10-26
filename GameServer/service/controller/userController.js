@@ -34,17 +34,12 @@ userController.userLogout = function(protoid, pkg, req, res, cb) {
 userController.userCreate = function(protoid, pkg, req, res, cb) {
     var handle = req.app.get("proto_handler");
     logger.info("%d user create", pkg.uid);
-    var Msg = handle.getResponseMsg(protoid);
-    if (Msg == null) {
-        handle.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.MSG_NOT_FOUND);
-        return ;
-    }
 
     var jsonObj = {
         uid : pkg.uid,
         qq : 0,
         wechat : pkg.bind_id
     };
-    var msg = new Msg(jsonObj);
-    handle.sendMsgToUser(res, protoid, msg);
+
+    handle.sendMsgToUser(res, protoid, jsonObj);
 }

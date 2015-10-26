@@ -25,9 +25,8 @@ var DEFINE = {
 };
 
 var head = {
-    len : '长度',
-    protoid : '协议id',
-    seq : '序列号或者返回码'
+    p: '协议id',
+    s: '序列号或者返回码'
 };
 
 //module.exports = DEFINE;

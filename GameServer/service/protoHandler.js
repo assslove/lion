@@ -3,7 +3,6 @@
  * Created by houbin on 15-10-18.
  */
 var path = require("path");
-var ProtoBuf = require("protobufjs");
 var DEFINE = require('./../proto/define.js');
 var logger = require('./../utils/log.js');
 var bufferpack = require('bufferpack');
@@ -16,19 +15,16 @@ module.exports = function(app) {
 
 function ProtoHandler(app) {
     this.app = app;
-    this.protoFile = path.join(__dirname, "../proto/user.proto");
     this.protoHandlers = {};
-    this.builder = ProtoBuf.loadProtoFile(this.protoFile);
-    this.rootMsg = this.builder.build("game");
 }
 
 
 /* @brief init proto
  */
 ProtoHandler.prototype.init = function() {
-    this.protoHandlers[DEFINE.PROTO.USER_LOGIN] =  [userController.userLogin, "UserLoginReq", "UserLoginRet"];
-    this.protoHandlers[DEFINE.PROTO.USER_LOGOUT] = [userController.userLogout, "UserLogoutReq"];
-    this.protoHandlers[DEFINE.PROTO.USER_CREATE] = [userController.userCreate, "UserCreateReq", "UserCreateRet"];
+    this.protoHandlers[DEFINE.PROTO.USER_LOGIN] =  [userController.userLogin];
+    this.protoHandlers[DEFINE.PROTO.USER_LOGOUT] = [userController.userLogout];
+    this.protoHandlers[DEFINE.PROTO.USER_CREATE] = [userController.userCreate];
 
     logger.info("init proto handlers success");
 }
@@ -38,15 +34,12 @@ ProtoHandler.prototype.init = function() {
  * @param res 返回
  * @cb 回调函数
  */
-ProtoHandler.prototype.handle = function(protoid, msg, req, res, cb) {
+ProtoHandler.prototype.handle = function(protoid, pkg, req, res, cb) {
     if (this.protoHandlers[protoid] == null || this.protoHandlers[protoid] == undefined) {
         cb(DEFINE.ERROR_CODE.PROTO_NOT_FOUND[0]);
         return ;
     }
     try {
-        var Msg = this.rootMsg[this.protoHandlers[protoid][1]];
-        var pkg = Msg.decode(msg);
-
 //        if (req.ses("sion == null || req.session.uid != pkg.uid) { //检测session是否过期
 //            cb(DEFINE.ERROR_CODE.USER_SESSION_EXPIRE);
 //            return ;
@@ -60,16 +53,8 @@ ProtoHandler.prototype.handle = function(protoid, msg, req, res, cb) {
 }
 
 ProtoHandler.prototype.sendErrorToUser = function(res, proto_id, err) {
-    var head = bufferpack.pack("<IHH", [8, proto_id, err]);
-    res.send(head);
-}
-
-ProtoHandler.prototype.getProtoBuilder = function() {
-    return this.builder;
-}
-
-ProtoHandler.prototype.getRootMsg = function() {
-    return this.rootMsg;
+    var obj = {p : proto_id, r : err};
+    res.send(JSON.stringify(obj));
 }
 
 ProtoHandler.prototype.sendMsgToUser = function(res, protoid, msg) {
@@ -77,18 +62,8 @@ ProtoHandler.prototype.sendMsgToUser = function(res, protoid, msg) {
         this.sendErrorToUser(res, protoid, 0);
         return ;
     }
-    var buffer = msg.encode().toBuffer();
-    var len = buffer.length + 8;
-    var head = bufferpack.pack("<IHH", [len, protoid, 0]);
-    var buffers = Buffer.concat([head, buffer], len);
-    res.send(buffers.toString('UTF-8'));
+
+    var obj = {p : protoid, r : 0, m : msg};
+    res.send(JSON.stringify(obj));
 }
 
-ProtoHandler.prototype.getResponseMsg = function(proto_id) {
-    var str = this.protoHandlers[proto_id][2];
-    if (str == null || str == undefined) {
-        return null;
-    }
-
-    return this.rootMsg[str];
-}

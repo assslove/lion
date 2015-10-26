@@ -42,21 +42,21 @@ app.set('view engine', 'jade');
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 //app.use(logger('dev'));
 //add rawBody to req
-app.use(function(req, res, next) {
-    var data = '';
-    req.setEncoding('utf8');
-    req.on('data', function(chunk) {
-        data += chunk;
-    });
-    req.on('end', function() {
-        req.rawBody = data;
-        next();
-    });
-});
+//app.use(function(req, res, next) {
+//    var data = '';
+//    req.setEncoding('utf8');
+//    req.on('data', function(chunk) {
+//        data += chunk;
+//    });
+//    req.on('end', function() {
+//        req.rawBody = data;
+//        next();
+//    });
+//});
 
-//app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(cookieParser());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
