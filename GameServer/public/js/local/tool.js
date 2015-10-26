@@ -68,5 +68,5 @@ function handleResponse(data) {
 
     //rdata.p 为协议id
     //rdata.m 为包体
-    $("#res").val(JSON.stringify(rdata, null, '\t');
+    $("#res").val(JSON.stringify(rdata, null, '\t'));
 }
