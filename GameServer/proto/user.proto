@@ -2,16 +2,17 @@
 
 package game;
 
+import "usertype.proto"
+
 message UserCreateReq {
-    required uint32 uid  = 1;    // 用户id 客户端临时id 小于1000000 服务器用9位数
-	required uint32 type = 2;	 // 绑定用户类型 1-qq 2-微信 3-...
+    required uint32 uid  = 1;     // 用户id 客户端临时id 小于1000000 服务器用9位数
+	required uint32 type = 2;	  // 绑定用户类型 1-qq 2-微信 3-...
 	required string bind_id = 3;  // 绑定账号
+	optional uint32 name = 4;     // 用户姓名
 }
 
 message UserCreateRet {
-	required uint32 uid = 1;    // 用户id
-	optional uint32 qq  = 2;	// 
-	optional string wechat = 3;
+
 }
 
 message UserLoginReq {	
@@ -21,14 +22,60 @@ message UserLoginReq {
 message UserLoginRet {
 }
 
-message UserErrorRet {
-	required uint32 err_code = 1;	//见error_code定义
-}
-
-message UserLogoutReq {	
+message UserLogoutReq {
 	required uint32 uid = 1;    // 用户id
 }
 
 message UserLogoutRet {
 }
 
+message UserSyncInfoReq {
+    required uint32 head_icon = 5; //头像id
+    required uint32 max_copy = 6; //通关数
+    required uint32 cash = 7; //钻石
+    required uint32 gold = 8; //金币
+    required uint32 hp = 9;  //体力
+}
+
+message UserSyncInfoRet {
+    required UserBase base  = 10; // 玩家基本信息
+}
+
+message UserSyncItemReq {
+    required uint32 uid = 1;
+    repeated ItemType item = 2;  //前端缓存消耗增加的物品
+}
+
+message UserSyncItemRet {
+    repeated ItemType item = 2;  //所有非限时道具
+}
+
+message UserSyncTimeItemReq {
+    required uint32 uid = 1;
+    repeated TimeItemType item = 2;  //前端缓存消耗增加的限时道具
+}
+
+message UserSyncTimeItemRet {
+    repeated ItemItemType item = 2;  //所有限时道具列表
+}
+
+message UserSyncCopyReq {
+    required uint32 uid = 1;
+    repeated CopyType copy = 2; //缓存通关的关卡
+}
+
+message UserSyncCopyRet {
+    required uint32 uid = 1;
+    repeated CopyType copy = 2; //所有关卡
+}
+
+message UserGetInfoReq {
+    required uint32 uid = 1;
+}
+
+message UserGetInfoRet {
+    required UserBase user = 1; //基本信息
+    repeated ItemType item = 2; //非限时道具
+    repeated TimeItemType time_time = 3; //限时道具
+    repeated CopyType copy = 4; //关卡数据
+}
