@@ -31,7 +31,7 @@ create table t_item (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
 	`itemid` int unsigned NOT NULL COMMENT '道具id',
 	`count` int unsigned NOT NULL COMMENT '数量',
-	primary key(`uid`, `item_id`)
+	primary key(`uid`, `itemid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
 #初始化用户id生成表
 drop table if exists t_uid;
