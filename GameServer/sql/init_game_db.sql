@@ -4,7 +4,7 @@ create table t_user (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
 	`name` varchar(128) NOT NULL COMMENT '昵称',
 	`qq` int unsigned NOT NULL COMMENT 'qq号',
-	`wchat` varchar(32) NOT NULL COMMENT 'wchat号',
+	`wechat` varchar(32) NOT NULL COMMENT '微信号',
 	`head_icon` tinyint unsigned NOT NULL COMMENT '头像',
 	`max_copy` int unsigned NOT NULL COMMENT '通关数',
 	`cash` int unsigned NOT NULL COMMENT '钻石',
