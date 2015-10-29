@@ -6,7 +6,7 @@ var mysqlManager = require('./mysqlManager.js');
 
 var userDao = module.exports;
 
-userDao.getUser = function(req, uid, cb) {
+userDao.getUser = function(app, uid, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
     var sql = "select * from t_user where uid = ?";
     mysqlCli.query(sql, [uid], function(err, res) {
@@ -19,7 +19,7 @@ userDao.getUser = function(req, uid, cb) {
     });
 }
 
-userDao.updateUser = function(req, user, cb) {
+userDao.updateUser = function(app, user, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
     var uid = user.uid;
     delete user.uid;
@@ -40,7 +40,7 @@ userDao.updateUser = function(req, user, cb) {
     });
 }
 
-userDao.addUser = function(req, user, cb) {
+userDao.addUser = function(app, user, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
 
     var sql = "", key = "", value = "";

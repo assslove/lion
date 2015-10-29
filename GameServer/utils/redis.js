@@ -6,6 +6,7 @@
 var redisModule = require("redis");
 var session = require("express-session");
 var utils = require('../utils/utils.js');
+var logger = require('../utils/log.js');
 
 var redisClient = module.exports;
 
