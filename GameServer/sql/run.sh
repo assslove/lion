@@ -16,6 +16,6 @@ SERVER_IP='127.0.0.1'	# 游戏服务器IP
 create_db_sql="create database if not exists ${DB_NAME}"
 mysql -h${DB_IP} -P${DB_PORT} -u${DB_USER} -p${DB_PSWD} -e "$create_db_sql"
 mysql -h${DB_IP} -P${DB_PORT} -u${DB_USER} -p${DB_PSWD} ${DB_NAME} < init_game_db.sql
+mysql -h${DB_IP} -P${DB_PORT} -u${DB_USER} -p${DB_PSWD} ${DB_NAME} < init_global_db.sql
 
-echo $sql
-echo "初始化数据库成功"
+echo "init sql success"

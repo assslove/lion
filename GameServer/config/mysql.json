@@ -1,7 +1,7 @@
 {
 	"development" : [
-        {"range" : [0, 50], "host" : "10.96.29.36", "port" : 3306, "user" : "houbin", "password" : "123456", "db" : "bleach_global"},
-        {"range" : [51, 99], "host" : "10.96.29.36", "port" : 3306, "user" : "houbin", "password" : "123456", "db" : "bleach_global"}
+		{"range" : [0, 50], "host" : "10.96.29.36", "port" : 3306, "user" : "houbin", "password" : "123456", "db" : "bleach_global"},
+		{"range" : [51, 99], "host" : "10.96.29.36", "port" : 3306, "user" : "houbin", "password" : "123456", "db" : "bleach_global"}
 	],
 	"production" : [
 		{"range" : [0, 50], "host" : "182.254.133.117", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db"},
