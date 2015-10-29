@@ -10,7 +10,10 @@ var code = {
         ITEM : "h_item",
         LIMIT_ITEM : "h_limit",
         USERID : "s_userid"
-    }
+    },
+
+    MIN_UID : 100000000,
+
 }
 
 module.exports = code;
