@@ -18,4 +18,4 @@ mysql -h${DB_IP} -P${DB_PORT} -u${DB_USER} -p${DB_PSWD} -e "$create_db_sql"
 mysql -h${DB_IP} -P${DB_PORT} -u${DB_USER} -p${DB_PSWD} ${DB_NAME} < init_game_db.sql
 mysql -h${DB_IP} -P${DB_PORT} -u${DB_USER} -p${DB_PSWD} ${DB_NAME} < init_global_db.sql
 
-echo $sql
+echo "init sql success"
