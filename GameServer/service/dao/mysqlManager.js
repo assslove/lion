@@ -13,7 +13,7 @@ var mysqlManager = module.exports;
 
 mysqlManager.addMysqlCli = function(id, obj) {
     for (var i in mysqlList) {
-        if (i[0].start == id[0] && i[1] == id[1]) {
+        if (i[0].start === id[0] && i[1] === id[1]) {
             mysqlManager.delMysqlCli(id);
         }
     }
@@ -23,7 +23,7 @@ mysqlManager.addMysqlCli = function(id, obj) {
 
 mysqlManager.delMysqlCli = function(id) {
     for (var i in mysqlList) {
-        if (i[0].start == id[0] && i[1] == id[1]) {
+        if (i[0].start === id[0] && i[1] === id[1]) {
             if (mysqlList[i] !== null) {
                 mysqlList[i].destroy();
                 mysqlList.splice(i, 1);
@@ -41,6 +41,8 @@ mysqlManager.getMysqlCli = function(userid) {
         }
     }
 
+    console.log(util.format("cannot find mysql userid=%d", userid));
+
     return null;
 }
 
@@ -48,7 +50,7 @@ mysqlManager.init = function(app) {
     var conf = app.get('mysql');
     for (var i in conf) {
         var mysqlCli = new MysqlCli(app, conf[i]);
-        if (mysqlCli == null) {
+        if (mysqlCli === null) {
             app.get('logger').error(util.format("mysql init error [%d,%d]", conf[i].range[0], conf[i].range[1]));
             return false;
         }
@@ -56,4 +58,16 @@ mysqlManager.init = function(app) {
     }
 
     app.get('logger').info("init mysql success");
+}
+
+mysqlManager.getGlobalMysql = function() {
+    for (var i in mysqlList) {
+        if (i[0] === 100) {
+            return mysqlList[i];
+        }
+    }
+
+    console.log("cannot find global mysql");
+
+    return null;
 }
