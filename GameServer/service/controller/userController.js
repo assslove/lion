@@ -10,15 +10,11 @@ var logger = require("./../../utils/log.js");
 var userController = module.exports;
 
 userController.userLogin = function(protoid, pkg, req, res, cb) {
-
     req.session.uid = pkg.uid;
     req.session.cookie.expires = false;
     req.session.save();
 
-
-
     logger.info("%d user login", pkg.uid);
-
 }
 
 userController.userLogout = function(protoid, pkg, req, res, cb) {
@@ -43,3 +39,4 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
 
     handle.sendMsgToUser(res, protoid, jsonObj);
 }
+
