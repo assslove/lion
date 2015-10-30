@@ -27,6 +27,7 @@ var log = require('./utils/log.js');
 
 var routes = require('./routes/index');
 var proto = require('./routes/proto.js');
+var gm = require('./routes/gm.js');
 
 var app = express();
 
@@ -71,28 +72,29 @@ if (app.get('env') == "development") {
     app.set('server', configJson('config/server.json', app.get('env')).production);
 }
 
-app.use(session({
-    store : new RedisStore({
-        host : app.get('redis').host,
-        port : app.get('redis').port,
-        ttl  : 3600,
-        db : 3
-    }),
-    secret : 'keyboard cat',
-    resave : false,
-    saveUninitialized : false,
-    cookie: {
-        //secure: true,
-        path : "/",
-        httpOnly : true,
-        signed : false,
-        //maxAge : 3600 * 24 * 7,
-        expires : false
-    }
-}));
+//app.use(session({
+//    store : new RedisStore({
+//        host : app.get('redis').host,
+//        port : app.get('redis').port,
+//        ttl  : 3600,
+//        db : 3
+//    }),
+//    secret : 'keyboard cat',
+//    resave : false,
+//    saveUninitialized : false,
+//    cookie: {
+//        //secure: true,
+//        path : "/",
+//        httpOnly : true,
+//        signed : false,
+//        //maxAge : 3600 * 24 * 7,
+//        expires : false
+//    }
+//}));
 
 app.use('/', routes);
 app.use('/proto', proto);
+app.use('/gm', gm);
 
 var listen_port = program.port;
 

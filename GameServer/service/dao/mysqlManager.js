@@ -12,22 +12,24 @@ var mysqlList = {};
 var mysqlManager = module.exports;
 
 mysqlManager.addMysqlCli = function(id, obj) {
+    var ids = id.join(',');
     for (var i in mysqlList) {
-        if (i[0].start === id[0] && i[1] === id[1]) {
+        if (i === ids) {
             mysqlManager.delMysqlCli(id);
         }
     }
-    mysqlList[id] = obj;
-    logger.info("add game mysql connnect success [%d,%d]", id[0], id[1]);
+    mysqlList[ids] = obj;
+    logger.info("add game mysql connnect success [%s]", i);
 }
 
 mysqlManager.delMysqlCli = function(id) {
+    var ids = id.join(',');
     for (var i in mysqlList) {
-        if (i[0].start === id[0] && i[1] === id[1]) {
+        if (i === ids) {
             if (mysqlList[i] !== null) {
                 mysqlList[i].destroy();
-                mysqlList.splice(i, 1);
-                console.info(util.format("del game mysql connnect success [%d,%d]", id[0], id[1]));
+                delete mysqlList[i];
+                console.info(util.format("del game mysql connnect success [%s]", i));
             }
         }
     }
@@ -36,7 +38,8 @@ mysqlManager.delMysqlCli = function(id) {
 mysqlManager.getMysqlCli = function(userid) {
     var mod = userid % 100;
     for (var i in mysqlList) {
-        if (mod >= i[0] && mod <= i[1]) {
+        var range = i.split(',');
+        if (mod >= range[0] && mod <= range[1]) {
             return mysqlList[i];
         }
     }
@@ -61,13 +64,5 @@ mysqlManager.init = function(app) {
 }
 
 mysqlManager.getGlobalMysql = function() {
-    for (var i in mysqlList) {
-        if (i[0] === 100) {
-            return mysqlList[i];
-        }
-    }
-
-    console.log("cannot find global mysql");
-
-    return null;
+    return mysqlList["100,199"];
 }

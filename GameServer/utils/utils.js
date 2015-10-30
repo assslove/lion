@@ -119,3 +119,7 @@ utils.toArray = function(obj) {
     }
     return arr;
 }
+
+utils.getRetMsg = function(code, msg) {
+     return { c : code, m : msg};
+}

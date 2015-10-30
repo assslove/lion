@@ -22,7 +22,7 @@ redisClient.init = function(app) {
             redis.debug = true;
         }
         redis.select(0, function(err, res) {
-            logger.info("redisclient create ", res);
+            logger.info("redisclient create %s", res);
         });
 
 		redis.on("error", function (err) {
@@ -34,7 +34,7 @@ redisClient.init = function(app) {
             store : new RedisStore({
                 host : redisConfig.host,
                 port : redisConfig.port,
-                db : 0
+                db : 1
             }),
             secret : "keyboard cat",
             resave : false,

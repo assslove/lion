@@ -39,7 +39,7 @@ uidDao.getMaxUid = function(app, cb)
 
 uidDao.insertOrUpdateUidFlag = function(app, uid, flag, cb) {
     var mysqlCli = mysqlManager.getGlobalMysql();
-    var sql = "insert into t_uid(?, ?) on duplicate key update flag = ?";
+    var sql = "insert into t_uid values(?, ?) on duplicate key update flag = ?";
     mysqlCli.query(sql, [uid, flag, flag], function(err, res) {
         if (err !== null) {
             logger.error('update uid flag  error: %s', err.message);
