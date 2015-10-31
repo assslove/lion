@@ -1,0 +1,37 @@
+/**
+ * Created by bin.hou on 2015/10/28.
+ */
+package game;
+
+//基本用户信息
+message UserBase {
+    required uint32 uid = 1;  //用户id
+    optional string name = 2; //用户昵称
+    required uint32 qq = 3;   //相关联qq
+    optional string wechat = 4; //关联微信号
+    required uint32 head_icon = 5; //头像id
+    required uint32 max_copy = 6; //通关数
+    required uint32 cash = 7; //钻石
+    required uint32 gold = 8; //金币
+    required uint32 hp = 9;  //体力
+    required uint32 last_login = 10; //上次登录时间
+    required uint32 reg_time = 11;  //注册时间
+    required uint32 last_sync = 12; //上次同步时间
+}
+
+message ItemType {
+    required uint32 itemid = 1; //物品id
+    required int32  count = 2;   //物品数量 可以为负数
+}
+
+message TimeItemType {
+    required uint32 itemid = 1; //物品id
+    required uint32  count = 2;  //物品数量 可以为负数
+    required uint32 expire = 3; //过期时间
+}
+
+message CopyType {
+    required uint32 copyid = 1; //关卡id
+    required uint32 max_score = 2; //最大分数
+    required uint32 star = 3; //星数
+}
