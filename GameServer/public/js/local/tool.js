@@ -1,4 +1,6 @@
 
+var DEFINE = server.DEFINE;
+
 $(document).ready(function() {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("aria-controls");
@@ -10,8 +12,8 @@ $(document).ready(function() {
     $('#server_tool_tab a[href="#proto_cmd"]').tab('show');
 
 
-    for (var i in proto) {
-        $("#protoids").append("<option value='" + proto[i] + "'>" + i + "</option>");
+    for (var i in DEFINE.PROTO) {
+        $("#protoids").append("<option value='" + DEFINE.PROTO[i] + "'>" + i + "</option>");
     }
 
 });
@@ -56,7 +58,6 @@ function getErrorStr(code)
 
     return "错误未定义";
 }
-
 
 function handleResponse(data) {
     var rdata = JSON.parse(data);
