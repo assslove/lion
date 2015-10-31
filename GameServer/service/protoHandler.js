@@ -3,7 +3,7 @@
  * Created by houbin on 15-10-18.
  */
 var path = require("path");
-var DEFINE = require('./../proto/define.js');
+var DEFINE = require('./../proto/define');
 var logger = require('./../utils/log.js');
 var bufferpack = require('bufferpack');
 
@@ -40,7 +40,7 @@ ProtoHandler.prototype.handle = function(protoid, pkg, req, res, cb) {
         return ;
     }
     try {
-//        if (req.ses("sion == null || req.session.uid != pkg.uid) { //检测session是否过期
+//        if (req.session == null || req.session.uid != pkg.uid) { //检测session是否过期
 //            cb(DEFINE.ERROR_CODE.USER_SESSION_EXPIRE);
 //            return ;
 //        }
@@ -58,7 +58,7 @@ ProtoHandler.prototype.sendErrorToUser = function(res, proto_id, err) {
 }
 
 ProtoHandler.prototype.sendMsgToUser = function(res, protoid, msg) {
-    if (msg == null) {
+    if (msg == null || msg == undefined) {
         this.sendErrorToUser(res, protoid, 0);
         return ;
     }
