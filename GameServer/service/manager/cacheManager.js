@@ -3,11 +3,11 @@
  * Created by bin.hou on 2015/10/29.
  */
 
-var utils = require('../utils/utils.js');
-var redis = require('../utils/redis.js');
-var logger = require('../utils/log.js');
-var CODE = require('../utils/code.js');
-var userDao = require('./dao/userDao.js');
+var utils = require('../../utils/utils.js');
+var redis = require('../../utils/redis.js');
+var logger = require('../../utils/log.js');
+var CODE = require('../../utils/code.js');
+var userDao = require('./../dao/userDao.js');
 
 var cacheManager = module.exports;
 
@@ -62,5 +62,4 @@ cacheManager.randUid = function(app, cb) {
         utils.invokeCallback(cb, err, res);
     });
 }
-
 

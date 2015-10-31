@@ -3,11 +3,11 @@
  * Created by houbin on 15-10-18.
  */
 var path = require("path");
-var DEFINE = require('./../proto/define');
-var logger = require('./../utils/log.js');
+var DEFINE = require('./../../proto/define');
+var logger = require('./../../utils/log.js');
 var bufferpack = require('bufferpack');
 
-var userController = require('./controller/userController.js');
+var userController = require('./../controller/userController.js');
 
 module.exports = function(app) {
     return new ProtoHandler(app);

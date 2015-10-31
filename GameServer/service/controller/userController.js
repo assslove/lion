@@ -6,6 +6,11 @@ var ProtoBuf = require("protobufjs");
 var builder = ProtoBuf.loadProtoFile("./../../proto/user.proto");
 var DEFINE = require('./../../proto/define.js');
 var logger = require("./../../utils/log.js");
+var cacheManager = require("./../service/cacheManager.js");
+var CODE = require("./../utils/code.js");
+var utils = require('./../utils/utils.js');
+var protoManager = require('./../manager/protoManager.js');
+var userDao = require('./../dao/userDao.js');
 
 var userController = module.exports;
 
@@ -28,15 +33,38 @@ userController.userLogout = function(protoid, pkg, req, res, cb) {
 }
 
 userController.userCreate = function(protoid, pkg, req, res, cb) {
-    var handle = req.app.get("proto_handler");
-    logger.info("%d user create", pkg.uid);
+    if (pkg.uid > CODE.MIN_UID) {
+        logger.error("user create uid is error [uid=%d]", pkg.uid);
+        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID);
+    }
 
-    var jsonObj = {
-        uid : pkg.uid,
-        qq : 0,
-        wechat : pkg.bind_id
-    };
+    var isBindValid = false;
+    for (var i in DEFINE.BIND_TYPE) {
+        if (DEFINE.BIND_TYPE[i] === pkg.type) {
+            isBindValid = true;
+        }
+    }
 
-    handle.sendMsgToUser(res, protoid, jsonObj);
+    if (!isBindValid) {
+        logger.error("user create bind type error [type=%d]", pkg.type);
+        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID);
+    }
+
+    if (utils.isNull(pkg.bind_id) || utils.isNull(pkg.name)) {
+        logger.error("user create param error [bind_id=%s,name=%s]", pkg.bind_id, pkg.name);
+        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID);
+    }
+
+    cacheManager.getUid(function(uid) {
+        var user = {
+            uid : pkg.uid,
+            name : pkg.name
+        };
+
+        userDao.addUser(req.app, user, function(err, result) {
+            logger.info("%d user create success", pkg.uid);
+            protoManager.sendMsgToUser(res, protoid, jsonObj);
+        });
+    });
 }
 

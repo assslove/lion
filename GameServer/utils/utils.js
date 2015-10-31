@@ -123,3 +123,7 @@ utils.toArray = function(obj) {
 utils.getRetMsg = function(code, msg) {
      return { c : code, m : msg};
 }
+
+utils.isNull = function(val) {
+    return val === null || val === undefined || val === "";
+}

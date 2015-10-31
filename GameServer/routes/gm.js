@@ -9,7 +9,7 @@ var async = require('async');
 var router = express.Router();
 
 var uidDao = require('../service/dao/uidDao.js');
-var cacheManager = require('../service/cacheManager.js');
+var cacheManager = require('../service/manager/cacheManager.js');
 var CODE = require('../utils/code.js');
 var utils = require('../utils/utils.js');
 

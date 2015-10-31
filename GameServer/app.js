@@ -21,7 +21,7 @@ program.version('0.0.1')
 program.parse(process.argv);
 
 var redisClient = require('./utils/redis.js');
-var ProtoHandler = require('./service/protoHandler.js');
+var ProtoHandler = require('./service/manager/protoHandler.js');
 var mysqlManager = require('./service/dao/mysqlManager.js');
 var log = require('./utils/log.js');
 
@@ -72,26 +72,6 @@ if (app.get('env') == "development") {
     app.set('server', configJson('config/server.json', app.get('env')).production);
 }
 
-//app.use(session({
-//    store : new RedisStore({
-//        host : app.get('redis').host,
-//        port : app.get('redis').port,
-//        ttl  : 3600,
-//        db : 3
-//    }),
-//    secret : 'keyboard cat',
-//    resave : false,
-//    saveUninitialized : false,
-//    cookie: {
-//        //secure: true,
-//        path : "/",
-//        httpOnly : true,
-//        signed : false,
-//        //maxAge : 3600 * 24 * 7,
-//        expires : false
-//    }
-//}));
-
 app.use('/', routes);
 app.use('/proto', proto);
 app.use('/gm', gm);
@@ -109,8 +89,7 @@ if (!!redisCli) {
 }
 
 var protoHandler = new ProtoHandler(app);
-protoHandler.init();
-app.set("proto_handler", protoHandler);
+protoManager.init(protoHandler);
 
 var server = app.listen(listen_port, function() {
     var host = server.address().address;

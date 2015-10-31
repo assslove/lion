@@ -5,10 +5,11 @@ package game;
 import "usertype.proto"
 
 message UserCreateReq {
-    required uint32 uid  = 1;     // 用户id 客户端临时id 小于1000000 服务器用9位数
+    required uint32 uid  = 1;     // 用户id 客户端临时id 小于1000000 服务器用9位数表示
+                                  // 如果发现uidi小于1000000,则需要创建账号
 	required uint32 type = 2;	  // 绑定用户类型 1-qq 2-微信 3-...
 	required string bind_id = 3;  // 绑定账号
-	optional uint32 name = 4;     // 用户姓名
+	optional uint32 name = 4;     // 用户昵称
 }
 
 message UserCreateRet {

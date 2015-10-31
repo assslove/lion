@@ -32,9 +32,16 @@
         MSG_NOT_FOUND:  [6,  "返回消息体没有找到"]
     };
 
+    //登录绑定方式
+    var BIND_TYPE = {
+        BIND_QQ : 1,       //qq登录
+        BIND_WECHAT : 2    //微信登录
+    };
+
     var DEFINE = {
         PROTO : PROTO,
-        ERROR_CODE : ERROR_CODE
+        ERROR_CODE : ERROR_CODE,
+        BIND_TYPE : BIND_TYPE
     };
 
     return DEFINE;
