@@ -16,7 +16,7 @@ var cacheManager = module.exports;
  * @ return res为用户信息
  */
 cacheManager.getUser = function(app, uid, cb) {
-    redis.hget(app, CODE.CACHE_TYPE.USER, uid, function(err, res) {
+    redis.hget(CODE.CACHE_TYPE.USER, uid, function(err, res) {
         if (err !== null) {
             userDao.getUser(app, uid, function(err, res) {
                 if (res.length > 0) cacheManager.updateUser(app, uid, res[0], null);
@@ -30,8 +30,8 @@ cacheManager.getUser = function(app, uid, cb) {
 
 /* @brief 更新用户
  */
-cacheManager.updateUser = function(app, uid, user, cb) {
-    redis.hset(app, CODE.CACHE_TYPE.USER, uid, user, function(err, res) {
+cacheManager.updateUser = function(uid, user, cb) {
+    redis.hset(CODE.CACHE_TYPE.USER, uid, user, function(err, res) {
         if (err !== null) {
            logger.error("cache user failed [uid=%ld]", uid);
         }
@@ -41,25 +41,32 @@ cacheManager.updateUser = function(app, uid, user, cb) {
 
 /* @brief 增加用户id
  */
-cacheManager.addUid = function(app, uid, cb) {
-    redis.sadd(app, CODE.CACHE_TYPE.USERID, uid, function(err, res) {
+cacheManager.addUid = function(uid, cb) {
+    redis.sadd(CODE.CACHE_TYPE.USERID, uid, function(err, res) {
         utils.invokeCallback(cb, err, res);
     });
 }
 
 /* @brief 删除用户id
  */
-cacheManager.delUid = function(app, uid, cb) {
-    redis.srem(app, code.CACHE_TYPE.USERID, uid, function(err, res) {
+cacheManager.delUid = function(uid, cb) {
+    redis.srem(code.CACHE_TYPE.USERID, uid, function(err, res) {
         utils.invokeCallback(cb, err, res);
     });
 }
 
 /* @brief 随机一个用户id
  */
-cacheManager.randUid = function(app, cb) {
-    redis.srandmember(app, code.CACHE_TYPE.USERID, function(err, res) {
+cacheManager.randUid = function(cb) {
+    redis.srandmember(code.CACHE_TYPE.USERID, function(err, res) {
         utils.invokeCallback(cb, err, res);
     });
 }
 
+/* @brief 获取用户id数量
+ */
+cacheManager.getUidCount = function(cb) {
+    redis.scard(code.CACHE_TYPE.USERID, function(err, res) {
+        utils.invokeCallback(cb, err, res);
+    });
+}

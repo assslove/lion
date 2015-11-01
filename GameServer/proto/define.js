@@ -29,7 +29,8 @@
         PROTO_LEN_INVALID:  [3,  "协议长度不正确"],
         PROTO_DATA_INVALID:  [4,  "协议数据不正确"],
         USER_SESSION_EXPIRE:  [5,  "用户session过期"],
-        MSG_NOT_FOUND:  [6,  "返回消息体没有找到"]
+        MSG_NOT_FOUND:  [6,  "返回消息体没有找到"],
+        USER_EXIST:  [7,  "用户已经存在"],
     };
 
     //登录绑定方式

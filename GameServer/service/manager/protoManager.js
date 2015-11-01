@@ -15,3 +15,7 @@ protoManager.init = function(handler) {
 protoManager.sendMsgToUser = function(res, protoid, msg) {
     g_handler.sendMsgToUser(res, protoid, msg);
 }
+
+protoManager.sendErrorToUser = function(res, protoid, code) {
+    g_handler.sendErrorToUser(res, protoid, code);
+}

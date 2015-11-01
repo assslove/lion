@@ -127,3 +127,7 @@ utils.getRetMsg = function(code, msg) {
 utils.isNull = function(val) {
     return val === null || val === undefined || val === "";
 }
+
+utils.getCurTime = function() {
+    return Math.floor(new Date().getTime()/1000);
+}
