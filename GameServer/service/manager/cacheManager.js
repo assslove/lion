@@ -50,7 +50,7 @@ cacheManager.addUid = function(uid, cb) {
 /* @brief 删除用户id
  */
 cacheManager.delUid = function(uid, cb) {
-    redis.srem(code.CACHE_TYPE.USERID, uid, function(err, res) {
+    redis.srem(CODE.CACHE_TYPE.USERID, uid, function(err, res) {
         utils.invokeCallback(cb, err, res);
     });
 }
@@ -58,7 +58,7 @@ cacheManager.delUid = function(uid, cb) {
 /* @brief 随机一个用户id
  */
 cacheManager.randUid = function(cb) {
-    redis.srandmember(code.CACHE_TYPE.USERID, function(err, res) {
+    redis.srandmember(CODE.CACHE_TYPE.USERID, function(err, res) {
         utils.invokeCallback(cb, err, res);
     });
 }
@@ -66,7 +66,7 @@ cacheManager.randUid = function(cb) {
 /* @brief 获取用户id数量
  */
 cacheManager.getUidCount = function(cb) {
-    redis.scard(code.CACHE_TYPE.USERID, function(err, res) {
+    redis.scard(CODE.CACHE_TYPE.USERID, function(err, res) {
         utils.invokeCallback(cb, err, res);
     });
 }

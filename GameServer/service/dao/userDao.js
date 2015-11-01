@@ -2,6 +2,7 @@
  * Created by bin.hou on 2015/10/29.
  */
 var utils = require('./../../utils/utils.js');
+var util = require('util');
 var mysqlManager = require('./mysqlManager.js');
 
 var userDao = module.exports;
@@ -41,18 +42,20 @@ userDao.updateUser = function(app, user, cb) {
 }
 
 userDao.addUser = function(app, user, cb) {
-    var mysqlCli = mysqlManager.getMysqlCli(uid);
+    var mysqlCli = mysqlManager.getMysqlCli(user.uid);
 
     var sql = "", key = "", value = "";
+    var real_val = [];
     for (var i in user) {
         key += i + ",";
-        value += i + ",";
+        value += "?,";
+        real_val.push(user[i]);
     }
 
     sql = util.format("insert into t_user(%s) values(%s)",
          key.substring(0, key.length-1), value.substring(0, value.length-1));
 
-    mysqlCli.query(sql, null, function(err, res) {
+    mysqlCli.query(sql, real_val, function(err, res) {
         if (err !== null) {
             console.log('insert user error: ' + err.message);
             utils.invokeCallback(cb, err.message, null);

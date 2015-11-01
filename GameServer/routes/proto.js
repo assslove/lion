@@ -10,6 +10,7 @@ var path = require("path");
 var DEFINE = require('./../proto/define.js');
 var user = require('./../service/model/user.js');
 var logger = require("./../utils/log.js");
+var protoManager = require('./../service/manager/protoManager.js');
 
 var router = express.Router();
 
@@ -25,7 +26,7 @@ router.post('/', function(req, res, next) {
     var seq = body.s;
     var pkg = body.m;
 
-    req.app.get("proto_handler").handle(protoid, pkg, req, res, function(err) {
+    protoManager.handle(protoid, pkg, req, res, function(err) {
         if (err != null) {
             req.app.get("proto_handler").sendErrorToUser(res, protoid, err);
         }

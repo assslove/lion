@@ -65,7 +65,7 @@ utils.formatDate = function(timestamp)
     return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
 }
 
-utils.getTime = function()
+utils.getCurTimeStr = function()
 {
     var timestamp = Math.floor(new Date().getTime() / 1000);
     return utils.formatDate(timestamp);

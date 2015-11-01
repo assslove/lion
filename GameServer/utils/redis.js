@@ -8,36 +8,34 @@ var session = require("express-session");
 var utils = require('../utils/utils.js');
 var logger = require('../utils/log.js');
 
-module.exports = function(app) {
-	return RedisClient(app);
-}
 
-function RedisClient(app) {
-	this.app = app;
-	this.handle = null;
-}
+var handler = null;
+var app = null;
+
+var redisClient = module.exports;
 
 /* @brief 初始化redis
  */
-RedisClient.prototype.init = function() {
-    var redisConfig = this.app.get('redis');
-    this.handle = redisModule.createClient(redisConfig.port, redisConfig.host, {});
-    if (this.handle === null) {
+redisClient.init = function(app_) {
+	app = app_;
+    var redisConfig = app.get('redis');
+    handler = redisModule.createClient(redisConfig.port, redisConfig.host, {});
+    if (handler === null) {
         logger.error("redis init failed!");
     } else {
-        if (this.app.get('env') == "development") {
-            redis.debug = true;
+        if (app.get('env') == "development") {
+            redisModule.debug = true;
         }
-        this.handle.select(0, function(err, res) {
+        handler.select(0, function(err, res) {
             logger.info("redisclient create %s", res);
         });
 
-		this.handle.on("error", function (err) {
+		handler.on("error", function (err) {
 			logger.error("redis error : %s" + err);
 		});
         //设置session地址
         var RedisStore = require('connect-redis')(session);
-        this.app.use(session({
+        app.use(session({
             store : new RedisStore({
                 host : redisConfig.host,
                 port : redisConfig.port,
@@ -50,11 +48,11 @@ RedisClient.prototype.init = function() {
         }));
 	}
 
-	return this.handle;
+	return handler;
 }
 
-RedisClient.prototype.set = function(key, value, cb) {
-	this.handle.set(key, value, function(err, res) {
+redisClient.set = function(key, value, cb) {
+	handler.set(key, value, function(err, res) {
 		if (err !== null) {
 			logger.error("exec set failed");
 			utils.invokeCallback(cb, err.message, null);
@@ -64,8 +62,8 @@ RedisClient.prototype.set = function(key, value, cb) {
 	});
 }
 
-RedisClient.prototype.hset = function(hash, key, val, cb) {
-	this.handle.hset(hash, key, val, function(err, res) {
+redisClient.hset = function(hash, key, val, cb) {
+	handler.hset(hash, key, val, function(err, res) {
 		if (err !== null) {
 			logger.error("exec hset failed");
 			utils.invokeCallback(cb, err.message, null);
@@ -75,8 +73,8 @@ RedisClient.prototype.hset = function(hash, key, val, cb) {
 	});
 }
 
-RedisClient.prototype.hget = function(hash, key,  cb) {
-	this.handle.hget(hash, key, function(err, res) {
+redisClient.hget = function(hash, key,  cb) {
+	handler.hget(hash, key, function(err, res) {
 		if (err !== null) {
 			logger.error("exec hget failed");
 			utils.invokeCallback(cb, err.message, null);
@@ -86,8 +84,8 @@ RedisClient.prototype.hget = function(hash, key,  cb) {
 	});
 }
 
-RedisClient.prototype.get = function(key, cb) {
-	this.handle.get(key, function(err, res) {
+redisClient.get = function(key, cb) {
+	handler.get(key, function(err, res) {
 		if (err !== null) {
 			logger.error("exec get failed");
 			utils.invokeCallback(cb, err.message, null);
@@ -98,8 +96,8 @@ RedisClient.prototype.get = function(key, cb) {
 	});
 }
 
-RedisClient.prototype.sadd = function(key, uid, cb) {
- 	this.handle.sadd(key, uid, function(err, res) {
+redisClient.sadd = function(key, uid, cb) {
+ 	handler.sadd(key, uid, function(err, res) {
 		if (err !== null) {
 			logger.error("exec sadd failed");
 			utils.invokeCallback(cb, err.message, null);
@@ -111,8 +109,8 @@ RedisClient.prototype.sadd = function(key, uid, cb) {
 }
 
 
-RedisClient.prototype.srem = function(key, uid, cb) {
- 	this.handle.srem(key, uid, function(err, res) {
+redisClient.srem = function(key, uid, cb) {
+ 	handler.srem(key, uid, function(err, res) {
 		if (err !== null) {
 			logger.error("exec srem failed");
 			utils.invokeCallback(cb, err.message, null);
@@ -124,8 +122,8 @@ RedisClient.prototype.srem = function(key, uid, cb) {
 }
 
 
-RedisClient.prototype.srandmember = function(key, cb) {
- 	this.handle.srandmember(key, function(err, res) {
+redisClient.srandmember = function(key, cb) {
+ 	handler.srandmember(key, function(err, res) {
 		if (err !== null) {
 			logger.error("exec srandmemeber failed");
 			utils.invokeCallback(cb, err.message, null);
@@ -136,12 +134,12 @@ RedisClient.prototype.srandmember = function(key, cb) {
 	});
 }
 
-RedisClient.prototype.fini = function() {
-	this.handle.end();
+redisClient.fini = function() {
+	handler.end();
 }
 
-RedisClient.prototype.scard = function(key, cb) {
- 	this.handle.scard(key, function(err, res) {
+redisClient.scard = function(key, cb) {
+ 	handler.scard(key, function(err, res) {
 		if (err !== null) {
 			logger.error("exec scard failed");
 			utils.invokeCallback(cb, err.message, null);

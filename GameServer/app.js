@@ -20,9 +20,12 @@ program.version('0.0.1')
 
 program.parse(process.argv);
 
-var RedisClient = require('./utils/redis.js');
+var redisClient = require('./utils/redis.js');
 var ProtoHandler = require('./service/manager/protoHandler.js');
+var protoManager = require('./service/manager/protoManager.js');
+
 var mysqlManager = require('./service/dao/mysqlManager.js');
+
 var log = require('./utils/log.js');
 
 var routes = require('./routes/index');
@@ -82,8 +85,12 @@ var listen_port = program.port;
 //store mysql pool to app
 mysqlManager.init(app);
 
-var redisCli = new RedisClient(app);
-redisCli.init();
+var redisClient = redisClient.init(app);
+if (redisClient == null) {
+    logger.error("init redis failed");
+    process.exit(1);
+}
+
 logger.info("init redis success");
 
 var protoHandler = new ProtoHandler(app);

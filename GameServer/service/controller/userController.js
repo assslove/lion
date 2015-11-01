@@ -11,7 +11,7 @@ var CODE = require("./../../utils/code.js");
 var utils = require('./../../utils/utils.js');
 var protoManager = require('./../manager/protoManager.js');
 var userDao = require('./../dao/userDao.js');
-var user = require('./../model/user.js');
+var userModel = require('./../model/user.js');
 
 var userController = module.exports;
 
@@ -41,8 +41,9 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
 
     var isBindValid = false;
     for (var i in DEFINE.BIND_TYPE) {
-        if (DEFINE.BIND_TYPE[i] === pkg.type) {
+        if (DEFINE.BIND_TYPE[i] == pkg.type) {
             isBindValid = true;
+            break;
         }
     }
 
@@ -56,7 +57,7 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
         return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID);
     }
 
-    user.getUid(function(uid) {
+    userModel.genUid(req.app, function(uid) {
         var user = {
             uid : uid,
             name : pkg.name,
@@ -66,7 +67,7 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
             gold : 0,
             hp : 0,
             last_login : 0,
-            req_time : utils.getCurTime()
+            reg_time : utils.getCurTime()
         };
 
         switch (pkg.type) {
@@ -80,12 +81,14 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
 
         userDao.addUser(req.app, user, function(err, results) {
             if (err !== null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_EXIST);
-            var jsonObj = {
-                uid : uid
-            };
+            userModel.delUidFromCache(req.app, uid, function(err, results) {
+                var jsonObj = {
+                    uid : uid
+                };
 
-            logger.info("%d user create success", uid);
-            protoManager.sendMsgToUser(res, protoid, jsonObj);
+                logger.info("%d user create success", uid);
+                protoManager.sendMsgToUser(res, protoid, jsonObj);
+            });
         });
     });
 }
