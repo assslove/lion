@@ -70,3 +70,49 @@ cacheManager.getUidCount = function(cb) {
         utils.invokeCallback(cb, err, res);
     });
 }
+
+/* @brief 获取物品
+ */
+cacheManager.getCopy = function(app, uid, cb) {
+    redis.hget(CODE.CACHE_TYPE.ITEM, uid, function(err, res) {
+        if (err !== null) {
+            itemDao.getCopy(app, uid, function(err, res) {
+                if (res.length > 0) cacheManager.updateCopy(app, uid, res[0], null);
+                cb(err, res);
+            });
+        } else {
+            cb(err, res);
+        }
+    });
+}
+
+cacheManager.updateCopy = function(uid, item, cb) {
+    redis.hset(CODE.CACHE_TYPE.Copy, uid, item, function(err, res) {
+        if (err !== null) {
+           logger.error("cache item failed [uid=%ld]", uid);
+        }
+        utils.invokeCallback(cb, err, res);
+    });
+}
+
+cacheManager.getCopy = function(app, uid, cb) {
+    redis.hget(CODE.CACHE_TYPE.COPY, uid, function(err, res) {
+        if (err !== null) {
+            copyDao.getCopy(app, uid, function(err, res) {
+                if (res.length > 0) cacheManager.updateCopy(app, uid, res, null);
+                cb(err, res);
+            });
+        } else {
+            cb(err, res);
+        }
+    });
+}
+
+cacheManager.updateCopy = function(uid, copy, cb) {
+    redis.hset(CODE.CACHE_TYPE.COPY, uid, copy, function(err, res) {
+        if (err !== null) {
+           logger.error("cache copy failed [uid=%ld]", uid);
+        }
+        utils.invokeCallback(cb, err, res);
+    });
+}

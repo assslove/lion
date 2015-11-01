@@ -5,9 +5,10 @@
 var path = require("path");
 var DEFINE = require('./../../proto/define');
 var logger = require('./../../utils/log.js');
-var bufferpack = require('bufferpack');
 
 var userController = require('./../controller/userController.js');
+var itemController = require('./../controller/itemController.js');
+var copyController = require('./../controller/copyController.js');
 
 module.exports = function(app) {
     return new ProtoHandler(app);
@@ -25,6 +26,9 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_LOGIN] =  [userController.userLogin];
     this.protoHandlers[DEFINE.PROTO.USER_LOGOUT] = [userController.userLogout];
     this.protoHandlers[DEFINE.PROTO.USER_CREATE] = [userController.userCreate];
+    this.protoHandlers[DEFINE.PROTO.USER_SYNC_ITEM] = [itemController.userSyncItem];
+    this.protoHandlers[DEFINE.PROTO.USER_SYNC_COPY] = [copyController.userSyncCopy];
+    this.protoHandlers[DEFINE.PROTO.USER_GET_INFO] = [userController.userGetInfo];
 
     logger.info("init proto handlers success");
 }

@@ -34,18 +34,25 @@ redisClient.init = function(app_) {
 			logger.error("redis error : %s" + err);
 		});
         //设置session地址
-        var RedisStore = require('connect-redis')(session);
-        app.use(session({
-            store : new RedisStore({
-                host : redisConfig.host,
-                port : redisConfig.port,
-                db : 1
-            }),
-            secret : "keyboard cat",
-            resave : false,
-            saveUninitialized : false,
-            cookie: {maxAge: 80000,  path: '/', httpOnly : true}
-        }));
+     //   var RedisStore = require('connect-redis')(session);
+	//	app.use(session({
+	//		store : new RedisStore({
+	//			host : app.get('redis').host,
+	//			port : app.get('redis').port,
+	//			ttl  : 3600,
+	//			db : 2
+	//		}),
+	//		secret : 'keyboard cat',
+	//		resave : false,
+	//		saveUninitialized : false,
+	//		cookie: {
+	//			//secure: true,
+	//			path : "/",
+	//			httpOnly : true,
+	//			signed : false,
+	//			expires : false
+	//		}
+	//	}));
 	}
 
 	return handler;

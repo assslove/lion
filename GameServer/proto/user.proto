@@ -51,15 +51,6 @@ message UserSyncItemRet {
     repeated ItemType item = 2;  //所有非限时道具
 }
 
-message UserSyncTimeItemReq {
-    required uint32 uid = 1;
-    repeated TimeItemType item = 2;  //前端缓存消耗增加的限时道具
-}
-
-message UserSyncTimeItemRet {
-    repeated ItemItemType item = 2;  //所有限时道具列表
-}
-
 message UserSyncCopyReq {
     required uint32 uid = 1;
     repeated CopyType copy = 2; //缓存通关的关卡

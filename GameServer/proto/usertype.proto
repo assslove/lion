@@ -22,11 +22,6 @@ message UserBase {
 message ItemType {
     required uint32 itemid = 1; //物品id
     required int32  count = 2;   //物品数量 可以为负数
-}
-
-message TimeItemType {
-    required uint32 itemid = 1; //物品id
-    required uint32  count = 2;  //物品数量 可以为负数
     required uint32 expire = 3; //过期时间
 }
 

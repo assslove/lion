@@ -17,9 +17,8 @@
         USER_LOGOUT : 3,    //登出
         USER_SYNC_INFO : 4, //同步玩家数据
         USER_SYNC_ITEM : 5, //同步物品
-        USER_SYNC_TIME_ITEM : 6, //同步限时物品
-        USER_SYNC_COPY : 7, //同步关卡
-        USER_GET_INFO : 8   //同步服务器数据 包括玩家数据,物品，限时物品,关卡等
+        USER_SYNC_COPY : 6, //同步关卡
+        USER_GET_INFO : 7   //同步服务器数据 包括玩家数据,物品，限时物品,关卡等
     };
 
     //错误码 编号与描述，方便客户端显示
@@ -31,6 +30,8 @@
         USER_SESSION_EXPIRE:  [5,  "用户session过期"],
         MSG_NOT_FOUND:  [6,  "返回消息体没有找到"],
         USER_EXIST:  [7,  "用户已经存在"],
+        USER_NOT_EXIST:  [8,  "用户不存在"],
+        USER_DATA_ERROR : [9, "用户数据错误"],
     };
 
     //登录绑定方式

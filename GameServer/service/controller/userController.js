@@ -2,8 +2,6 @@
  * Created by houbin on 15-10-18.
  */
 
-var ProtoBuf = require("protobufjs");
-var builder = ProtoBuf.loadProtoFile("./../../proto/user.proto");
 var DEFINE = require('./../../proto/define.js');
 var logger = require("./../../utils/log.js");
 var cacheManager = require("./../manager/cacheManager.js");
@@ -15,24 +13,37 @@ var userModel = require('./../model/user.js');
 
 var userController = module.exports;
 
+/* @brief 用户登录
+ */
 userController.userLogin = function(protoid, pkg, req, res, cb) {
-    req.session.uid = pkg.uid;
-    req.session.cookie.expires = false;
-    req.session.save();
+    userDao.getUser(req.app, pkg.uid, function(err, results) {
+        if (err != null || results.length == 0) {
+            protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_NOT_EXIST);
+        } else {
+            req.session.uid = pkg.uid;
+            req.session.cookie.expires = false;
+            req.session.save();
 
-    logger.info("%d user login", pkg.uid);
+            logger.info("%d user login", pkg.uid);
+
+            protoManager.sendErrorToUser(res, protoid, 0);
+        }
+    });
 }
 
+/* @brief 用户登出
+ */
 userController.userLogout = function(protoid, pkg, req, res, cb) {
     if (req.session) {
         req.session.destroy(function() {
-
+            logger.info("%d user logout", pkg.uid);
+            protoManager.sendErrorToUser(res, protoid, 0);
         });
     }
-
-    logger.info("%d user logout", pkg.uid);
 }
 
+/* @brief 用户创建
+ */
 userController.userCreate = function(protoid, pkg, req, res, cb) {
     if (pkg.uid > CODE.MIN_UID) {
         logger.error("user create uid is error [uid=%d]", pkg.uid);
@@ -93,3 +104,29 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
     });
 }
 
+
+userController.userGetInfo = function(protoid, pkg, req, res, cb) {
+    async.parallel([
+        function(callback) {
+            cacheManager.getUser(req.app, pkg.uid, callback);
+        },
+        function(callback) {
+            cacheManager.getItem(req.app, pkg.uid, callback);
+        },
+        function(callback) {
+            cacheManager.getCopy(req.app, pkg.uid, callback);
+        }
+    ], function(err, results) {
+        if (err != null)  {
+            return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_DATA_ERROR);
+        }
+
+        var obj = {
+            user : results[0],
+            item : results[1],
+            copy : results[2]
+        };
+
+        protoManager.sendMsgToUser(res, protoid, obj);
+    });
+}
