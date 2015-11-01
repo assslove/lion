@@ -1,6 +1,7 @@
 /**
  * Created by houbin on 15-10-18.
  */
+var async = require('async');
 
 var DEFINE = require('./../../proto/define.js');
 var logger = require("./../../utils/log.js");
@@ -122,9 +123,9 @@ userController.userGetInfo = function(protoid, pkg, req, res, cb) {
         }
 
         var obj = {
-            user : results[0],
-            item : results[1],
-            copy : results[2]
+            user : results[0].length > 0 ? results[0][0] : null,
+            item : results[1] == null ? [] : results[1],
+            copy : results[2] == null ? [] : results[2]
         };
 
         protoManager.sendMsgToUser(res, protoid, obj);

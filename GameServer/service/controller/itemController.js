@@ -1,6 +1,9 @@
 /**
  * Created by houbin on 15-11-1.
  */
+
+var async = require('async');
+
 var DEFINE = require('./../../proto/define.js');
 var logger = require("./../../utils/log.js");
 var cacheManager = require("./../manager/cacheManager.js");

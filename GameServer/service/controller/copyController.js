@@ -1,6 +1,9 @@
 /**
  * Created by houbin on 15-11-1.
  */
+
+var async = require('async');
+
 var DEFINE = require('./../../proto/define.js');
 var logger = require("./../../utils/log.js");
 var cacheManager = require("./../manager/cacheManager.js");
@@ -10,7 +13,7 @@ var protoManager = require('./../manager/protoManager.js');
 
 var copyController = module.exports;
 
-copyController.userSyncItem = function(protoid, pkg, req, res, cb) {
+copyController.userSyncCopy = function(protoid, pkg, req, res, cb) {
 
 }
 

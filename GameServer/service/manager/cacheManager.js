@@ -8,6 +8,8 @@ var redis = require('../../utils/redis.js');
 var logger = require('../../utils/log.js');
 var CODE = require('../../utils/code.js');
 var userDao = require('./../dao/userDao.js');
+var itemDao = require('./../dao/itemDao.js');
+var copyDao = require('./../dao/copyDao.js');
 
 var cacheManager = module.exports;
 
@@ -17,7 +19,7 @@ var cacheManager = module.exports;
  */
 cacheManager.getUser = function(app, uid, cb) {
     redis.hget(CODE.CACHE_TYPE.USER, uid, function(err, res) {
-        if (err !== null) {
+        if (err == null && res == null) {
             userDao.getUser(app, uid, function(err, res) {
                 if (res.length > 0) cacheManager.updateUser(app, uid, res[0], null);
                 cb(err, res);
@@ -73,11 +75,11 @@ cacheManager.getUidCount = function(cb) {
 
 /* @brief 获取物品
  */
-cacheManager.getCopy = function(app, uid, cb) {
+cacheManager.getItem = function(app, uid, cb) {
     redis.hget(CODE.CACHE_TYPE.ITEM, uid, function(err, res) {
-        if (err !== null) {
-            itemDao.getCopy(app, uid, function(err, res) {
-                if (res.length > 0) cacheManager.updateCopy(app, uid, res[0], null);
+        if (err == null && res == null) {
+            itemDao.getItem(app, uid, function(err, res) {
+                if (res.length > 0) cacheManager.updateItem(app, uid, res[0], null);
                 cb(err, res);
             });
         } else {
@@ -86,8 +88,8 @@ cacheManager.getCopy = function(app, uid, cb) {
     });
 }
 
-cacheManager.updateCopy = function(uid, item, cb) {
-    redis.hset(CODE.CACHE_TYPE.Copy, uid, item, function(err, res) {
+cacheManager.updateItem = function(uid, item, cb) {
+    redis.hset(CODE.CACHE_TYPE.ITEM, uid, item, function(err, res) {
         if (err !== null) {
            logger.error("cache item failed [uid=%ld]", uid);
         }
@@ -97,7 +99,7 @@ cacheManager.updateCopy = function(uid, item, cb) {
 
 cacheManager.getCopy = function(app, uid, cb) {
     redis.hget(CODE.CACHE_TYPE.COPY, uid, function(err, res) {
-        if (err !== null) {
+        if (err == null && res == null) {
             copyDao.getCopy(app, uid, function(err, res) {
                 if (res.length > 0) cacheManager.updateCopy(app, uid, res, null);
                 cb(err, res);
