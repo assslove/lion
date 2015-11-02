@@ -10,6 +10,7 @@ var CODE = require("./../../utils/code.js");
 var utils = require('./../../utils/utils.js');
 var protoManager = require('./../manager/protoManager.js');
 var userDao = require('./../dao/userDao.js');
+var accountDao = require('./../dao/accountDao.js');
 var userModel = require('./../model/user.js');
 
 var userController = module.exports;
@@ -82,25 +83,38 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
             reg_time : utils.getCurTime()
         };
 
+        var account = {
+            uid : uid,
+        };
+
         switch (pkg.type) {
             case DEFINE.BIND_TYPE.BIND_QQ:
-                user.qq = pkg.bind_id;
+                account.qq = pkg.bind_id;
                 break;
             case DEFINE.BIND_TYPE.BIND_WECHAT:
-                user.wechat = pkg.bind_id;
+                account.wechat = pkg.bind_id;
                 break;
         }
 
-        userDao.addUser(req.app, user, function(err, results) {
-            if (err !== null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_EXIST);
-            userModel.delUidFromCache(req.app, uid, function(err, results) {
-                var jsonObj = {
-                    uid : uid
-                };
+        async.parallel([
+            function(callback) {
+                accountDao.addOrUpdateAccount(req.app, account, callback);
+            },
+            function(callback) {
+                userDao.addUser(req.app, user, callback);
+            },
+            function(callback) {
+                userModel.delUidFromCache(req.app, uid, callback);
+            }
+        ], function(err, results) {
+            if (err != null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_EXIST);
 
-                logger.info("%d user create success", uid);
-                protoManager.sendMsgToUser(res, protoid, jsonObj);
-            });
+            var jsonObj = {
+                uid : uid
+            };
+
+            logger.info("%d user create success", uid);
+            protoManager.sendMsgToUser(res, protoid, jsonObj);
         });
     });
 }
