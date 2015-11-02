@@ -58,6 +58,28 @@ redisClient.init = function(app_) {
 	return handler;
 }
 
+redisClient.setex = function(key, expire, value, cb) {
+	handler.setex(key, expire, value, function(err, res) {
+		if (err !== null) {
+			logger.error("exec setex failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, null);
+		}
+	});
+}
+
+redisClient.set = function(key, value, cb) {
+	handler.set(key, value, function(err, res) {
+		if (err !== null) {
+			logger.error("exec set failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, null);
+		}
+	});
+}
+
 redisClient.set = function(key, value, cb) {
 	handler.set(key, value, function(err, res) {
 		if (err !== null) {
@@ -97,7 +119,6 @@ redisClient.get = function(key, cb) {
 			logger.error("exec get failed");
 			utils.invokeCallback(cb, err.message, null);
 		} else {
-			logger.info(res);
 			utils.invokeCallback(cb, null, res);
 		}
 	});
@@ -109,7 +130,6 @@ redisClient.sadd = function(key, uid, cb) {
 			logger.error("exec sadd failed");
 			utils.invokeCallback(cb, err.message, null);
 		} else {
-			logger.info(res);
 			utils.invokeCallback(cb, null, res);
 		}
 	});
@@ -122,7 +142,6 @@ redisClient.srem = function(key, uid, cb) {
 			logger.error("exec srem failed");
 			utils.invokeCallback(cb, err.message, null);
 		} else {
-			logger.info(res);
 			utils.invokeCallback(cb, null, res);
 		}
 	});
@@ -135,7 +154,6 @@ redisClient.srandmember = function(key, cb) {
 			logger.error("exec srandmemeber failed");
 			utils.invokeCallback(cb, err.message, null);
 		} else {
-			logger.info(res);
 			utils.invokeCallback(cb, null, res);
 		}
 	});
@@ -151,7 +169,39 @@ redisClient.scard = function(key, cb) {
 			logger.error("exec scard failed");
 			utils.invokeCallback(cb, err.message, null);
 		} else {
-			logger.info(res);
+			utils.invokeCallback(cb, null, res);
+		}
+	});
+}
+
+redisClient.hmget = function(key, fields, cb) {
+ 	handler.hmget(key, fields, function(err, res) {
+		if (err !== null) {
+			logger.error("exec hmget failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, res);
+		}
+	});
+}
+
+redisClient.hmset = function(key, fields, vals, cb) {
+ 	handler.hmget(key, fields, vals, function(err, res) {
+		if (err !== null) {
+			logger.error("exec hmset failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, res);
+		}
+	});
+}
+
+redisClient.hgetall = function(key, cb) {
+ 	handler.hgetall(key, function(err, res) {
+		if (err !== null) {
+			logger.error("exec hgetall failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
 			utils.invokeCallback(cb, null, res);
 		}
 	});

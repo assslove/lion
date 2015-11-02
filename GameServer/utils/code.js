@@ -13,6 +13,7 @@ var code = {
     },
 
     MIN_UID : 100000000,
+    USER_EXPIRE : 3600,  //一个小时间
 
 }
 

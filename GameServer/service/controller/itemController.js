@@ -14,5 +14,6 @@ var protoManager = require('./../manager/protoManager.js');
 var itemController = module.exports;
 
 itemController.userSyncItem = function(protoid, pkg, req, res, cb) {
+    var items = pkg.item;
 
 }
