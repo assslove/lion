@@ -118,3 +118,20 @@ cacheManager.updateCopy = function(uid, copy, cb) {
         utils.invokeCallback(cb, err, res);
     });
 }
+
+/* @brief 获取用户所有信息
+ */
+cacheManager.getUserInfo = function(app, uid, cb) {
+    redis.hgetall(CODE.CACHE_TYPE.USER, uid, function(err, res) {
+        if (err == null && res == null) {
+            userDao.getUser(app, uid, function(err, res) {
+                if (res.length > 0) cacheManager.updateUser(app, uid, res[0], null);
+                cb(err, res);
+            });
+
+            user
+        } else {
+            cb(err, res);
+        }
+    });
+}

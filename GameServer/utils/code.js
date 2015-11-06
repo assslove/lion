@@ -12,6 +12,12 @@ var code = {
         USERID : "s_userid"
     },
 
+    CACHE_KEY_TYPE : {
+        USER : "k_usr",
+        COPY : "k_cpy",
+        ITEM : "k_itm"
+    },
+
     MIN_UID : 100000000,
     USER_EXPIRE : 3600,  //一个小时间
 
