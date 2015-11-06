@@ -29,17 +29,28 @@ create table t_item (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
 	`itemid` int unsigned NOT NULL COMMENT '道具id',
 	`count` int unsigned NOT NULL COMMENT '数量',
+	`expire` int unsigned NOT NULL COMMENT '到期时间',
 	primary key(`uid`, `itemid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
 
-#初始化限时道具表
-drop table if exists t_limit_item;
-create table t_limit_item (
+#初始化宠物表
+drop table if exists t_pet;
+create table t_pet (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
-	`itemid` int unsigned NOT NULL COMMENT '道具id',
-	`get_time` int unsigned NOT NULL COMMENT '获得时间',
-	`expire` int unsigned NOT NULL COMMENT '到期时间',
-	primary key(`uid`, `itemid`, `get_time`),
-	index(`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	`pet_list` varbinary(1000) COMMENT '宠物列表',
+	`pet_equip` varbinary(48) COMMENT '已上阵宠物列表',
+	`pet_suit` varbinary(256) COMMENT '宠物套装激活情况'
+	`invite_cnt` smallint unsigned COMMENT '派对总人数',
+	`party_flag` tinyint unsigned COMMENT '已领取奖励标志',
+	primary key(`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
+
+#初始化离线消息表
+drop table if exists t_msg;
+create table t_msg (
+	`uid` int unsigned NOT NULL COMMENT '用户id',
+	`msg_list` varbinary(2000) COMMENT '离线消息'
+	primary key(`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
+
 
