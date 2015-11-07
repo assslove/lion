@@ -18,8 +18,8 @@ var userController = module.exports;
 /* @brief 用户登录
  */
 userController.userLogin = function(protoid, pkg, req, res, cb) {
-    userDao.getUser(req.app, pkg.uid, function(err, results) {
-        if (err != null || results.length == 0) {
+    userModel.getUserInfo(req.app, pkg.uid, function(err, results) {
+        if (err != null || results == null) {
             protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_NOT_EXIST);
         } else {
             req.session.uid = pkg.uid;
@@ -121,27 +121,43 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
 
 
 userController.userGetInfo = function(protoid, pkg, req, res, cb) {
-    async.parallel([
-        function(callback) {
-            cacheManager.getUser(req.app, pkg.uid, callback);
-        },
-        function(callback) {
-            cacheManager.getItem(req.app, pkg.uid, callback);
-        },
-        function(callback) {
-            cacheManager.getCopy(req.app, pkg.uid, callback);
-        }
-    ], function(err, results) {
-        if (err != null)  {
-            return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_DATA_ERROR);
+    userModel.getUserInfo(req.app, pkg.uid, function(err, results) {
+        if (err != null || err != undefined)  {
+            return cb(DEFINE.ERROR_CODE.USER_DATA_ERROR);
         }
 
         var obj = {
-            user : results[0].length > 0 ? results[0][0] : null,
-            item : results[1] == null ? [] : results[1],
-            copy : results[2] == null ? [] : results[2]
+            user : results.user,
+            item : results.item,
+            copy : results.copy
         };
 
         protoManager.sendMsgToUser(res, protoid, obj);
+    });
+}
+
+userController.userSyncInfo = function(protoid, pkg, req, res, cb) {
+    cacheManager.getUser(req.app, pkg.uid, function(err, result) {
+        if (err == null || res != null) {
+            //TODO check user info
+            var user = result;
+            for (var i in pkg) {
+                user[i] = pkg[i];
+            }
+
+            async.parallel([
+                function(callback) {
+                    cacheManager.updateUser(pkg.uid, user, callback);
+                },
+                function(callback) {
+                    userDao.updateUser(req.app, user, callback);
+                }
+            ], function(err, results) {
+                if (err != null || err != undefined) cb(DEFINE.ERROR_CODE.USER_SAVE_ERROR);
+                protoManager.sendMsgToUser(res, protoid, user);
+            });
+        } else {
+            cb(DEFINE.ERROR_CODE.USER_NOT_EXIST);
+        }
     });
 }

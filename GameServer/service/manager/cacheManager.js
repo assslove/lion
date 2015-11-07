@@ -13,33 +13,7 @@ var copyDao = require('./../dao/copyDao.js');
 
 var cacheManager = module.exports;
 
-/* @brief 从缓存中获取用户，如果没有，则从数据库获取
- * @ cb 返回 err res
- * @ return res为用户信息
- */
-cacheManager.getUser = function(app, uid, cb) {
-    redis.hget(CODE.CACHE_TYPE.USER, uid, function(err, res) {
-        if (err == null && res == null) {
-            userDao.getUser(app, uid, function(err, res) {
-                if (res.length > 0) cacheManager.updateUser(app, uid, res[0], null);
-                cb(err, res);
-            });
-        } else {
-            cb(err, res);
-        }
-    });
-}
 
-/* @brief 更新用户
- */
-cacheManager.updateUser = function(uid, user, cb) {
-    redis.hset(CODE.CACHE_TYPE.USER, uid, user, function(err, res) {
-        if (err !== null) {
-           logger.error("cache user failed [uid=%ld]", uid);
-        }
-        utils.invokeCallback(cb, err, res);
-    });
-}
 
 /* @brief 增加用户id
  */
@@ -73,23 +47,67 @@ cacheManager.getUidCount = function(cb) {
     });
 }
 
+/* @brief 从缓存中获取用户，如果没有，则从数据库获取
+ * @ cb 返回 err res
+ * @ return res为用户信息
+ */
+cacheManager.getUser = function(app, uid, cb) {
+    redis.hget(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.USER, function(err, res) {
+        if (err == null && res == null) {
+            userDao.getUser(app, uid, function(err, res) {
+                if (err == null && res.length > 0) {
+                    cacheManager.updateUser(app, uid, res[0], null);
+                    utils.invokeCallback(cb, err, res[0]);
+                } else {
+                    utils.invokeCallback(cb, DEFINE.ERROR_CODE.USER_NOT_EXIST, null);
+                }
+            });
+        } else {
+            res = JSON.parse(res);
+            utils.invokeCallback(cb, err, res);
+        }
+    });
+}
+
+/* @brief 更新用户
+ */
+cacheManager.updateUser = function(uid, user, cb) {
+    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.USER, JSON.stringify(user), function(err, res) {
+        if (err !== null) {
+           logger.error("cache user failed [uid=%ld]", uid);
+        }
+        redis.expire(CODE.CACHE_KEY_TYPE.USER + uid, CODE.USER_EXPIRE, function() {});
+        utils.invokeCallback(cb, err, res);
+    });
+}
+
 /* @brief 获取物品
  */
 cacheManager.getItem = function(app, uid, cb) {
-    redis.hget(CODE.CACHE_TYPE.ITEM, uid, function(err, res) {
+    redis.hget(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.ITEM, function(err, res) {
         if (err == null && res == null) {
             itemDao.getItem(app, uid, function(err, res) {
-                if (res.length > 0) cacheManager.updateItem(app, uid, res[0], null);
-                cb(err, res);
+                //delete the name
+                var vals = [];
+                for (var i in res) {
+                    vals.push([res[i].itemid, res[i].count, res[i].expire]);
+                }
+                if (err == null) {
+                    cacheManager.updateItem(app, uid, vals, null);
+                    utils.invokeCallback(cb, err, vals);
+                } else {
+                    utils.invokeCallback(cb, err, null);
+                }
             });
         } else {
-            cb(err, res);
+            res = JSON.parse(res);
+            utils.invokeCallback(cb, err, res);
         }
     });
 }
 
 cacheManager.updateItem = function(uid, item, cb) {
-    redis.hset(CODE.CACHE_TYPE.ITEM, uid, item, function(err, res) {
+    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.ITEM, JSON.stringify(item), function(err, res) {
         if (err !== null) {
            logger.error("cache item failed [uid=%ld]", uid);
         }
@@ -98,23 +116,47 @@ cacheManager.updateItem = function(uid, item, cb) {
 }
 
 cacheManager.getCopy = function(app, uid, cb) {
-    redis.hget(CODE.CACHE_TYPE.COPY, uid, function(err, res) {
+    redis.hget(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.COPY, function(err, res) {
         if (err == null && res == null) {
             copyDao.getCopy(app, uid, function(err, res) {
-                if (res.length > 0) cacheManager.updateCopy(app, uid, res, null);
-                cb(err, res);
+                if (err == null) cacheManager.updateCopy(app, uid, res, null);
+                utils.invokeCallback(cb, err, res);
             });
         } else {
-            cb(err, res);
+            utils.invokeCallback(cb, err, res);
         }
     });
 }
 
 cacheManager.updateCopy = function(uid, copy, cb) {
-    redis.hset(CODE.CACHE_TYPE.COPY, uid, copy, function(err, res) {
+    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.COPY, copy, function(err, res) {
         if (err !== null) {
            logger.error("cache copy failed [uid=%ld]", uid);
         }
         utils.invokeCallback(cb, err, res);
     });
+}
+
+cacheManager.getUserInfo = function(app, uid, cb) {
+    redis.hgetall(CODE.CACHE_TYPE.USER + uid, function(err, results) {
+        for (var i in results) {
+            results[i] = JSON.parse(results[i]);
+        }
+        cb(err, results);
+    });
+}
+
+cacheManager.updateUserInfo = function(app, uid, res, cb) {
+    var fields = [CODE.CACHE_KEY_TYPE.USER, CODE.CACHE_KEY_TYPE.ITEM, CODE.CACHE_KEY_TYPE.COPY];
+    var vals = [res.user, res.item, res.copy];
+    for (var i in vals) {
+        vals[i] = JSON.stringify(vals[i]);
+    }
+    redis.hmset(CODE.CACHE_TYPE.USER + uid,
+        fields,
+        vals,
+        function(err, result) {
+           redis.expire(CODE.CACHE_TYPE.USER + uid, CODE.USER_EXPIRE, cb);
+        }
+    );
 }

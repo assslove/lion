@@ -2,6 +2,7 @@
  * Created by bin.hou on 2015/10/29.
  */
 
+var util = require('util');
 var utils = require('./../../utils/utils.js');
 var mysqlManager = require('./mysqlManager.js');
 var logger = require('./../../utils/log.js');
@@ -64,14 +65,20 @@ itemDao.addItem = function(app, item, cb) {
     });
 }
 
-itemDao.addOrUpdateItem = function(app, item, cb) {
+itemDao.addOrUpdateItem = function(app, uid, item, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
 
-    var sql = "", key = "", value = "", update="";
+    var sql = "", key = "uid, ", value = "?,", update="";
+    var args = [];
+    args.push(uid);
     for (var i in item) {
         key += i + ",";
-        value += i + ",";
+        value += "?,";
         update += i + "=" + item[i] + ",";
+        args.push(item[i]);
+    }
+    for (var i in item) {
+        args.push(item[i]);
     }
 
     sql = util.format("insert into t_item(%s) values(%s) on duplicate key update %s",
@@ -80,7 +87,7 @@ itemDao.addOrUpdateItem = function(app, item, cb) {
         update.substring(0, update.length-1)
     );
 
-    mysqlCli.query(sql, null, function(err, res) {
+    mysqlCli.query(sql, args, function(err, res) {
         if (err !== null) {
             console.log('insert item error: ' + err.message);
             utils.invokeCallback(cb, err.message, null);

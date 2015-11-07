@@ -5,11 +5,14 @@
 
 var code = {
     CACHE_TYPE : {
-        USER : "h_user",
-        COPY : "h_copy",
-        ITEM : "h_item",
-        LIMIT_ITEM : "h_limit",
+        USER : "h_usr_",
         USERID : "s_userid"
+    },
+
+    CACHE_KEY_TYPE : {
+        USER : "k_usr",  //用户
+        ITEM : "k_itm", //物品
+        COPY : "k_cpy"  //副本
     },
 
     MIN_UID : 100000000,

@@ -26,6 +26,7 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_LOGIN] =  [userController.userLogin];
     this.protoHandlers[DEFINE.PROTO.USER_LOGOUT] = [userController.userLogout];
     this.protoHandlers[DEFINE.PROTO.USER_CREATE] = [userController.userCreate];
+    this.protoHandlers[DEFINE.PROTO.USER_SYNC_INFO] = [userController.userSyncInfo];
     this.protoHandlers[DEFINE.PROTO.USER_SYNC_ITEM] = [itemController.userSyncItem];
     this.protoHandlers[DEFINE.PROTO.USER_SYNC_COPY] = [copyController.userSyncCopy];
     this.protoHandlers[DEFINE.PROTO.USER_GET_INFO] = [userController.userGetInfo];
