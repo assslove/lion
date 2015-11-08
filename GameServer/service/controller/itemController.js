@@ -19,7 +19,7 @@ itemController.userSyncItem = function(protoid, pkg, req, res, cb) {
     cacheManager.getItem(req.app, pkg.uid, function(err, results) {
         var itemMap = {};
         for (var i in results) {
-            itemMap[results[i][0]] = [results[i][1], results[2]];
+            itemMap[results[i][0]] = [results[i][1], results[i][2]];
         }
 
         for (var i in items) {

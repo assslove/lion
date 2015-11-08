@@ -161,3 +161,11 @@ userController.userSyncInfo = function(protoid, pkg, req, res, cb) {
         }
     });
 }
+
+userController.userSyncTime = function(protoid, pkg, req, res, cb) {
+    var obj = {
+        timestamp : utils.getCurTime()
+    };
+
+    protoManager.sendMsgToUser(res, protoid, obj);
+}

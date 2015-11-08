@@ -30,6 +30,7 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_SYNC_ITEM] = [itemController.userSyncItem];
     this.protoHandlers[DEFINE.PROTO.USER_SYNC_COPY] = [copyController.userSyncCopy];
     this.protoHandlers[DEFINE.PROTO.USER_GET_INFO] = [userController.userGetInfo];
+    this.protoHandlers[DEFINE.PROTO.USER_SYNC_TIME] = [userController.userSyncTime];
 
     logger.info("init proto handlers success");
 }

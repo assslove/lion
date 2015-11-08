@@ -93,8 +93,9 @@ cacheManager.getItem = function(app, uid, cb) {
                     vals.push([res[i].itemid, res[i].count, res[i].expire]);
                 }
                 if (err == null) {
-                    cacheManager.updateItem(app, uid, vals, null);
-                    utils.invokeCallback(cb, err, vals);
+                    cacheManager.updateItem(uid, vals, function(err, result) {
+                        utils.invokeCallback(cb, err, vals);
+                    });
                 } else {
                     utils.invokeCallback(cb, err, null);
                 }
