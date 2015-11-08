@@ -37,13 +37,9 @@ create table t_item (
 drop table if exists t_pet;
 create table t_pet (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
-	`pet_list` varbinary(1000) COMMENT '宠物列表',
-	`pet_equip` varbinary(48) COMMENT '已上阵宠物列表',
-	`pet_suit` varbinary(256) COMMENT '宠物套装激活情况'
-	`invite_cnt` smallint unsigned COMMENT '派对总人数',
-	`party_flag` tinyint unsigned COMMENT '已领取奖励标志',
+	`pet` varbinary(2048) COMMENT '宠物信息',
 	primary key(`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #初始化离线消息表
 drop table if exists t_msg;
@@ -53,4 +49,8 @@ create table t_msg (
 	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
 
-
+#初始化好友表
+drop table if exists t_friend;
+create table t_friend (
+	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

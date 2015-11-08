@@ -3,6 +3,8 @@
  * Created by bin.hou on 2015/10/29.
  */
 
+var path = require('path');
+var ProtoBuf = require('protobufjs');
 var utils = require('../../utils/utils.js');
 var redis = require('../../utils/redis.js');
 var logger = require('../../utils/log.js');
@@ -10,10 +12,12 @@ var CODE = require('../../utils/code.js');
 var userDao = require('./../dao/userDao.js');
 var itemDao = require('./../dao/itemDao.js');
 var copyDao = require('./../dao/copyDao.js');
+var petDao = require('./../dao/petDao.js');
 
 var cacheManager = module.exports;
 
-
+var builder = ProtoBuf.loadProtoFile(path.join(__dirname, "../../proto/usertype.proto"));
+var Game = builder.build('game');
 
 /* @brief 增加用户id
  */
@@ -168,4 +172,41 @@ cacheManager.updateUserInfo = function(app, uid, res, cb) {
            redis.expire(CODE.CACHE_TYPE.USER + uid, CODE.USER_EXPIRE, cb);
         }
     );
+}
+
+cacheManager.getPet = function(app, uid, cb) {
+    redis.hget(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.PET, function(err, res) {
+        if (err == null && res == null) {
+            petDao.getPet(app, uid, function(err, res) {
+                if (err == null && res.length != 0) {
+                    cacheManager.updatePet(uid, res[0], function(err, result){
+                        utils.invokeCallback(cb, err, res[0]);
+                    });
+                } else {
+                    utils.invokeCallback(cb, err, null);
+                }
+            });
+        } else {
+            res = new Buffer(res);
+            utils.invokeCallback(cb, err, res);
+        }
+    });
+}
+
+cacheManager.updatePet = function(uid, pet, cb) {
+    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.PET, pet, function(err, res) {
+        if (err !== null) {
+           logger.error("cache pet failed [uid=%ld]", uid);
+        }
+        utils.invokeCallback(cb, err, res);
+    });
+}
+
+cacheManager.serializeToPb = function(type, obj) {
+    var model = new Game[type](obj);
+    return model.encode().toBuffer();
+}
+
+cacheManager.parseFromPb = function(type, buffer) {
+    return Game[type].decode(buffer);
 }

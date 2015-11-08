@@ -9,6 +9,7 @@ var logger = require('./../../utils/log.js');
 var userController = require('./../controller/userController.js');
 var itemController = require('./../controller/itemController.js');
 var copyController = require('./../controller/copyController.js');
+var petController = require('./../controller/petController.js');
 
 module.exports = function(app) {
     return new ProtoHandler(app);
@@ -31,6 +32,8 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_SYNC_COPY] = [copyController.userSyncCopy];
     this.protoHandlers[DEFINE.PROTO.USER_GET_INFO] = [userController.userGetInfo];
     this.protoHandlers[DEFINE.PROTO.USER_SYNC_TIME] = [userController.userSyncTime];
+    this.protoHandlers[DEFINE.PROTO.USER_SYNC_PET] = [petController.userSyncPet];
+    this.protoHandlers[DEFINE.PROTO.USER_GET_PET] = [petController.userGetPet];
 
     logger.info("init proto handlers success");
 }
