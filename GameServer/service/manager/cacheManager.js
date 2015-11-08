@@ -154,6 +154,7 @@ cacheManager.updateCopy = function(uid, copy, cb) {
 cacheManager.getUserInfo = function(app, uid, cb) {
     redis.hgetall(CODE.CACHE_TYPE.USER + uid, function(err, results) {
         for (var i in results) {
+            if (i == CODE.CACHE_KEY_TYPE.PET) continue;
             results[i] = JSON.parse(results[i]);
         }
         cb(err, results);
