@@ -120,17 +120,25 @@ cacheManager.getCopy = function(app, uid, cb) {
     redis.hget(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.COPY, function(err, res) {
         if (err == null && res == null) {
             copyDao.getCopy(app, uid, function(err, res) {
-                if (err == null) cacheManager.updateCopy(app, uid, res, null);
-                utils.invokeCallback(cb, err, res);
+                var vals = [];
+                for (var i in res) {
+                    vals.push([res[i].copyid, res[i].max_score, res[i].star]);
+                }
+                if (err == null) {
+                    cacheManager.updateCopy(uid, vals, function(err, result){
+                        utils.invokeCallback(cb, err, vals);
+                    });
+                }
             });
         } else {
+            res = JSON.parse(res);
             utils.invokeCallback(cb, err, res);
         }
     });
 }
 
 cacheManager.updateCopy = function(uid, copy, cb) {
-    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.COPY, copy, function(err, res) {
+    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.COPY, JSON.stringify(copy), function(err, res) {
         if (err !== null) {
            logger.error("cache copy failed [uid=%ld]", uid);
         }

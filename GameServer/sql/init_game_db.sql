@@ -17,7 +17,7 @@ create table t_user (
 drop table if exists t_copy;
 create table  t_copy(
 	`uid` int unsigned NOT NULL COMMENT '用户id',
-	`copy_id` int unsigned NOT NULL COMMENT '关卡id',
+	`copyid` int unsigned NOT NULL COMMENT '关卡id',
 	`max_score` int unsigned NOT NULL COMMENT '最高积分',
 	`star` tinyint unsigned NOT NULL COMMENT '星数',
 	primary key(`uid`)
