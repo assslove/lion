@@ -17,7 +17,7 @@ var petController = module.exports;
 petController.userSyncPet = function(protoid, pkg, req, res, cb) {
     var pet = pkg.pet;
     cacheManager.getPet(req.app, pkg.uid, function(err, results) {
-        if (err != null) return cb(DEFINE.ERROR_CODE.USER_PET_ERROR);
+        if (err != null) return cb(DEFINE.ERROR_CODE.USER_PET_ERROR[0]);
 
         //TODO 校验 检验petid是否重复
         // 校验petid是否存在
@@ -60,7 +60,7 @@ petController.userSyncPet = function(protoid, pkg, req, res, cb) {
             }
         ], function(err, results) {
             if (err != null) {
-                return cb(DEFINE.ERROR_CODE.PET_SAVE_ERROR);
+                return cb(DEFINE.ERROR_CODE.PET_SAVE_ERROR[0]);
             }
 
             protoManager.sendMsgToUser(res, protoid, src);

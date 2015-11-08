@@ -13,6 +13,7 @@ var userDao = require('./../dao/userDao.js');
 var itemDao = require('./../dao/itemDao.js');
 var copyDao = require('./../dao/copyDao.js');
 var petDao = require('./../dao/petDao.js');
+var DEFINE = require('./../../proto/define.js');
 
 var cacheManager = module.exports;
 
@@ -63,7 +64,7 @@ cacheManager.getUser = function(app, uid, cb) {
                     cacheManager.updateUser(app, uid, res[0], null);
                     utils.invokeCallback(cb, err, res[0]);
                 } else {
-                    utils.invokeCallback(cb, DEFINE.ERROR_CODE.USER_NOT_EXIST, null);
+                    utils.invokeCallback(cb, DEFINE.ERROR_CODE.USER_NOT_EXIST[0], null);
                 }
             });
         } else {

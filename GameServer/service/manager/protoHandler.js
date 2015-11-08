@@ -34,6 +34,7 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_SYNC_TIME] = [userController.userSyncTime];
     this.protoHandlers[DEFINE.PROTO.USER_SYNC_PET] = [petController.userSyncPet];
     this.protoHandlers[DEFINE.PROTO.USER_GET_PET] = [petController.userGetPet];
+    this.protoHandlers[DEFINE.PROTO.GET_OTHER_USER] = [userController.getOtherUser];
 
     logger.info("init proto handlers success");
 }

@@ -20,7 +20,7 @@ var userController = module.exports;
 userController.userLogin = function(protoid, pkg, req, res, cb) {
     userModel.getUserInfo(req.app, pkg.uid, function(err, results) {
         if (err != null || results == null) {
-            protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_NOT_EXIST);
+            protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_NOT_EXIST[0]);
         } else {
             req.session.uid = pkg.uid;
             req.session.cookie.expires = false;
@@ -49,7 +49,7 @@ userController.userLogout = function(protoid, pkg, req, res, cb) {
 userController.userCreate = function(protoid, pkg, req, res, cb) {
     if (pkg.uid > CODE.MIN_UID) {
         logger.error("user create uid is error [uid=%d]", pkg.uid);
-        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID);
+        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
     }
 
     var isBindValid = false;
@@ -62,12 +62,12 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
 
     if (!isBindValid) {
         logger.error("user create bind type error [type=%d]", pkg.type);
-        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID);
+        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
     }
 
     if (utils.isNull(pkg.bind_id) || utils.isNull(pkg.name)) {
         logger.error("user create param error [bind_id=%s,name=%s]", pkg.bind_id, pkg.name);
-        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID);
+        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
     }
 
     userModel.genUid(req.app, function(uid) {
@@ -107,7 +107,7 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
                 userModel.delUidFromCache(req.app, uid, callback);
             }
         ], function(err, results) {
-            if (err != null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_EXIST);
+            if (err != null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_EXIST[0]);
 
             var jsonObj = {
                 uid : uid
@@ -123,7 +123,7 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
 userController.userGetInfo = function(protoid, pkg, req, res, cb) {
     userModel.getUserInfo(req.app, pkg.uid, function(err, results) {
         if (err != null || err != undefined)  {
-            return cb(DEFINE.ERROR_CODE.USER_DATA_ERROR);
+            return cb(DEFINE.ERROR_CODE.USER_DATA_ERROR[0]);
         }
 
         var obj = {
@@ -153,11 +153,11 @@ userController.userSyncInfo = function(protoid, pkg, req, res, cb) {
                     userDao.updateUser(req.app, user, callback);
                 }
             ], function(err, results) {
-                if (err != null || err != undefined) cb(DEFINE.ERROR_CODE.USER_SAVE_ERROR);
+                if (err != null || err != undefined) cb(DEFINE.ERROR_CODE.USER_SAVE_ERROR[0]);
                 protoManager.sendMsgToUser(res, protoid, user);
             });
         } else {
-            cb(DEFINE.ERROR_CODE.USER_NOT_EXIST);
+            cb(DEFINE.ERROR_CODE.USER_NOT_EXIST[0]);
         }
     });
 }
@@ -168,4 +168,14 @@ userController.userSyncTime = function(protoid, pkg, req, res, cb) {
     };
 
     protoManager.sendMsgToUser(res, protoid, obj);
+}
+
+userController.getOtherUser = function(protoid, pkg, req, res, cb) {
+    cacheManager.getUser(req.app, pkg.other, function(err, result) {
+        if (err != null) {
+            return cb(DEFINE.ERROR_CODE.USER_NOT_EXIST[0]);
+        }
+
+        protoManager.sendMsgToUser(res, protoid, result);
+    });
 }

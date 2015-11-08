@@ -60,7 +60,7 @@ copyController.userSyncCopy = function(protoid, pkg, req, res, cb) {
             if (err == null || err == undefined) {
                 protoManager.sendMsgToUser(res, protoid, allCopys);
             } else {
-                cb(DEFINE.ERROR_CODE.ITEM_SAVE_ERROR);
+                cb(DEFINE.ERROR_CODE.COPY_SAVE_ERROR[0]);
             }
         });
     });

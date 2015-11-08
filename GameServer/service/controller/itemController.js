@@ -60,7 +60,7 @@ itemController.userSyncItem = function(protoid, pkg, req, res, cb) {
             if (err == null || err == undefined) {
                 protoManager.sendMsgToUser(res, protoid, allItems);
             } else {
-                cb(DEFINE.ERROR_CODE.ITEM_SAVE_ERROR);
+                cb(DEFINE.ERROR_CODE.ITEM_SAVE_ERROR[0]);
             }
         });
     });
