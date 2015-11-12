@@ -45,12 +45,21 @@ create table t_pet (
 	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
 
-#初始化离线消息表
-drop table if exists t_msg;
-create table t_msg (
+#初始化好友邮件表
+drop table if exists t_friend_mail;
+create table t_friend_mail(
 	`uid` int unsigned NOT NULL COMMENT '用户id',
-	`msg_list` varbinary(2000) COMMENT '离线消息'
+	`mails` varbinary(2000) NOT NULL COMMENT '邮件信息'
+	primary key('uid')
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#初始化好友信息表
+drop table if exists t_friend;
+create table t_friend (
+	`uid` int unsigned NOT NULL COMMENT '用户id',
+	`friendlist` varbinary(2000) NOT NULL COMMENT '好友列表',
+	`get_hp_times` tinyint unsigned NOT NULL COMMENT '领取体力的次数',
+	`get_gold_times` tinyint unsigned NOT NULL COMMENT '领取金币的次数',
+	`oper_time` int unsigned NOT NULL COMMENT '操作时间',
 	primary key(`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
-
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
