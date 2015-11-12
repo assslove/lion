@@ -4,6 +4,7 @@
 var utils = require('./../../utils/utils.js');
 var util = require('util');
 var mysqlManager = require('./mysqlManager.js');
+var async = require('async');
 
 var userDao = module.exports;
 
@@ -21,17 +22,20 @@ userDao.getUser = function(app, uid, cb) {
 }
 
 userDao.updateUser = function(app, user, cb) {
-    var mysqlCli = mysqlManager.getMysqlCli(uid);
+    var mysqlCli = mysqlManager.getMysqlCli(user.uid);
     var uid = user.uid;
     delete user.uid;
 
+    var args = [];
     var sql = "update t_user set ";
     for (var i in user) {
-        sql += i + "=" + user[i] + ",";
+        sql += i + "=?" + ",";
+        args.push(user[i]);
     }
     sql = sql.slice(0, sql.length - 1);
     sql += " where uid = ?";
-    mysqlCli.query(sql, [uid], function(err, res) {
+    args.push(uid);
+    mysqlCli.query(sql, args, function(err, res) {
         if (err !== null) {
             console.log('update user error: ' + err.message);
             utils.invokeCallback(cb, err.message, null);
@@ -64,4 +68,5 @@ userDao.addUser = function(app, user, cb) {
         }
     });
 }
+
 

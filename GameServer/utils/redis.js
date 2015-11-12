@@ -33,26 +33,6 @@ redisClient.init = function(app_) {
 		handler.on("error", function (err) {
 			logger.error("redis error : %s" + err);
 		});
-        //设置session地址
-     //   var RedisStore = require('connect-redis')(session);
-	//	app.use(session({
-	//		store : new RedisStore({
-	//			host : app.get('redis').host,
-	//			port : app.get('redis').port,
-	//			ttl  : 3600,
-	//			db : 2
-	//		}),
-	//		secret : 'keyboard cat',
-	//		resave : false,
-	//		saveUninitialized : false,
-	//		cookie: {
-	//			//secure: true,
-	//			path : "/",
-	//			httpOnly : true,
-	//			signed : false,
-	//			expires : false
-	//		}
-	//	}));
 	}
 
 	return handler;
@@ -200,6 +180,26 @@ redisClient.hgetall = function(key, cb) {
  	handler.hgetall(key, function(err, res) {
 		if (err !== null) {
 			logger.error("exec hgetall failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, res);
+		}
+	});
+}
+
+redisClient.expire = function(key, timeout, cb) {
+	handler.expire(key, timeout, cb);
+}
+
+redisClient.hmset = function(key, fileds, vals, cb) {
+	var args = [];
+	for (var i = 0; i < fileds.length; ++i) {
+		args.push(fileds[i]);
+		args.push(vals[i]);
+	}
+ 	handler.hmset(key, args, function(err, res) {
+		if (err !== null) {
+			logger.error("exec hmset failed");
 			utils.invokeCallback(cb, err.message, null);
 		} else {
 			utils.invokeCallback(cb, null, res);

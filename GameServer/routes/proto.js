@@ -28,7 +28,7 @@ router.post('/', function(req, res, next) {
 
     protoManager.handle(protoid, pkg, req, res, function(err) {
         if (err != null) {
-            req.app.get("proto_handler").sendErrorToUser(res, protoid, err);
+            protoManager.sendErrorToUser(res, protoid, err);
         }
     });
 });

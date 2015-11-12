@@ -9,6 +9,7 @@ var logger = require('./../../utils/log.js');
 var userController = require('./../controller/userController.js');
 var itemController = require('./../controller/itemController.js');
 var copyController = require('./../controller/copyController.js');
+var petController = require('./../controller/petController.js');
 
 module.exports = function(app) {
     return new ProtoHandler(app);
@@ -26,9 +27,14 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_LOGIN] =  [userController.userLogin];
     this.protoHandlers[DEFINE.PROTO.USER_LOGOUT] = [userController.userLogout];
     this.protoHandlers[DEFINE.PROTO.USER_CREATE] = [userController.userCreate];
+    this.protoHandlers[DEFINE.PROTO.USER_SYNC_INFO] = [userController.userSyncInfo];
     this.protoHandlers[DEFINE.PROTO.USER_SYNC_ITEM] = [itemController.userSyncItem];
     this.protoHandlers[DEFINE.PROTO.USER_SYNC_COPY] = [copyController.userSyncCopy];
     this.protoHandlers[DEFINE.PROTO.USER_GET_INFO] = [userController.userGetInfo];
+    this.protoHandlers[DEFINE.PROTO.USER_SYNC_TIME] = [userController.userSyncTime];
+    this.protoHandlers[DEFINE.PROTO.USER_SYNC_PET] = [petController.userSyncPet];
+    this.protoHandlers[DEFINE.PROTO.USER_GET_PET] = [petController.userGetPet];
+    this.protoHandlers[DEFINE.PROTO.GET_OTHER_USER] = [userController.getOtherUser];
 
     logger.info("init proto handlers success");
 }

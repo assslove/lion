@@ -7,14 +7,14 @@ var utils = require('./../../utils/utils.js');
 var mysqlManager = require('./mysqlManager.js');
 var logger = require('./../../utils/log.js');
 
-var copyDao = module.exports;
+var petDao = module.exports;
 
-copyDao.getCopy = function(app, uid, cb) {
+petDao.getPet = function(app, uid, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
-    var sql = "select * from t_copy where uid = ?";
+    var sql = "select * from t_pet where uid = ?";
     mysqlCli.query(sql, [uid], function(err, res) {
         if (err !== null) {
-            console.log('get copy error: ' + err.message);
+            console.log('get pet error: ' + err.message);
             utils.invokeCallback(cb, err.message, null);
         } else {
             utils.invokeCallback(cb, null, res);
@@ -22,20 +22,20 @@ copyDao.getCopy = function(app, uid, cb) {
     });
 }
 
-copyDao.updateCopy = function(app, copy, cb) {
+petDao.updatePet = function(app, pet, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
-    var uid = copy.uid;
-    delete copy.uid;
+    var uid = pet.uid;
+    delete pet.uid;
 
-    var sql = "update t_copy set ";
-    for (var i in copy) {
-        sql += i + "=" + copy[i] + ",";
+    var sql = "update t_pet set ";
+    for (var i in pet) {
+        sql += i + "=" + pet[i] + ",";
     }
     sql = sql.slice(0, sql.length - 1);
     sql += " where uid = ?";
     mysqlCli.query(sql, [uid], function(err, res) {
         if (err !== null) {
-            console.log('update copy error: ' + err.message);
+            console.log('update pet error: ' + err.message);
             utils.invokeCallback(cb, err.message, null);
         } else {
             utils.invokeCallback(cb, null, res);
@@ -43,21 +43,21 @@ copyDao.updateCopy = function(app, copy, cb) {
     });
 }
 
-copyDao.addCopy = function(app, copy, cb) {
+petDao.addPet = function(app, pet, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
 
     var sql = "", key = "", value = "";
-    for (var i in copy) {
+    for (var i in pet) {
         key += i + ",";
         value += i + ",";
     }
 
-    sql = util.format("insert into t_copy(%s) values(%s)",
+    sql = util.format("insert into t_pet(%s) values(%s)",
          key.substring(0, key.length-1), value.substring(0, value.length-1));
 
     mysqlCli.query(sql, null, function(err, res) {
         if (err !== null) {
-            console.log('insert copy error: ' + err.message);
+            console.log('insert pet error: ' + err.message);
             utils.invokeCallback(cb, err.message, null);
         } else {
             utils.invokeCallback(cb, null, res);
@@ -65,23 +65,23 @@ copyDao.addCopy = function(app, copy, cb) {
     });
 }
 
-copyDao.addOrUpdateCopy = function(app, uid, copy, cb) {
+petDao.addOrUpdatePet = function(app, uid, pet, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
 
-    var sql = "", key = "", value = "", update="";
+    var sql = "", key = "uid,", value = "?,", update="";
     var args = [];
     args.push(uid);
-    for (var i in copy) {
+    for (var i in pet) {
         key += i + ",";
         value += "?,";
         update += i + "=?,";
-        args.push(copy[i]);
+        args.push(pet[i]);
     }
-    for (var i in copy) {
-        args.push(copy[i]);
+    for (var i in pet) {
+        args.push(pet[i]);
     }
 
-    sql = util.format("insert into t_copy(%s) values(%s) on duplicate key update %s",
+    sql = util.format("insert into t_pet(%s) values(%s) on duplicate key update %s",
         key.substring(0, key.length-1),
         value.substring(0, value.length-1),
         update.substring(0, update.length-1)
@@ -89,7 +89,7 @@ copyDao.addOrUpdateCopy = function(app, uid, copy, cb) {
 
     mysqlCli.query(sql, args, function(err, res) {
         if (err !== null) {
-            console.log('insert copy error: ' + err.message);
+            console.log('insert pet error: ' + err.message);
             utils.invokeCallback(cb, err.message, null);
         } else {
             utils.invokeCallback(cb, null, res);
