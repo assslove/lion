@@ -10,7 +10,9 @@ var CODE = require('./../../utils/code.js');
 var userDao = require('../dao/userDao.js');
 var itemDao = require('../dao/itemDao.js');
 var copyDao = require('../dao/copyDao.js');
+var friendMailDao = require('./../dao/friendMailDao.js');
 var utils = require("./../../utils/utils.js");
+
 
 var user = module.exports;
 
@@ -139,3 +141,9 @@ user.getUserInfoFromDB = function(app, uid, cb) {
 }
 
 
+
+user.addFriendMail(app, uid, cb) {
+    friendMailDao.addOrUpdateFriendMail(app, uid, function(err, results) {
+
+    });
+}

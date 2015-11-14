@@ -10,6 +10,7 @@ var userController = require('./../controller/userController.js');
 var itemController = require('./../controller/itemController.js');
 var copyController = require('./../controller/copyController.js');
 var petController = require('./../controller/petController.js');
+var friendController = require('./../controller/friendController.js');
 
 module.exports = function(app) {
     return new ProtoHandler(app);
@@ -35,6 +36,9 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_SYNC_PET] = [petController.userSyncPet];
     this.protoHandlers[DEFINE.PROTO.USER_GET_PET] = [petController.userGetPet];
     this.protoHandlers[DEFINE.PROTO.GET_OTHER_USER] = [userController.getOtherUser];
+    this.protoHandlers[DEFINE.PROTO.FRIEND_ADD] = [friendController.friendAdd];
+    this.protoHandlers[DEFINE.PROTO.FRIEND_DEL] = [friendController.friendDel];
+    this.protoHandlers[DEFINE.PROTO.USER_GET_FRIENDS] = [friendController.getFriends];
 
     logger.info("init proto handlers success");
 }

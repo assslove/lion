@@ -1,6 +1,7 @@
 /* @brief 提供游戏mysql查询类
  */
 var mysql = require('mysql');
+var logger = require('./../../utils/log.js');
 
 module.exports = function(app, conf) {
    return new MysqlCli(app, conf);
@@ -31,6 +32,7 @@ function MysqlCli(app, conf) {
 
 MysqlCli.prototype.query = function(sql, args, cb) {
 	console.log(sql);
+    logger.debug(sql);
     this.pool.getConnection(function(err, conn) {
         if (err == null) {
             conn.query(sql, args, function(err, res) {

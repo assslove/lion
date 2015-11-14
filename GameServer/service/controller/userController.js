@@ -105,6 +105,9 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
             },
             function(callback) {
                 userModel.delUidFromCache(req.app, uid, callback);
+            },
+            function(callback) {
+                userModel.addFriendMail(req.app, uid, callback);
             }
         ], function(err, results) {
             if (err != null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_EXIST[0]);
