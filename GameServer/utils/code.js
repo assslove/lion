@@ -21,7 +21,7 @@ var code = {
     FRIEND_MAIL_TYPE : {
         APPLY : 1, //好友申请
         GET_HP : 2, //索取体力
-        GIVE_GOLD : 3 //赠送金币
+        GIVE_HP : 3 //赠送体力
     }
 }
 

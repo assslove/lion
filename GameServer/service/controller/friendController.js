@@ -165,8 +165,10 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
                 handleFriendApply(mails, ids, req, protoid, pkg, res);
                 break;
             case CODE.FRIEND_MAIL_TYPE.GET_HP:
+                handleFriendGetHp(mails, ids, req, protoid, pkg, res);
                 break;
-            case CODE.FRIEND_MAIL_TYPE.GIVE_GOLD:
+            case CODE.FRIEND_MAIL_TYPE.GIVE_HP:
+                handleFriendGiveHp(mails, ids, req, protoid, pkg, res);
                 break;
         }
 
@@ -174,7 +176,32 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
 }
 
 friendController.requestHp = function(protoid, pkg, req, res, cb) {
+    var uids = pkg.friendid;
+    var i = 0, total = uids.length;
+    async.whilst(
+        function() {return i < total;},
+        function(callback) {
+            friendMailDao.getFriendMail(req.app, uids[i], function(err, results) {
+                var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails).mail;
+                for (var j in mails) {
+                    if (mails[j].type == CODE.FRIEND_MAIL_TYPE.GET_HP && mails[j].uid == pkg.uid) { //已经申请过
+                        return callback(null);
+                    }
+                }
 
+                mails.push({type : CODE.FRIEND_MAIL_TYPE.GET_HP, uid : pkg.uid});
+
+                var buffer = cacheManager.serializeToPb("FriendMailList", {mail : mails});
+                friendMailDao.addOrUpdateFriendMail(req.app, uids[i], {mails : buffer}, function(err, results) {
+                    ++i;
+                    callback(err);
+                });
+            });
+        },
+        function(err) {
+            protoManager.sendErrorToUser(res, protoid, 0);
+        }
+    );
 }
 
 /* @brief 公共函数定义
@@ -270,4 +297,50 @@ function addFriend(req, uid, friendid, cb) {
            utils.invokeCallback(cb, null, null);
         }
     });
+}
+
+function handleFriendGetHp(mails, ids, req, protoid, pkg, res)
+{
+    if (pkg.answer == 1) {
+        var uids = [];
+        for (var i in ids) {
+            uids.push(mails[ids[i]].uid);
+        }
+
+        var i = 0,  total = uids.length;
+        async.whilst(
+            function() { return i < total; },
+            function(callback) { //增加到好友邮件中
+                friendMailDao.getFriendMail(req.app, uids[i], function(err, results) {
+                    var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails).mail;
+                    mails.push({uid : pkg.uid, type : CODE.FRIEND_MAIL_TYPE.GIVE_HP});
+                    var buffer = cacheManager.serializeToPb("FriendMailList", {mail : mails});
+                    friendMailDao.addOrUpdateFriendMail(req.app, uids[i], {mails : buffer}, function(err, results) {
+                        ++i;
+                        callback(err);
+                    });
+                });
+            },
+            function(err) {
+                delFriendMail(mails, ids, protoid, pkg, req, res);
+            }
+        );
+    } else { //删除邮件
+        delFriendMail(mails, ids, protoid, pkg, req, res);
+    }
+}
+
+/* @brief 领取赠送体力
+ */
+function handleFriendGiveHp(mails, ids, req, protoid, pkg, res)
+{
+    if (pkg.answer == 1) {
+        var uids = [];
+        for (var i in ids) {
+            uids.push(mails[ids[i]].uid);
+        }
+        delFriendMail(mails, ids, protoid, pkg, req, res);
+    } else { //删除邮件
+        delFriendMail(mails, ids, protoid, pkg, req, res);
+    }
 }
