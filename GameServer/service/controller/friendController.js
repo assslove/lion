@@ -50,7 +50,56 @@ friendController.friendAdd = function(protoid, pkg, req, res, cb) {
 }
 
 friendController.friendDel = function(protoid, pkg, req, res, cb) {
+    var uids = pkg.friendid;
+    async.parallel([
+        function(callback) { //从自己列表中删除
+            friendDao.getFriend(req.app, pkg.uid, function(err, results) {
+                var friends = cacheManager.parseFromPb("FriendList", results[0].friendlist).uid;
+                for (var i in uids) {
+                    for (var j in friends) {
+                        if (friends[j] == uids[i]) {
+                            friends.splice(j, 1);
+                            break;
+                        }
+                    }
+                }
 
+                var buffer = cacheManager.serializeToPb("FriendList", {uid: friends});
+                friendDao.addOrUpdateFriend(req.app, pkg.uid, {friendlist: buffer}, function(err, results) {
+                    callback(err, results);
+                });
+            });
+
+        },
+        function(callback) { //把自己从别人列表中删除
+            var i = 0, total = uids.length;
+            async.whilst(
+                function() {return i < total;},
+                function(callback1) {
+                    var friendid = uids[i];
+                    friendDao.getFriend(req.app, friendid, function(err, results) {
+                        var friends = cacheManager.parseFromPb("FriendList", results[0].friendlist).uid;
+                        for (var j in friends) {
+                            if (friends[j] == pkg.uid) {
+                                friends.splice(j, 1);
+                                break;
+                            }
+                        }
+                        var buffer = cacheManager.serializeToPb("FriendList", {uid: friends});
+                        friendDao.addOrUpdateFriend(req.app, friendid, {friendlist: buffer}, function(err, results) {
+                            ++i;
+                            callback1(err);
+                        });
+                    });
+                },
+                function(err) {
+                    callback(err, null);
+                }
+            );
+        }
+    ], function(err, results) {
+        protoManager.sendErrorToUser(res, protoid, 0);
+    });
 }
 
 friendController.getFriends  = function(protoid, pkg, req, res, cb) {
@@ -66,12 +115,12 @@ friendController.getFriends  = function(protoid, pkg, req, res, cb) {
             function(callback) {
                 cacheManager.getUser(req.app, uids[i], function(err, result) {
                     ++i;
-                    user.push(result);
-                    callback(err, result);
+                    users.push(result);
+                    callback(err);
                 });
             },
-            function(err, results) {
-                protoManager.sendMsgToUser(res, protoid, users);
+            function(err) {
+                protoManager.sendMsgToUser(res, protoid, { user: users});
             }
         )
     });
@@ -105,7 +154,7 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
             }
         } else {
             for (var i in mails) {
-                if (mails[i].type == type && mails[i].uid == friendid) ids.push(i);
+                if (mails[i].type == type && mails[i].uid == friendId) ids.push(i);
             }
         }
 
@@ -134,63 +183,60 @@ function handleFriendApply(mails, ids, req, protoid, pkg, res) {
     if (pkg.answer == 1) {
         var uids = [];
         for (var i in ids) {
-            uids.push(mails[i].uid);
+            uids.push(mails[ids[i]].uid);
         }
 
         async.parallel([
-            function(callback) {
-friendDao.getFriend(req.app, pkg.uid, function(err, results) {
-    var friends = cacheManager.parseFromPb("FriendList", results[0].friendlist).uid;
-    for (var i in uids) {
-        var isFind = false;
-        for (var j in friends) {
-            if (friends[j] == uids[i]) {
-                isFind = true;
-                break;
-            }
-        }
+            function(callback) { // 增加好友到自己列表中
+                friendDao.getFriend(req.app, pkg.uid, function(err, results) {
+                    var friends = cacheManager.parseFromPb("FriendList", results[0].friendlist).uid;
+                    for (var i in uids) {
+                        var isFind = false;
+                        for (var j in friends) {
+                            if (friends[j] == uids[i]) {
+                                isFind = true;
+                                break;
+                            }
+                        }
 
-        if (!isFind) friends.push(uids[i]);
-    }
+                        if (!isFind) friends.push(uids[i]);
+                    }
 
-    var buffer = cacheManager.serializeToPb("FriendList", {uid : friends});
-    friendDao.addOrUpdateFriend(req.app, pkg.uid, {friendlist : buffer}, function(err, results) {
-
-    });
-
-});
+                    var buffer = cacheManager.serializeToPb("FriendList", {uid : friends});
+                    friendDao.addOrUpdateFriend(req.app, pkg.uid, {friendlist : buffer}, function(err, results) {
+                        callback(err, results);
+                    });
+                });
             },
-            function(callback) {
-
+            function(callback) { // 增加自己到其它好友中
+                var i = 0,  total = uids.length;
+                async.whilst(
+                    function() { return i < total; },
+                    function(callback1) {
+                        addFriend(req, uids[i], pkg.uid, function(err, results) {
+                            ++i;
+                            callback1(err, results);
+                        });
+                    },
+                    function(err) {
+                        callback(err, null);
+                    }
+                )
             }
         ], function(err, results) {
-
+            delFriendMail(mails, ids, protoid, pkg, req, res);
         });
-
-        friendDao.getFriend(req.app, pkg.uid, function(err, results) {
-            var friends = cacheManager.parseFromPb("FriendList", results[0].friendlist).uid;
-            for (var i in uids) {
-                var isFind = false;
-                for (var j in friends) {
-                    if (friends[j] == uids[i]) {
-                        isFind = true;
-                        break;
-                    }
-                }
-
-                if (!isFind) friends.push(uids[i]);
-            }
-
-            var buffer = cacheManager.serializeToPb("FriendList", {uid : friends});
-            friendDao.addOrUpdateFriend(req.app, pkg.uid, {friendlist : buffer}, function(err, results) {
-
-            });
-
-        });
+    } else { //删除邮件
+        delFriendMail(mails, ids, protoid, pkg, req, res);
     }
 
+
+}
+
+function delFriendMail(mails, ids, protoid, pkg, req, res)
+{
     for (var i in ids) {
-        mails.slice(i, 1);
+        mails.splice(ids[i], 1);
     }
 
     var buffer = cacheManager.serializeToPb("FriendMailList", {mail : mails});
@@ -217,9 +263,11 @@ function addFriend(req, uid, friendid, cb) {
         if (!isFind) {
             friends.push(friendid);
             var buffer = cacheManager.serializeToPb("FriendList", {uid : friends});
-            friendDao.addOrUpdateFriend(req.app, pkg.uid, {friendlist : buffer}, function(err, results) {
+            friendDao.addOrUpdateFriend(req.app, uid, {friendlist : buffer}, function(err, results) {
                 utils.invokeCallback(cb, err, results);
             });
+        } else {
+           utils.invokeCallback(cb, null, null);
         }
     });
 }
