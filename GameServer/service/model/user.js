@@ -11,6 +11,7 @@ var userDao = require('../dao/userDao.js');
 var itemDao = require('../dao/itemDao.js');
 var copyDao = require('../dao/copyDao.js');
 var friendMailDao = require('./../dao/friendMailDao.js');
+var friendDao = require('./../dao/friendDao.js');
 var utils = require("./../../utils/utils.js");
 
 
@@ -142,8 +143,35 @@ user.getUserInfoFromDB = function(app, uid, cb) {
 
 
 
-user.addFriendMail(app, uid, cb) {
-    friendMailDao.addOrUpdateFriendMail(app, uid, function(err, results) {
+user.addFriendMail = function(app, uid, cb) {
+    var obj = {
+        mail : []
+    };
 
+    var buffer = cacheManager.serializeToPb("FriendMailList", obj);
+    var friendMail = {
+        mails : buffer
+    };
+
+    friendMailDao.addOrUpdateFriendMail(app, uid, friendMail, function(err, results) {
+        cb(err, results);
+    });
+}
+
+user.addFriend = function(app, uid, cb) {
+    var obj = {
+        uid : []
+    };
+
+    var buffer = cacheManager.serializeToPb("FriendList", obj);
+    var friend = {
+        friendlist : buffer,
+        get_hp_times : 0,
+        get_gold_times : 0,
+        oper_time : utils.getCurTime()
+    };
+
+    friendDao.addOrUpdateFriend(app, uid, friend, function(err, results) {
+        cb(err, results);
     });
 }

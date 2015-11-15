@@ -43,10 +43,10 @@ create table t_pet (
 
 #初始化好友邮件表
 drop table if exists t_friend_mail;
-create table t_friend_mail(
+create table t_friend_mail (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
 	`mails` varbinary(2000) NOT NULL COMMENT '邮件信息',
-	primary key('uid')
+	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #初始化好友信息表
