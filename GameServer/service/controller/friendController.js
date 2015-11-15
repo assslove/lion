@@ -170,6 +170,9 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
             case CODE.FRIEND_MAIL_TYPE.GIVE_HP:
                 handleFriendGiveHp(mails, ids, req, protoid, pkg, res);
                 break;
+            case CODE.FRIEND_MAIL_TYPE.GIVE_GOLD:
+                handleFriendGiveGold(mails, ids, req, protoid, pkg, res);
+                break;
         }
 
     });
@@ -259,6 +262,24 @@ function handleFriendApply(mails, ids, req, protoid, pkg, res) {
 
 
 }
+friendController.giveGold = function(protoid, pkg, req, res, cb) {
+    var friendid  = pkg.friendid;
+    friendMailDao.getFriendMail(req.app, friendid, function(err, results) {
+        var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails).mail;
+        for (var j in mails) {
+            if (mails[j].type == CODE.FRIEND_MAIL_TYPE.GIVE_GOLD && mails[j].uid == pkg.uid) { //已经赠送
+                return cb(0);
+            }
+        }
+
+        mails.push({type: CODE.FRIEND_MAIL_TYPE.GIVE_GOLD, uid: pkg.uid});
+
+        var buffer = cacheManager.serializeToPb("FriendMailList", {mail: mails});
+        friendMailDao.addOrUpdateFriendMail(req.app, friendid, {mails: buffer}, function (err, results) {
+            protoManager.sendErrorToUser(res, protoid, 0);
+        });
+    });
+}
 
 function delFriendMail(mails, ids, protoid, pkg, req, res)
 {
@@ -333,6 +354,21 @@ function handleFriendGetHp(mails, ids, req, protoid, pkg, res)
 /* @brief 领取赠送体力
  */
 function handleFriendGiveHp(mails, ids, req, protoid, pkg, res)
+{
+    if (pkg.answer == 1) {
+        var uids = [];
+        for (var i in ids) {
+            uids.push(mails[ids[i]].uid);
+        }
+        delFriendMail(mails, ids, protoid, pkg, req, res);
+    } else { //删除邮件
+        delFriendMail(mails, ids, protoid, pkg, req, res);
+    }
+}
+
+/* @brief 赠送金币
+ */
+function handleFriendGiveGold(mails, ids, req, protoid, pkg, res)
 {
     if (pkg.answer == 1) {
         var uids = [];

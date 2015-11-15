@@ -42,6 +42,7 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_GET_FRIEND_MAIL] = [friendController.getFriendMail];
     this.protoHandlers[DEFINE.PROTO.USER_READ_FRIEND_MAIL] = [friendController.readFriendMail];
     this.protoHandlers[DEFINE.PROTO.USER_REQUEST_HP] = [friendController.requestHp];
+    this.protoHandlers[DEFINE.PROTO.USER_GIVE_GOLD] = [friendController.giveGold];
 
     logger.info("init proto handlers success");
 }
