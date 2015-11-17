@@ -165,17 +165,6 @@ redisClient.hmget = function(key, fields, cb) {
 	});
 }
 
-redisClient.hmset = function(key, fields, vals, cb) {
- 	handler.hmget(key, fields, vals, function(err, res) {
-		if (err !== null) {
-			logger.error("exec hmset failed");
-			utils.invokeCallback(cb, err.message, null);
-		} else {
-			utils.invokeCallback(cb, null, res);
-		}
-	});
-}
-
 redisClient.hgetall = function(key, cb) {
  	handler.hgetall(key, function(err, res) {
 		if (err !== null) {
@@ -200,6 +189,50 @@ redisClient.hmset = function(key, fileds, vals, cb) {
  	handler.hmset(key, args, function(err, res) {
 		if (err !== null) {
 			logger.error("exec hmset failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, res);
+		}
+	});
+}
+
+redisClient.zrevrank = function(key, uid, cb) {
+	handler.zrevrank(key, uid, function(err, res) {
+		if (err !== null) {
+			logger.error("exec zrank failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, res);
+		}
+	});
+}
+
+redisClient.zscore = function(key, uid, cb) {
+	handler.zscore(key, uid, function(err, res) {
+		if (err !== null) {
+			logger.error("exec zscore failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, res);
+		}
+	});
+}
+
+redisClient.zrevrange = function(key, args, cb) {
+    handler.zrevrange(key, uid, function(err, res) {
+		if (err !== null) {
+			logger.error("exec zrevrange failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, res);
+		}
+	});
+}
+
+redisClient.zadd = function(key, uid, score, cb) {
+    handler.zrevrange(key, [uid, score], function(err, res) {
+		if (err !== null) {
+			logger.error("exec zadd failed");
 			utils.invokeCallback(cb, err.message, null);
 		} else {
 			utils.invokeCallback(cb, null, res);
