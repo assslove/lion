@@ -7,6 +7,13 @@ var cacheManager = require('./../manager/cacheManager.js');
 var logger = require("./../../utils/log.js");
 var uidDao = require('./../dao/uidDao.js');
 var CODE = require('./../../utils/code.js');
+var userDao = require('../dao/userDao.js');
+var itemDao = require('../dao/itemDao.js');
+var copyDao = require('../dao/copyDao.js');
+var friendMailDao = require('./../dao/friendMailDao.js');
+var friendDao = require('./../dao/friendDao.js');
+var utils = require("./../../utils/utils.js");
+
 
 var user = module.exports;
 
@@ -77,6 +84,94 @@ user.delUidFromCache = function(app, uid, cb) {
             uidDao.insertOrUpdateUidFlag(app, uid, 1, callback);
         }
     ], function(err, results) {
+        cb(err, results);
+    });
+}
+
+user.getUserInfo = function(app, uid, cb) {
+    cacheManager.getUserInfo(app, uid, function(err, res) {
+        if (err == null && res == null) {
+            user.getUserInfoFromDB(app, uid, function(err, res) {
+                if (err != null) {
+                    utils.callback(cb, err, res);
+                } else {
+                    cacheManager.updateUserInfo(app, uid, res, function(err, result) {
+                        cb(err, res);
+                    });
+                }
+            });
+        } else {
+            var results = {
+                user : res[CODE.CACHE_KEY_TYPE.USER],
+                item : res[CODE.CACHE_KEY_TYPE.ITEM],
+                copy : res[CODE.CACHE_KEY_TYPE.COPY]
+            };
+            cb(err, results);
+        }
+    })
+}
+
+user.getUserInfoFromDB = function(app, uid, cb) {
+    async.series([
+        function(callback) {
+            userDao.getUser(app, uid, callback);
+        },
+        function(callback) {
+            itemDao.getItem(app, uid, callback);
+        },
+        function(callback) {
+            copyDao.getCopy(app, uid, callback);
+        }
+    ], function(err, results) {
+        var items = [], copys = [];
+        for (var i in results[1]) {
+            var item = results[1][i];
+            items.push([item.itemid, item.count, item.expire]);
+        }
+
+        for (var i in results[2]) {
+            var copy = results[2][i];
+            copys.push(copy.copyid, copy.star, copy.score);
+        }
+        cb(err, {
+            "user" : results[0] != null && results[0].length != 0 ? results[0][0]  : null,
+            "item" : items,
+            "copy" : copys
+        });
+    });
+}
+
+
+
+user.addFriendMail = function(app, uid, cb) {
+    var obj = {
+        mail : []
+    };
+
+    var buffer = cacheManager.serializeToPb("FriendMailList", obj);
+    var friendMail = {
+        mails : buffer
+    };
+
+    friendMailDao.addOrUpdateFriendMail(app, uid, friendMail, function(err, results) {
+        cb(err, results);
+    });
+}
+
+user.addFriend = function(app, uid, cb) {
+    var obj = {
+        uid : []
+    };
+
+    var buffer = cacheManager.serializeToPb("FriendList", obj);
+    var friend = {
+        friendlist : buffer,
+        get_hp_times : 0,
+        get_gold_times : 0,
+        oper_time : utils.getCurTime()
+    };
+
+    friendDao.addOrUpdateFriend(app, uid, friend, function(err, results) {
         cb(err, results);
     });
 }

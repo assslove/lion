@@ -17,7 +17,7 @@ create table t_user (
 drop table if exists t_copy;
 create table  t_copy(
 	`uid` int unsigned NOT NULL COMMENT '用户id',
-	`copy_id` int unsigned NOT NULL COMMENT '关卡id',
+	`copyid` int unsigned NOT NULL COMMENT '关卡id',
 	`max_score` int unsigned NOT NULL COMMENT '最高积分',
 	`star` tinyint unsigned NOT NULL COMMENT '星数',
 	primary key(`uid`)
@@ -37,20 +37,25 @@ create table t_item (
 drop table if exists t_pet;
 create table t_pet (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
-	`pet_list` varbinary(1000) COMMENT '宠物列表',
-	`pet_equip` varbinary(48) COMMENT '已上阵宠物列表',
-	`pet_suit` varbinary(256) COMMENT '宠物套装激活情况'
-	`invite_cnt` smallint unsigned COMMENT '派对总人数',
-	`party_flag` tinyint unsigned COMMENT '已领取奖励标志',
+	`pet` varbinary(2048) COMMENT '宠物信息',
 	primary key(`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-#初始化离线消息表
-drop table if exists t_msg;
-create table t_msg (
+#初始化好友邮件表
+drop table if exists t_friend_mail;
+create table t_friend_mail (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
-	`msg_list` varbinary(2000) COMMENT '离线消息'
+	`mails` varbinary(2000) NOT NULL COMMENT '邮件信息',
 	primary key(`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+#初始化好友信息表
+drop table if exists t_friend;
+create table t_friend (
+	`uid` int unsigned NOT NULL COMMENT '用户id',
+	`friendlist` varbinary(2000) NOT NULL COMMENT '好友列表',
+	`get_hp_times` tinyint unsigned NOT NULL COMMENT '领取体力的次数',
+	`get_gold_times` tinyint unsigned NOT NULL COMMENT '领取金币的次数',
+	`oper_time` int unsigned NOT NULL COMMENT '操作时间',
+	primary key(`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
