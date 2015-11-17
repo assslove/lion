@@ -16,6 +16,7 @@ var router = express.Router();
 
 router.post('/', function(req, res, next) {
     //check proto pkg
+	logger.info(req.body.b);
     var body = JSON.parse(req.body.b);
     if (body.p == undefined) {
         logger.error("proto id is not null protoid=%d", body.p);
