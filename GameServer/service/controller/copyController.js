@@ -15,7 +15,7 @@ var copyDao = require('./../dao/copyDao.js');
 var copyController = module.exports;
 
 copyController.userSyncCopy = function(protoid, pkg, req, res, cb) {
-    var copys = JSON.parse(pkg.copy);
+    var copys = pkg.copy;
     cacheManager.getCopy(req.app, pkg.uid, function(err, results) {
         var copyMap = {};
         for (var i in results) {

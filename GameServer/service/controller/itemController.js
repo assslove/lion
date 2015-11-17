@@ -15,7 +15,7 @@ var itemDao = require('./../dao/itemDao.js');
 var itemController = module.exports;
 
 itemController.userSyncItem = function(protoid, pkg, req, res, cb) {
-    var items = JSON.parse(pkg.item);
+    var items = pkg.item;
     cacheManager.getItem(req.app, pkg.uid, function(err, results) {
         var itemMap = {};
         for (var i in results) {
