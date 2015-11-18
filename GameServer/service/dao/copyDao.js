@@ -68,7 +68,7 @@ copyDao.addCopy = function(app, copy, cb) {
 copyDao.addOrUpdateCopy = function(app, uid, copy, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
 
-    var sql = "", key = "", value = "", update="";
+    var sql = "", key = "uid,", value = "?,", update="";
     var args = [];
     args.push(uid);
     for (var i in copy) {
