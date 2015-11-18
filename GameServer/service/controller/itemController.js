@@ -31,8 +31,14 @@ itemController.userSyncItem = function(protoid, pkg, req, res, cb) {
             }
         }
 
+        var count = 0;
         for (var i in items) {
-            itemMap[items[i][0]] = [itemMap[items[i][0]][0] + items[i][1], items[i][2]];
+            if (itemMap[items[i][0]] != undefined) {
+                count =  itemMap[items[i][0]][0] + items[i][1];
+            } else {
+                count = items[i][1];
+            }
+            itemMap[items[i][0]] = [count, items[i][2]];
         }
 
         var allItems = [];
