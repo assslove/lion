@@ -6,7 +6,8 @@
 var code = {
     CACHE_TYPE : {
         USER : "h_usr_",
-        USERID : "s_userid"
+        USERID : "s_userid",
+        COPY_SCORE : 's_cpy_score:'  //玩家关卡通过记录
     },
 
     CACHE_KEY_TYPE : {

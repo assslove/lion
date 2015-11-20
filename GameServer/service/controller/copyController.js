@@ -11,6 +11,7 @@ var CODE = require("./../../utils/code.js");
 var utils = require('./../../utils/utils.js');
 var protoManager = require('./../manager/protoManager.js');
 var copyDao = require('./../dao/copyDao.js');
+var userModel = require('./../model/user.js');
 
 var copyController = module.exports;
 
@@ -33,6 +34,9 @@ copyController.userSyncCopy = function(protoid, pkg, req, res, cb) {
 
         //检验道具合法性 TODO
         async.parallel([
+            function(callback) {
+                cacheManager.updateCopyScore(pkg.uid, copys, callback);
+            },
             function(callback) {
                 cacheManager.updateCopy(pkg.uid, allCopys, callback);
             },

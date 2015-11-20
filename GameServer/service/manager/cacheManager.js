@@ -212,3 +212,31 @@ cacheManager.serializeToPb = function(type, obj) {
 cacheManager.parseFromPb = function(type, buffer) {
     return Game[type].decode(buffer);
 }
+
+cacheManager.getUserCopyScore =  function(copyid, ids, cb) {
+    redis.hmget(CODE.CACHE_TYPE.COPY_SCORE + copyid, ids, function(err, res) {
+        if (err !== null) {
+            logger.error("get copy score failed");
+        }
+        utils.invokeCallback(cb, err, res);
+    });
+}
+
+cacheManager.updateCopyScore = function(uid, cpy, cb) {
+    var i = 0;
+    var total = copy.length;
+    async.whilst(
+        function() {return i < total;},
+        function(callback) {
+            var id = cpy[i][0];
+            var score = cpy[i][1];
+            redis.hset(CODE.CACHE_TYPE.COPY_SCORE + id, uid, score, function(err, results) {
+                ++i;
+                callback(err);
+            })
+        },
+        function(err) {
+           cb(err, null);
+        }
+    )
+}

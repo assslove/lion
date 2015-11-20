@@ -175,3 +175,4 @@ user.addFriend = function(app, uid, cb) {
         cb(err, results);
     });
 }
+

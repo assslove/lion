@@ -185,3 +185,34 @@ userController.getOtherUser = function(protoid, pkg, req, res, cb) {
         protoManager.sendMsgToUser(res, protoid, result);
     });
 }
+
+userController.getCopyRank = function(protoid, pkg, req, res, cb) {
+    var copyid = pkg.copyid;
+    var ids = pkg.friendid;
+    cacheManager.getUserCopyScore(copyid, ids, function(err, resutls) {
+        var copys = [];
+        for (var i in ids) {
+           copys.push([ids[i], results[i]]);
+        }
+
+        copys.sort(function(a, b) {
+           return a[1] < b[1];
+        });
+
+        var rank = 0;
+        for (var i in copys) {
+            if (copys[i][0] === pkg.uid) {
+                rank = i + 1;
+                break;
+            }
+        }
+
+        copys.slice(0, 10);
+
+        var ret = {
+            rank : rank,
+            friend : copys
+        };
+        protoManager.sendMsgToUser(res, protoid, ret);
+    });
+}
