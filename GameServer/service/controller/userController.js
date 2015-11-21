@@ -52,24 +52,6 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
         return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
     }
 
-    var isBindValid = false;
-    for (var i in DEFINE.BIND_TYPE) {
-        if (DEFINE.BIND_TYPE[i] == pkg.type) {
-            isBindValid = true;
-            break;
-        }
-    }
-
-    if (!isBindValid) {
-        logger.error("user create bind type error [type=%d]", pkg.type);
-        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
-    }
-
-    if (utils.isNull(pkg.bind_id) || utils.isNull(pkg.name)) {
-        logger.error("user create param error [bind_id=%s,name=%s]", pkg.bind_id, pkg.name);
-        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
-    }
-
     userModel.genUid(req.app, function(uid) {
         var user = {
             uid : uid,
@@ -87,15 +69,6 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
             uid : uid,
         };
 
-        switch (pkg.type) {
-            case DEFINE.BIND_TYPE.BIND_QQ:
-                account.qq = pkg.bind_id;
-                break;
-            case DEFINE.BIND_TYPE.BIND_WECHAT:
-                account.wechat = pkg.bind_id;
-                break;
-        }
-
         async.parallel([
             function(callback) {
                 accountDao.addOrUpdateAccount(req.app, account, callback);
@@ -111,7 +84,10 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
             },
             function(callback) {
                 userModel.addFriend(req.app, uid, callback);
-            }
+            },
+            function(callback) {
+                cacheManager.updateUserBase(uid, user, callback);
+            },
         ], function(err, results) {
             if (err != null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_EXIST[0]);
 
@@ -157,6 +133,9 @@ userController.userSyncInfo = function(protoid, pkg, req, res, cb) {
                 },
                 function(callback) {
                     userDao.updateUser(req.app, user, callback);
+                },
+                function(callback) {
+                    cacheManager.updateUserBase(pkg.uid, user, callback);
                 }
             ], function(err, results) {
                 if (err != null || err != undefined) cb(DEFINE.ERROR_CODE.USER_SAVE_ERROR[0]);

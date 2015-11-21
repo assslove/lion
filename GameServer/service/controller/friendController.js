@@ -108,21 +108,14 @@ friendController.getFriends  = function(protoid, pkg, req, res, cb) {
 
         var uids = cacheManager.parseFromPb("FriendList", results[0].friendlist).uid;
 
-        var i = 0, total = uids.length;
-        var users = [];
-        async.whilst(
-            function() {return i < total; },
-            function(callback) {
-                cacheManager.getUser(req.app, uids[i], function(err, result) {
-                    ++i;
-                    users.push(result);
-                    callback(err);
-                });
-            },
-            function(err) {
-                protoManager.sendMsgToUser(res, protoid, { user: users});
+        cacheManager.getUserBases(uids, function(err, results) {
+            var users = [];
+            for (var i in results) {
+                users.push(JSON.parse(results[i]));
             }
-        )
+
+            protoManager.sendMsgToUser(res, protoid, { user: users});
+        });
     });
 }
 

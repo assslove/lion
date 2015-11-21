@@ -240,3 +240,29 @@ cacheManager.updateCopyScore = function(uid, cpy, cb) {
         }
     )
 }
+
+cacheManager.updateUserBase = function(uid, base, cb) {
+    var obj = {
+        uid : base.uid,
+        name : base.name,
+        head_icon : base.head_icon,
+        max_copy : base.max_copy,
+        copy_stars : base.copy_stars
+    };
+
+    redis.hset(CODE.CACHE_TYPE.USER_BASE, uid, JSON.stringify(obj), function(err, res) {
+        if (err !== null) {
+           logger.error("cache user base failed [uid=%ld]", uid);
+        }
+        utils.invokeCallback(cb, err, res);
+    });
+}
+
+cacheManager.getUserBases = function(uids, cb) {
+    redis.hmget(CODE.CACHE_TYPE.USER_BASE, uids, function(err, res) {
+        if (err !== null) {
+            logger.error("get user bases failed");
+        }
+        utils.invokeCallback(cb, err, res);
+    });
+}

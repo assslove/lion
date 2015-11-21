@@ -17,6 +17,7 @@ var copyController = module.exports;
 
 copyController.userSyncCopy = function(protoid, pkg, req, res, cb) {
     var copys = pkg.copy;
+    //校验关卡的正确性 TODO
     cacheManager.getCopy(req.app, pkg.uid, function(err, results) {
         var copyMap = {};
         for (var i in results) {
