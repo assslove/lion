@@ -35,6 +35,8 @@ userDao.updateUser = function(app, user, cb) {
     sql = sql.slice(0, sql.length - 1);
     sql += " where uid = ?";
     args.push(uid);
+    user.uid = uid;
+
     mysqlCli.query(sql, args, function(err, res) {
         if (err !== null) {
             console.log('update user error: ' + err.message);

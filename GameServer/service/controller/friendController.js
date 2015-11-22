@@ -302,7 +302,7 @@ function addFriend(req, uid, friendid, cb) {
         }
 
         if (!isFind) {
-            friends.push(friendid);
+            friends.push(parseInt(friendid));
             var buffer = cacheManager.serializeToPb("FriendList", {uid : friends});
             friendDao.addOrUpdateFriend(req.app, uid, {friendlist : buffer}, function(err, results) {
                 utils.invokeCallback(cb, err, results);

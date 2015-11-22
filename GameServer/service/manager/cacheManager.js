@@ -5,6 +5,8 @@
 
 var path = require('path');
 var ProtoBuf = require('protobufjs');
+var async = require('async');
+
 var utils = require('../../utils/utils.js');
 var redis = require('../../utils/redis.js');
 var logger = require('../../utils/log.js');
@@ -224,7 +226,7 @@ cacheManager.getUserCopyScore =  function(copyid, ids, cb) {
 
 cacheManager.updateCopyScore = function(uid, cpy, cb) {
     var i = 0;
-    var total = copy.length;
+    var total = cpy.length;
     async.whilst(
         function() {return i < total;},
         function(callback) {

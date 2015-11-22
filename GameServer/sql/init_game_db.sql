@@ -3,11 +3,12 @@ drop table if exists t_user;
 create table t_user (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
 	`name` varchar(32) NOT NULL COMMENT '昵称',
-	`head_icon` tinyint unsigned NOT NULL COMMENT '头像',
-	`max_copy` int unsigned NOT NULL COMMENT '通关数',
-	`cash` int unsigned NOT NULL COMMENT '钻石',
-	`gold` int unsigned NOT NULL COMMENT '金币',
-	`hp` int unsigned NOT NULL COMMENT '体力',
+	`head_icon` tinyint unsigned NOT NULL default 0 COMMENT '头像',
+	`max_copy` int unsigned NOT NULL default 0 COMMENT '通关数',
+	`copy_stars` int unsigned NOT NULL COMMENT '通关总星数',
+	`cash` int unsigned NOT NULL default 0 COMMENT '钻石',
+	`gold` int unsigned NOT NULL default 0 COMMENT '金币',
+	`hp` int unsigned NOT NULL default 0 COMMENT '体力',
 	`last_login` int unsigned NOT NULL COMMENT '最后登录时间',
 	`reg_time` int unsigned NOT NULL COMMENT '注册时间',
 	primary key(`uid`)
@@ -20,7 +21,7 @@ create table  t_copy(
 	`copyid` int unsigned NOT NULL COMMENT '关卡id',
 	`max_score` int unsigned NOT NULL COMMENT '最高积分',
 	`star` tinyint unsigned NOT NULL COMMENT '星数',
-	primary key(`uid`)
+	primary key(`uid`, `copyid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #初始化道具表

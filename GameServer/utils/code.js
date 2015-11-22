@@ -8,7 +8,7 @@ var code = {
         USER : "h_usr:",   // 单个用户缓存记录 key: CACHE_KEY_TYPE , value: 相关联的信息
         USERID : "s_userid", // 账号id生成
         COPY_SCORE : 'h_cpy_score:',  // 玩家关卡通过记录 key : uid, value:max_score
-        USER_BASE: 'h_user_base'   // 用户基本信息,用于好友列表用 key:uid, value:userinfo
+        USER_BASE: 'h_usr_base'   // 用户基本信息,用于好友列表用 key:uid, value:userinfo
     },
 
     CACHE_KEY_TYPE : {

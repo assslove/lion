@@ -28,7 +28,15 @@ userController.userLogin = function(protoid, pkg, req, res, cb) {
 
             logger.info("%d user login", pkg.uid);
 
-            protoManager.sendErrorToUser(res, protoid, 0);
+            //标记登录时间
+            var user = {
+                uid : pkg.uid,
+                last_login : utils.getCurTime()
+            };
+
+            userDao.updateUser(req.app, user, function(err, results) {
+                protoManager.sendErrorToUser(res, protoid, 0);
+            });
         }
     });
 }
@@ -55,9 +63,10 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
     userModel.genUid(req.app, function(uid) {
         var user = {
             uid : uid,
-            name : pkg.name,
+            name : "",
             head_icon : 0,
             max_copy : 0,
+            copy_stars : 0,
             cash : 0,
             gold : 0,
             hp : 0,
@@ -168,10 +177,11 @@ userController.getOtherUser = function(protoid, pkg, req, res, cb) {
 userController.getCopyRank = function(protoid, pkg, req, res, cb) {
     var copyid = pkg.copyid;
     var ids = pkg.friendid;
-    cacheManager.getUserCopyScore(copyid, ids, function(err, resutls) {
+    cacheManager.getUserCopyScore(copyid, ids, function(err, results) {
         var copys = [];
         for (var i in ids) {
-           copys.push([ids[i], results[i]]);
+            var copy = [ids[i], parseInt(results[i])];
+            copys.push(copy);
         }
 
         copys.sort(function(a, b) {
@@ -180,8 +190,8 @@ userController.getCopyRank = function(protoid, pkg, req, res, cb) {
 
         var rank = 0;
         for (var i in copys) {
-            if (copys[i][0] === pkg.uid) {
-                rank = i + 1;
+            if (copys[i][0] == pkg.uid) {
+                rank = parseInt(i) + 1;
                 break;
             }
         }
