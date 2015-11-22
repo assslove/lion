@@ -47,6 +47,8 @@ drop table if exists t_friend_mail;
 create table t_friend_mail (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
 	`mails` varbinary(2000) NOT NULL COMMENT '邮件信息',
+	`get_hp_times` tinyint unsigned NOT NULL COMMENT '领取体力的次数',
+	`get_gold_times` tinyint unsigned NOT NULL COMMENT '领取金币的次数'
 	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -55,8 +57,5 @@ drop table if exists t_friend;
 create table t_friend (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
 	`friendlist` varbinary(2000) NOT NULL COMMENT '好友列表',
-	`get_hp_times` tinyint unsigned NOT NULL COMMENT '领取体力的次数',
-	`get_gold_times` tinyint unsigned NOT NULL COMMENT '领取金币的次数',
-	`oper_time` int unsigned NOT NULL COMMENT '操作时间',
 	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

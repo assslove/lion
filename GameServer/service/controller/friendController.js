@@ -130,7 +130,11 @@ friendController.getFriendMail = function(protoid, pkg, req, res, cb) {
             list.push(obj);
         }
 
-        var ret = {mail : list};
+        var ret = {
+            mail : list,
+            get_hp_times : results[0].get_hp_times,
+            get_gold_times : results[0].get_gold_times
+        };
 
         protoManager.sendMsgToUser(res, protoid, ret);
     });
@@ -161,11 +165,27 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
                 handleFriendGetHp(mails, ids, req, protoid, pkg, res);
                 break;
             case CODE.FRIEND_MAIL_TYPE.GIVE_HP:
-                handleFriendGiveHp(mails, ids, req, protoid, pkg, res);
+            {
+                var total_times = results[0].get_hp_times + ids.length;
+                if (total_times > 20) {
+                    ids = ids.slice(0, total_times - 20);
+                    total_times = 20;
+                }
+                if (ids.length == 0) return cb(DEFINE.ERROR_CODE.REWARD_DAY_LIMIT[0]);
+                handleFriendGiveHp(mails, ids, total_times, req, protoid, pkg, res);
                 break;
+            }
             case CODE.FRIEND_MAIL_TYPE.GIVE_GOLD:
-                handleFriendGiveGold(mails, ids, req, protoid, pkg, res);
+            {
+                var total_times = results[0].get_gold_times + ids.length;
+                if (total_times > 20) {
+                    ids = ids.slice(0, total_times - 20);
+                    total_times = 20;
+                }
+                if (ids.length == 0) return cb(DEFINE.ERROR_CODE.REWARD_DAY_LIMIT[0]);
+                handleFriendGiveGold(mails, ids, total_times, req, protoid, pkg, res);
                 break;
+            }
         }
 
     });
@@ -203,6 +223,7 @@ friendController.requestHp = function(protoid, pkg, req, res, cb) {
 /* @brief 公共函数定义
  */
 function handleFriendApply(mails, ids, req, protoid, pkg, res) {
+    var friendMail = {};
     if (pkg.answer == 1) {
         var uids = [];
         for (var i in ids) {
@@ -247,10 +268,12 @@ function handleFriendApply(mails, ids, req, protoid, pkg, res) {
                 )
             }
         ], function(err, results) {
-            delFriendMail(mails, ids, protoid, pkg, req, res);
+            delFriendMail(mails, ids, friendMail);
+            saveFriendMail(friendMail, protoid, pkg, req, res);
         });
     } else { //删除邮件
-        delFriendMail(mails, ids, protoid, pkg, req, res);
+        delFriendMail(mails, ids, friendMail);
+        saveFriendMail(friendMail, protoid, pkg, req, res);
     }
 
 
@@ -274,15 +297,18 @@ friendController.giveGold = function(protoid, pkg, req, res, cb) {
     });
 }
 
-function delFriendMail(mails, ids, protoid, pkg, req, res)
+function delFriendMail(mails, ids, friendMail)
 {
     for (var i in ids) {
         mails.splice(ids[i], 1);
     }
 
     var buffer = cacheManager.serializeToPb("FriendMailList", {mail : mails});
+    friendMail.mails = buffer;
+}
 
-    friendMailDao.addOrUpdateFriendMail(req.app, pkg.uid, {mails : buffer}, function(err, results) {
+function saveFriendMail(friendMail, protoid, pkg, req, res) {
+    friendMailDao.addOrUpdateFriendMail(req.app, pkg.uid, friendMail, function(err, results) {
         protoManager.sendErrorToUser(res, protoid, 0);
     });
 }
@@ -315,6 +341,7 @@ function addFriend(req, uid, friendid, cb) {
 
 function handleFriendGetHp(mails, ids, req, protoid, pkg, res)
 {
+    var friendMail = {};
     if (pkg.answer == 1) {
         var uids = [];
         for (var i in ids) {
@@ -336,40 +363,52 @@ function handleFriendGetHp(mails, ids, req, protoid, pkg, res)
                 });
             },
             function(err) {
-                delFriendMail(mails, ids, protoid, pkg, req, res);
+                delFriendMail(mails, ids, friendMail);
+                saveFriendMail(friendMail, protoid, pkg, req, res);
             }
         );
     } else { //删除邮件
-        delFriendMail(mails, ids, protoid, pkg, req, res);
+        delFriendMail(mails, ids, friendMail);
+        saveFriendMail(friendMail, protoid, pkg, req, res);
     }
 }
 
 /* @brief 领取赠送体力
  */
-function handleFriendGiveHp(mails, ids, req, protoid, pkg, res)
+function handleFriendGiveHp(mails, ids, total_times, req, protoid, pkg, res)
 {
+    var friendMail = {};
     if (pkg.answer == 1) {
         var uids = [];
         for (var i in ids) {
             uids.push(mails[ids[i]].uid);
         }
-        delFriendMail(mails, ids, protoid, pkg, req, res);
+
+        friendMail.get_hp_times = total_times;
+        delFriendMail(mails, ids, friendMail);
+        saveFriendMail(friendMail, protoid, pkg, req, res);
     } else { //删除邮件
-        delFriendMail(mails, ids, protoid, pkg, req, res);
+        delFriendMail(mails, ids, friendMail);
+        saveFriendMail(friendMail, protoid, pkg, req, res);
     }
 }
 
 /* @brief 赠送金币
  */
-function handleFriendGiveGold(mails, ids, req, protoid, pkg, res)
+function handleFriendGiveGold(mails, ids, total_times, req, protoid, pkg, res)
 {
+    var friendMail = {};
     if (pkg.answer == 1) {
         var uids = [];
         for (var i in ids) {
             uids.push(mails[ids[i]].uid);
         }
-        delFriendMail(mails, ids, protoid, pkg, req, res);
+
+        friendMail.get_gold_times = total_times;
+        delFriendMail(mails, ids, friendMail);
+        saveFriendMail(friendMail, protoid, pkg, req, res);
     } else { //删除邮件
-        delFriendMail(mails, ids, protoid, pkg, req, res);
+        delFriendMail(mails, ids, friendMail);
+        saveFriendMail(friendMail, protoid, pkg, req, res);
     }
 }

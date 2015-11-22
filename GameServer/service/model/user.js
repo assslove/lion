@@ -176,3 +176,17 @@ user.addFriend = function(app, uid, cb) {
     });
 }
 
+/* @brief 每日数据清除
+ */
+user.initData = function(app, uid) {
+    async.parallel([
+        function(callback) {
+            friendMailDao.initData(app, uid, callback);
+        },
+        function(callback) {
+            callback(null, null);
+        },
+    ], function(err, results) {
+        logger.info("init every date date [uid=%ld]", uid);
+    });
+}

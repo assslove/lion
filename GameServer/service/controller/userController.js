@@ -12,6 +12,7 @@ var protoManager = require('./../manager/protoManager.js');
 var userDao = require('./../dao/userDao.js');
 var accountDao = require('./../dao/accountDao.js');
 var userModel = require('./../model/user.js');
+var async = require('async');
 
 var userController = module.exports;
 
@@ -33,6 +34,10 @@ userController.userLogin = function(protoid, pkg, req, res, cb) {
                 uid : pkg.uid,
                 last_login : utils.getCurTime()
             };
+
+            if (utils.isDiffDay(results.user.last_login)) {
+                userModel.initData(req.app, pkg.uid);
+            }
 
             userDao.updateUser(req.app, user, function(err, results) {
                 protoManager.sendErrorToUser(res, protoid, 0);

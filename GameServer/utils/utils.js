@@ -131,3 +131,7 @@ utils.isNull = function(val) {
 utils.getCurTime = function() {
     return Math.floor(new Date().getTime()/1000);
 }
+
+utils.isDiffDay = function(chktm) {
+    return new Date().getDate() != new Date(chktm * 1000).getDate();
+}
