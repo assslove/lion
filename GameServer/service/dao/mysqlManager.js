@@ -19,7 +19,7 @@ mysqlManager.addMysqlCli = function(id, obj) {
         }
     }
     mysqlList[ids] = obj;
-    logger.info("add game mysql connnect success [%s]", i);
+    logger.info("add game mysql connnect success [%s]", ids);
 }
 
 mysqlManager.delMysqlCli = function(id) {
