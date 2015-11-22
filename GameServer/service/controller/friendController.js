@@ -185,7 +185,7 @@ friendController.requestHp = function(protoid, pkg, req, res, cb) {
                     }
                 }
 
-                mails.push({type : CODE.FRIEND_MAIL_TYPE.GET_HP, uid : pkg.uid});
+                mails.push({type : CODE.FRIEND_MAIL_TYPE.GET_HP, uid : parseInt(pkg.uid)});
 
                 var buffer = cacheManager.serializeToPb("FriendMailList", {mail : mails});
                 friendMailDao.addOrUpdateFriendMail(req.app, uids[i], {mails : buffer}, function(err, results) {
@@ -265,7 +265,7 @@ friendController.giveGold = function(protoid, pkg, req, res, cb) {
             }
         }
 
-        mails.push({type: CODE.FRIEND_MAIL_TYPE.GIVE_GOLD, uid: pkg.uid});
+        mails.push({type: CODE.FRIEND_MAIL_TYPE.GIVE_GOLD, uid: parseInt(pkg.uid)});
 
         var buffer = cacheManager.serializeToPb("FriendMailList", {mail: mails});
         friendMailDao.addOrUpdateFriendMail(req.app, friendid, {mails: buffer}, function (err, results) {
@@ -327,7 +327,7 @@ function handleFriendGetHp(mails, ids, req, protoid, pkg, res)
             function(callback) { //增加到好友邮件中
                 friendMailDao.getFriendMail(req.app, uids[i], function(err, results) {
                     var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails).mail;
-                    mails.push({uid : pkg.uid, type : CODE.FRIEND_MAIL_TYPE.GIVE_HP});
+                    mails.push({uid : parseInt(pkg.uid), type : CODE.FRIEND_MAIL_TYPE.GIVE_HP});
                     var buffer = cacheManager.serializeToPb("FriendMailList", {mail : mails});
                     friendMailDao.addOrUpdateFriendMail(req.app, uids[i], {mails : buffer}, function(err, results) {
                         ++i;
