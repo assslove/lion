@@ -6,6 +6,7 @@ create table t_user (
 	`head_icon` tinyint unsigned NOT NULL default 0 COMMENT '头像',
 	`max_copy` int unsigned NOT NULL default 0 COMMENT '通关数',
 	`copy_stars` int unsigned NOT NULL COMMENT '通关总星数',
+	`party_lv` tinyint unsigned NOT NULL COMMENT '宠物派对等级',
 	`cash` int unsigned NOT NULL default 0 COMMENT '钻石',
 	`gold` int unsigned NOT NULL default 0 COMMENT '金币',
 	`hp` int unsigned NOT NULL default 0 COMMENT '体力',
@@ -62,3 +63,8 @@ create table t_friend (
 
 #初始化宠物派对
 drop table if exists t_pet_party;
+create table t_pet_party (
+	`uid` int unsigned NOT NULL COMMENT '用户id',
+	`info` varbinary(2000) NOT NULL COMMENT '宏物派对信息',
+	primary key(`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
