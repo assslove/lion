@@ -59,3 +59,6 @@ create table t_friend (
 	`friendlist` varbinary(2000) NOT NULL COMMENT '好友列表',
 	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#初始化宠物派对
+drop table if exists t_pet_party;
