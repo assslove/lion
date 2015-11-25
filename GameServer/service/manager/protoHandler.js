@@ -44,6 +44,11 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_REQUEST_HP] = [friendController.requestHp];
     this.protoHandlers[DEFINE.PROTO.USER_GIVE_GOLD] = [friendController.giveGold];
     this.protoHandlers[DEFINE.PROTO.USER_GET_COPYRANK] = [userController.getCopyRank];
+    this.protoHandlers[DEFINE.PROTO.USER_GET_PET_PARTY] = [petController.getPetParty];
+    this.protoHandlers[DEFINE.PROTO.USER_GET_FRIEND_PETPARTY] = [petController.getFriendPetParty];
+    this.protoHandlers[DEFINE.PROTO.USER_PET_PARTY_LEVELUP] = [petController.petPartyLevelup];
+    this.protoHandlers[DEFINE.PROTO.USER_GIFTBOX_CHANGE] = [petController.giftBoxChange];
+    this.protoHandlers[DEFINE.PROTO.USER_GIFTBOX_GET] = [petController.giftBoxGet];
 
     logger.info("init proto handlers success");
 }

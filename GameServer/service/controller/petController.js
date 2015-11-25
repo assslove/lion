@@ -11,6 +11,7 @@ var CODE = require("./../../utils/code.js");
 var utils = require('./../../utils/utils.js');
 var protoManager = require('./../manager/protoManager.js');
 var petDao = require('./../dao/petDao.js');
+var petPartyDao = require('./../dao/petPartyDao.js');
 
 var petController = module.exports;
 
@@ -84,3 +85,40 @@ petController.userGetPet = function(protoid, pkg, req, res, cb){
         return protoManager.sendMsgToUser(res, protoid, obj);
     });
 }
+
+petController.userGetPet = function(protoid, pkg, req, res, cb){
+    cacheManager.getPet(req.app, pkg.uid, function(err, results) {
+        if (err != null || results == null) {
+            return protoManager.sendMsgToUser(res, protoid, {pet : null});
+        }
+
+        var obj = cacheManager.parseFromPb("PetInfo", results);
+
+        var pet_suit = [];
+        for (var i in obj.pet_suit) {
+            obj.pet_suit[i] = [obj.pet_suit[i].suitid, obj.pet_suit[i].flag];
+        }
+
+        return protoManager.sendMsgToUser(res, protoid, obj);
+    });
+}
+
+
+
+petController.getPetParty = function(protoid, pkg, req, res, cb){
+
+});
+
+petController.getFriendPetParty = function(protoid, pkg, req, res, cb){
+
+});
+
+petController.petPartyLevelup = function(protoid, pkg, req, res, cb){
+
+});
+petController.giftBoxChange = function(protoid, pkg, req, res, cb){
+
+});
+petController.giftBoxGet = function(protoid, pkg, req, res, cb){
+
+});
