@@ -100,8 +100,11 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
                 userModel.addFriend(req.app, uid, callback);
             },
             function(callback) {
-                cacheManager.updateUserBase(uid, user, callback);
+                userModel.addPetParty(req.app, uid, callback);
             },
+            function(callback) {
+                cacheManager.updateUserBase(uid, user, callback);
+            }
         ], function(err, results) {
             if (err != null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_EXIST[0]);
 

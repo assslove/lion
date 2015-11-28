@@ -12,6 +12,7 @@ var itemDao = require('../dao/itemDao.js');
 var copyDao = require('../dao/copyDao.js');
 var friendMailDao = require('./../dao/friendMailDao.js');
 var friendDao = require('./../dao/friendDao.js');
+var petPartyDao = require('./../dao/petPartyDao.js');
 var utils = require("./../../utils/utils.js");
 
 
@@ -188,5 +189,26 @@ user.initData = function(app, uid) {
         },
     ], function(err, results) {
         logger.info("init every date date [uid=%ld]", uid);
+    });
+}
+
+user.addPetParty = function(app, uid, cb) {
+    var obj = {
+        melike : [],
+        likeme : [],
+        party_lv : 1,
+        total_like : 0,
+        gift : [],
+        gift_num : 0
+    };
+
+    var buffer = cacheManager.serializeToPb("PetParty", obj);
+
+    var petParty = {
+        info : buffer
+    };
+
+    petPartyDao.addOrUpdatePetParty(app, uid, petParty, function(err, results) {
+        cb(err, results);
     });
 }

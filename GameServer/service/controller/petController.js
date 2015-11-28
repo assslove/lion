@@ -106,19 +106,40 @@ petController.userGetPet = function(protoid, pkg, req, res, cb){
 
 
 petController.getPetParty = function(protoid, pkg, req, res, cb){
+    petPartyDao.getPetParty(req.app, pkg.uid, function(err, results) {
+        if (err == null && results.length > 0) {
+            var petParty = cacheManager.parseFromPb("PetParty", results[0].info);
+            protoManager.sendMsgToUser(res, protoid, petParty);
 
-});
+        } else {
+            protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PET_PARTY_DATA_ERROR[0]);
+        }
+    });
+}
 
 petController.getFriendPetParty = function(protoid, pkg, req, res, cb){
 
-});
+}
 
 petController.petPartyLevelup = function(protoid, pkg, req, res, cb){
+     petPartyDao.getPetParty(req.app, pkg.uid, function(err, results) {
+         var petParty = cacheManager.parseFromPb("PetParty", results[0].info);
+         //判断条件
 
-});
+         petParty.party_lv += 1;
+         var buffer = cacheManager.serializeToPb("PetParty", petParty);
+
+         petPartyDao.addOrUpdatePetParty(req.app, pkg.uid, {info : buffer}, function(err, results) {
+             var ret = {
+                party_lv : petParty.party_lv
+             };
+             protoManager.sendMsgToUser(res, protoid, ret);
+         })
+     });
+}
 petController.giftBoxChange = function(protoid, pkg, req, res, cb){
 
-});
+}
 petController.giftBoxGet = function(protoid, pkg, req, res, cb){
 
-});
+}

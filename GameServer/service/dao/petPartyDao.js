@@ -9,7 +9,7 @@ var logger = require('./../../utils/log.js');
 
 var petPartyDao = module.exports;
 
-petPartyDao.getPet = function(app, uid, cb) {
+petPartyDao.getPetParty = function(app, uid, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
     var sql = "select * from t_pet_party where uid = ?";
     mysqlCli.query(sql, [uid], function(err, res) {
@@ -23,7 +23,7 @@ petPartyDao.getPet = function(app, uid, cb) {
 }
 
 
-petPartyDao.addOrUpdatePet = function(app, uid, petParty, cb) {
+petPartyDao.addOrUpdatePetParty = function(app, uid, petParty, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
 
     var sql = "", key = "uid,", value = "?,", update="";
