@@ -134,7 +134,7 @@ petController.petPartyLevelup = function(protoid, pkg, req, res, cb){
                 party_lv : petParty.party_lv
              };
              protoManager.sendMsgToUser(res, protoid, ret);
-         })
+         });
      });
 }
 petController.giftBoxChange = function(protoid, pkg, req, res, cb){

@@ -29,17 +29,15 @@ userController.userLogin = function(protoid, pkg, req, res, cb) {
 
             logger.info("%d user login", pkg.uid);
 
-            //标记登录时间
-            var user = {
-                uid : pkg.uid,
-                last_login : utils.getCurTime()
-            };
-
             if (utils.isDiffDay(results.user.last_login)) {
                 userModel.initData(req.app, pkg.uid);
             }
 
-            userDao.updateUser(req.app, user, function(err, results) {
+            //标记登录时间
+            var user = results.user;
+            user.last_login = utils.getCurTime();
+
+            userModel.updateUser(req.app, user, function(err, results) {
                 protoManager.sendErrorToUser(res, protoid, 0);
             });
         }

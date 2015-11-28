@@ -143,6 +143,22 @@ user.getUserInfoFromDB = function(app, uid, cb) {
 }
 
 
+user.updateUser = function(app, user, cb) {
+    async.parallel([
+        function(callback) {
+            userDao.updateUser(app, user, function(err, results) {
+                callback(err, results);
+            });
+        },
+        function(callback) {
+            cacheManager.updateUser(user.uid, user, function(err, results) {
+               callback(err, results);
+            });
+        }
+    ], function(err, results) {
+       cb(err, results);
+    })
+}
 
 user.addFriendMail = function(app, uid, cb) {
     var obj = {
@@ -185,7 +201,7 @@ user.initData = function(app, uid) {
             friendMailDao.initData(app, uid, callback);
         },
         function(callback) {
-            callback(null, null);
+            user.initPetParty(app, uid, callback);
         },
     ], function(err, results) {
         logger.info("init every date date [uid=%ld]", uid);
@@ -211,4 +227,19 @@ user.addPetParty = function(app, uid, cb) {
     petPartyDao.addOrUpdatePetParty(app, uid, petParty, function(err, results) {
         cb(err, results);
     });
+}
+
+user.initPetParty = function(app, uid, callback) {
+  petPartyDao.getPetParty(app, uid, function(err, results) {
+      var petParty = cacheManager.parseFromPb("PetParty", results[0].info);
+      petParty.gift_num = 0;
+      petParty.likeme = [];
+      petParty.melike = [];
+
+      var buffer = cacheManager.serializeToPb("PetParty", petParty);
+
+      petPartyDao.addOrUpdatePetParty(app, uid, {info : buffer}, function(err, results) {
+          callback(err, results);
+      });
+  });
 }
