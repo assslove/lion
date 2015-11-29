@@ -104,13 +104,61 @@ petController.userGetPet = function(protoid, pkg, req, res, cb){
 }
 
 
+function checkPetPartyGiftBox(petParty) {
+    var cur = utils.getCurTime();
+
+    if (petParty.gift_box.length == 0) { //初始化
+        for (var i = 0; i < 4; ++i) {
+            var obj = {
+                type : 0,
+                begin : cur,
+                lv : 0
+            };
+
+            petParty.giftBox.push(obj);
+        }
+    } else {
+        var gifts = gift_box;
+        for (var i in gifts) {
+            if (gifts[i].lv == 4) { //已是最大等级
+                continue;
+            };
+            var total_time = cur - gifts[i].begin;
+            if (gifts[i].type == 0 && total_time >= 20) { //0-1级转化
+                gifts[i].type = utils.randomRange(1, 3);
+                total_time -= 20;
+            }
+
+            var num = Math.floor(total_time / 20);
+            var turn = 3; //最大转化
+            var j = 0;
+            if (num > 10) num = 10;
+            for (var k = 0; k < num; ++k) { //最大10次转化
+                if (utils.isHitRandom(30)) {
+                    gifts[i].lv += 1;
+                    ++j;
+
+                    if (j > turn) break;
+                }
+            }
+
+            gifts[i].begin = cur;
+        }
+    }
+}
 
 petController.getPetParty = function(protoid, pkg, req, res, cb){
     petPartyDao.getPetParty(req.app, pkg.uid, function(err, results) {
         if (err == null && results.length > 0) {
             var petParty = cacheManager.parseFromPb("PetParty", results[0].info);
-            protoManager.sendMsgToUser(res, protoid, petParty);
-
+            if (checkPetPartyGiftBox(petParty)) { //有变化
+                var buffer = cacheManager.serializeToPb("PetParty", petParty);
+                petPartyDao.addOrUpdatePetParty(req.app, pkg.uid, {info : buffer}, function(err, results) {
+                    protoManager.sendMsgToUser(res, protoid, petParty);
+                });
+            } else {
+                protoManager.sendMsgToUser(res, protoid, ret);
+            }
         } else {
             protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PET_PARTY_DATA_ERROR[0]);
         }
@@ -118,28 +166,166 @@ petController.getPetParty = function(protoid, pkg, req, res, cb){
 }
 
 petController.getFriendPetParty = function(protoid, pkg, req, res, cb){
+    var uids = pkg.friendid;
+    cacheManager.getPetParty(uids, function(err, results) {
+        for (var i in uids) {
+            results[i] = JSON.parse(results[i]);
+            results[i].uid = uids[i];
+        }
 
+        var msg = {
+           party : results
+        };
+
+        protoManager.sendMsgToUser(res, protoid, msg);
+    });
 }
 
 petController.petPartyLevelup = function(protoid, pkg, req, res, cb){
      petPartyDao.getPetParty(req.app, pkg.uid, function(err, results) {
          var petParty = cacheManager.parseFromPb("PetParty", results[0].info);
-         //判断条件
+         //判断条件 TODO
+
+         if (petParty.party_lv >= 5) {
+             return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.GIFTBOX_LV_HIGH[0]);
+         }
 
          petParty.party_lv += 1;
-         var buffer = cacheManager.serializeToPb("PetParty", petParty);
 
-         petPartyDao.addOrUpdatePetParty(req.app, pkg.uid, {info : buffer}, function(err, results) {
+         async.parallel([
+             function(callback) {
+                 var buffer = cacheManager.serializeToPb("PetParty", petParty);
+                 petPartyDao.addOrUpdatePetParty(req.app, pkg.uid, {info : buffer}, function(err, results) {
+                     callback(err, results);
+                 });
+             },
+             function(callback) {
+                cacheManager.updatePetParty(pkg.uid, petParty, function(err, results) {
+                    callback(err, results);
+                });
+             }
+         ], function(err, results) {
              var ret = {
-                party_lv : petParty.party_lv
+                 party_lv : petParty.party_lv
              };
              protoManager.sendMsgToUser(res, protoid, ret);
          });
+
      });
 }
+
 petController.giftBoxChange = function(protoid, pkg, req, res, cb){
+    if (!(pkg.giftid >= 0 && pkg.giftid <= 3)) {
+        return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PROTO_PARA_ERROR[0]);
+    }
+    petPartyDao.getPetParty(req.app, pkg.uid, function(err, results) {
+        var petParty = cacheManager.parseFromPb("PetParty", results[0].info);
+        var gifts = petParty.gift_box;
+        if (gifts[pkg.giftid].lv == 0) {
+            return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.GIFTBOX_LV_LOW[0]);
+        }
 
+        gifts[pkg.giftid].type = 0;
+        gifts[pkg.giftid].begin = utils.getCurTime();
+        gifts[pkg.giftid].lv = 0;
+        petParty.gift_num += 1;
+
+        var buffer = cacheManager.serializeToPb("PetParty", petParty);
+        petPartyDao.addOrUpdatePetParty(req.app, pkg.uid, {info : buffer}, function(err, results) {
+            var msg = {
+                gift : gifts[pkg.giftid]
+            };
+
+            protoManager.sendMsgToUser(res, protoid, msg);
+        });
+    });
 }
-petController.giftBoxGet = function(protoid, pkg, req, res, cb){
 
+petController.giftBoxGet = function(protoid, pkg, req, res, cb){
+    if (!(pkg.giftid >= 0 && pkg.giftid <= 3)) {
+        return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PROTO_PARA_ERROR[0]);
+    }
+
+    petPartyDao.getPetParty(req.app, pkg.uid, function(err, results) {
+        var petParty = cacheManager.parseFromPb("PetParty", results[0].info);
+        var gifts = petParty.gift_box;
+        gifts[pkg.giftid].type = 0;
+        gifts[pkg.giftid].begin = utils.getCurTime();
+        gifts[pkg.giftid].lv = 0;
+        petParty.gift_num += 1;
+
+        var buffer = cacheManager.serializeToPb("PetParty", petParty);
+        petPartyDao.addOrUpdatePetParty(req.app, pkg.uid, {info : buffer}, function(err, results) {
+            var msg = {
+                gift : gifts[pkg.giftid]
+            };
+
+            protoManager.sendMsgToUser(res, protoid, msg);
+        });
+    });
+}
+
+petController.userLikePetParty = function(protoid, pkg, req, res, cb) {
+    petPartyDao.getPetParty(req.app, pkg.uid, function(err, results) {
+        var petParty = cacheManager.parseFromPb("PetParty", results[0].info);
+
+        if (petParty.melike.length >= 10) {
+            return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.EVERYDAY_TIMES_LIMIT[0]);
+        }
+
+        for (var i in petParty.melike) {
+            if (pkg.friendid == petParty.melike[i]) {
+                return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.LIKE_FRIEND_ALREADY[0]);
+            }
+        }
+
+        async.parallel([
+            function(callback) { //给自己增加记录
+                petParty.melike.push(pkg.friendid);
+                var buffer = cacheManager.serializeToPb("PetParty", petParty);
+                petPartyDao.addOrUpdatePetParty(req.app, pkg.uid, {info : buffer}, function(err, results) {
+                    callback(err, results);
+                });
+            },
+            function(callback) { //修改好友数据
+                async.waterfall([
+                    function(callback1) {
+                        petPartyDao.getPetParty(req.app, pkg.friendid, function(err, results) {
+                            var friendPetParty = cacheManager.parseFromPb("PetParty", results[0].info);
+                            callback1(err, friendPetParty);
+                        });
+                    },
+                    function(friendPetParty, callback1) {
+                        friendPetParty.likeme.push(pkg.uid);
+                        friendPetParty.total_like += 1;
+                        var buffer = cacheManager.serializeToPb("PetParty", friendPetParty);
+                        petPartyDao.addOrUpdatePetParty(req.app, pkg.friendid, {info : buffer}, function(err, results) {
+                            callback1(err, friendPetParty);
+                        });
+                    },
+                    function(friendPetParty, callback1) {
+                        cacheManager.updatePetParty(pkg.friendid, friendPetParty, function(err, results) {
+                            callback(err, results);
+                        });
+                    }
+                ], function(err, result) {
+                   callback(err, result);
+                });
+            }
+        ], function(err, results) {
+            protoManager.sendErrorToUser(res, protoid, 0);
+        });
+    });
+}
+
+petController.userGetFriendPet = function(protoid, pkg, req, res, cb) {
+    cacheManager.getPet(req.app, pkg.friendid, function(err, result) {
+        var obj = cacheManager.parseFromPb("PetInfo", results);
+
+        var msg = {
+            petid : obj.petid
+        };
+
+        protoManager.sendMsgToUser(res, protoid, msg);
+    });
 }

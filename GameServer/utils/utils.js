@@ -48,6 +48,12 @@ utils.randomRange = function(low, high) {
     return Math.ceil(Math.random() * 1000000000) % (high - low + 1) + low;
 }
 
+/* @brief 随机是否命中 100概率
+ */
+utils.isHitRandom = function(base) {
+    return Math.ceil(Math.random() * 1000000000) % 100 <= base ? true : false;
+}
+
 utils.formatDate = function(timestamp)
 {
     var now = new Date(timestamp * 1000);

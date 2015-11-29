@@ -268,3 +268,26 @@ cacheManager.getUserBases = function(uids, cb) {
         utils.invokeCallback(cb, err, res);
     });
 }
+
+cacheManager.updatePetParty = function(uid, petParty, cb) {
+    var obj = {
+        party_lv : petParty.party_lv,
+        total_like : petParty.total_like
+    };
+
+    redis.hset(CODE.CACHE_TYPE.PET_PARTY, uid, JSON.stringify(obj), function(err, res) {
+        if (err !== null) {
+           logger.error("cache pet party failed [uid=%ld]", uid);
+        }
+        utils.invokeCallback(cb, err, res);
+    });
+}
+
+cacheManager.getPetParty = function(uids, cb) {
+    redis.hmget(CODE.CACHE_TYPE.PET_PARTY, uids, function(err, res) {
+        if (err !== null) {
+            logger.error("get pet party failed");
+        }
+        utils.invokeCallback(cb, err, res);
+    });
+}

@@ -217,16 +217,25 @@ user.addPetParty = function(app, uid, cb) {
         gift : [],
         gift_num : 0
     };
-
-    var buffer = cacheManager.serializeToPb("PetParty", obj);
-
-    var petParty = {
-        info : buffer
-    };
-
-    petPartyDao.addOrUpdatePetParty(app, uid, petParty, function(err, results) {
+    async.parallel([
+        function(callback) {
+            var buffer = cacheManager.serializeToPb("PetParty", obj);
+            var petParty = {
+                info : buffer
+            };
+            petPartyDao.addOrUpdatePetParty(app, uid, petParty, function(err, results) {
+                callback(err, results);
+            });
+        },
+        function(callback) {
+            cacheManager.updatePetParty(uid, obj, function(err, results) {
+                callback(err, results);
+            });
+        }
+    ], function(err, results) {
         cb(err, results);
-    });
+    })
+
 }
 
 user.initPetParty = function(app, uid, callback) {

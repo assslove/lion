@@ -49,12 +49,15 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_PET_PARTY_LEVELUP] = [petController.petPartyLevelup];
     this.protoHandlers[DEFINE.PROTO.USER_GIFTBOX_CHANGE] = [petController.giftBoxChange];
     this.protoHandlers[DEFINE.PROTO.USER_GIFTBOX_GET] = [petController.giftBoxGet];
+    this.protoHandlers[DEFINE.PROTO.USER_LIKE_PET_PARTY] = [petController.userLikePetParty];
+    this.protoHandlers[DEFINE.PROTO.USER_GET_FRIEND_PET] = [petController.userGetFriendPet];
 
     logger.info("init proto handlers success");
 }
 
 
-/* @param req 请求包
+/* @param req 请求包	required uint32 uid = 1;
+	repeated uint32 friendid = 2; //已经开启宠物派对的好友
  * @param res 返回
  * @cb 回调函数
  */
