@@ -106,8 +106,8 @@ petController.userGetPet = function(protoid, pkg, req, res, cb){
 
 function checkPetPartyGiftBox(petParty) {
     var cur = utils.getCurTime();
-
-    if (petParty.gift_box.length == 0) { //初始化
+    var isChange = false;
+    if (petParty.gift.length == 0) { //初始化
         for (var i = 0; i < 4; ++i) {
             var obj = {
                 type : 0,
@@ -115,21 +115,26 @@ function checkPetPartyGiftBox(petParty) {
                 lv : 0
             };
 
-            petParty.giftBox.push(obj);
+            petParty.gift.push(obj);
         }
+        isChange = true;
     } else {
-        var gifts = gift_box;
+        var gifts = petParty.gift;
         for (var i in gifts) {
             if (gifts[i].lv == 4) { //已是最大等级
                 continue;
             };
+
             var total_time = cur - gifts[i].begin;
-            if (gifts[i].type == 0 && total_time >= 20) { //0-1级转化
+            if (total_time < 1200) continue;
+
+            if (gifts[i].type == 0 && total_time >= 1200) { //0-1级转化
                 gifts[i].type = utils.randomRange(1, 3);
-                total_time -= 20;
+                total_time -= 1200;
+                isChange = true;
             }
 
-            var num = Math.floor(total_time / 20);
+            var num = Math.floor(total_time / 1200);
             var turn = 3; //最大转化
             var j = 0;
             if (num > 10) num = 10;
@@ -137,14 +142,16 @@ function checkPetPartyGiftBox(petParty) {
                 if (utils.isHitRandom(30)) {
                     gifts[i].lv += 1;
                     ++j;
-
+                    isChange = true;
                     if (j > turn) break;
                 }
             }
 
-            gifts[i].begin = cur;
+            gifts[i].begin = cur - (total_time - num * 1200);
         }
     }
+
+    return isChange;
 }
 
 petController.getPetParty = function(protoid, pkg, req, res, cb){
@@ -157,7 +164,7 @@ petController.getPetParty = function(protoid, pkg, req, res, cb){
                     protoManager.sendMsgToUser(res, protoid, petParty);
                 });
             } else {
-                protoManager.sendMsgToUser(res, protoid, ret);
+                protoManager.sendMsgToUser(res, protoid, petParty);
             }
         } else {
             protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PET_PARTY_DATA_ERROR[0]);
@@ -228,7 +235,6 @@ petController.giftBoxChange = function(protoid, pkg, req, res, cb){
         gifts[pkg.giftid].type = 0;
         gifts[pkg.giftid].begin = utils.getCurTime();
         gifts[pkg.giftid].lv = 0;
-        petParty.gift_num += 1;
 
         var buffer = cacheManager.serializeToPb("PetParty", petParty);
         petPartyDao.addOrUpdatePetParty(req.app, pkg.uid, {info : buffer}, function(err, results) {
@@ -248,7 +254,12 @@ petController.giftBoxGet = function(protoid, pkg, req, res, cb){
 
     petPartyDao.getPetParty(req.app, pkg.uid, function(err, results) {
         var petParty = cacheManager.parseFromPb("PetParty", results[0].info);
-        var gifts = petParty.gift_box;
+        var gifts = petParty.gift;
+
+        if (gifts[pkg.giftid].lv < 1) {
+            return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.GIFTBOX_LV_LOW[0]);
+        }
+
         gifts[pkg.giftid].type = 0;
         gifts[pkg.giftid].begin = utils.getCurTime();
         gifts[pkg.giftid].lv = 0;
@@ -320,7 +331,7 @@ petController.userLikePetParty = function(protoid, pkg, req, res, cb) {
 
 petController.userGetFriendPet = function(protoid, pkg, req, res, cb) {
     cacheManager.getPet(req.app, pkg.friendid, function(err, result) {
-        var obj = cacheManager.parseFromPb("PetInfo", results);
+        var obj = cacheManager.parseFromPb("PetInfo", result);
 
         var msg = {
             petid : obj.petid
