@@ -42,14 +42,14 @@ petController.userSyncPet = function(protoid, pkg, req, res, cb) {
 
         src.pet_equip = pet.pet_equip;
         for (var i in pet.pet_suit) {
-            src.pet_suit.push({suitid : pet.pet_suit[i][0], flag : pet.pet_suit[i][1]});
+            src.pet_suit.push(pet.pet_suit[i]);
         }
 
 
         var buffer = cacheManager.serializeToPb("PetInfo", src);
 
         for (var i in src.pet_suit) {
-            src.pet_suit[i] = [src.pet_suit[i].suitid, src.pet_suit[i].flag];
+            src.pet_suit[i] = src.pet_suit[i];
         }
 
         async.parallel([
@@ -77,11 +77,6 @@ petController.userGetPet = function(protoid, pkg, req, res, cb){
 
         var obj = cacheManager.parseFromPb("PetInfo", results);
 
-        var pet_suit = [];
-        for (var i in obj.pet_suit) {
-            obj.pet_suit[i] = [obj.pet_suit[i].suitid, obj.pet_suit[i].flag];
-        }
-
         return protoManager.sendMsgToUser(res, protoid, obj);
     });
 }
@@ -93,12 +88,6 @@ petController.userGetPet = function(protoid, pkg, req, res, cb){
         }
 
         var obj = cacheManager.parseFromPb("PetInfo", results);
-
-        var pet_suit = [];
-        for (var i in obj.pet_suit) {
-            obj.pet_suit[i] = [obj.pet_suit[i].suitid, obj.pet_suit[i].flag];
-        }
-
         return protoManager.sendMsgToUser(res, protoid, obj);
     });
 }
