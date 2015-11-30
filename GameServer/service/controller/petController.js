@@ -37,12 +37,12 @@ petController.userSyncPet = function(protoid, pkg, req, res, cb) {
         }
 
         for (var i in pet.petid) {
-            src.petid.push(pet.petid[i]);
+            src.petid.push(parseInt(pet.petid[i]));
         }
 
         src.pet_equip = pet.pet_equip;
         for (var i in pet.pet_suit) {
-            src.pet_suit.push(pet.pet_suit[i]);
+            src.pet_suit.push(parseInt(pet.pet_suit[i]));
         }
 
 
