@@ -35,7 +35,7 @@ petController.userSyncPet = function(protoid, pkg, req, res, cb) {
         //TODO 校验 检验petid是否重复
         // 校验petid是否存在
         for (var i = 0; i < pet.petid.length; ) {
-            if (src.petid.indexOf(pet.petid[i]) != -1) {
+            if (src.petid.indexOf(parseInt(pet.petid[i])) != -1) {
                 pet.petid.splice(i, 1);
             } else {
                 ++i;
@@ -44,7 +44,7 @@ petController.userSyncPet = function(protoid, pkg, req, res, cb) {
 
         // 校验pet_suit是否重复
         for (var i = 0; i < pet.pet_suit.length; ) {
-            if (src.pet_suit.indexOf(pet.pet_suit[i]) != -1) {
+            if (src.pet_suit.indexOf(parseInt(pet.pet_suit[i])) != -1) {
                 pet.pet_suit.splice(i, 1);
             } else {
                 ++i;
