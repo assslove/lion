@@ -20,10 +20,6 @@ petController.userSyncPet = function(protoid, pkg, req, res, cb) {
     cacheManager.getPet(req.app, pkg.uid, function(err, results) {
         if (err != null) return cb(DEFINE.ERROR_CODE.USER_PET_ERROR[0]);
 
-        //TODO 校验 检验petid是否重复
-        // 校验petid是否存在
-        // 校验pet_suit是否重复
-
         var src = {
             petid : [],
             pet_equip : 0,
@@ -34,6 +30,25 @@ petController.userSyncPet = function(protoid, pkg, req, res, cb) {
             src.petid = obj.petid;
             src.pet_equip = obj.pet_equip;
             src.pet_suit = obj.pet_suit;
+        }
+
+        //TODO 校验 检验petid是否重复
+        // 校验petid是否存在
+        for (var i = 0; i < pet.petid.length; ) {
+            if (src.petid.indexOf(pet.petid[i]) != -1) {
+                pet.petid.splice(i, 1);
+            } else {
+                ++i;
+            }
+        }
+
+        // 校验pet_suit是否重复
+        for (var i = 0; i < pet.pet_suit.length; ) {
+            if (src.pet_suit.indexOf(pet.pet_suit[i]) != -1) {
+                pet.pet_suit.splice(i, 1);
+            } else {
+                ++i;
+            }
         }
 
         for (var i in pet.petid) {
