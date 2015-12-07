@@ -66,7 +66,7 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
     userModel.genUid(req.app, function(uid) {
         var user = {
             uid : uid,
-            name : "",
+            name : req.name,
             head_icon : 0,
             max_copy : 0,
             copy_stars : 0,
@@ -171,13 +171,21 @@ userController.userSyncTime = function(protoid, pkg, req, res, cb) {
 }
 
 userController.getOtherUser = function(protoid, pkg, req, res, cb) {
-    cacheManager.getUser(req.app, pkg.other, function(err, result) {
-        if (err != null) {
+    var uids = [pkg.other];
+    cacheManager.getUserBases(uids, function(err, results) {
+        if (results.length == 0)
             return cb(DEFINE.ERROR_CODE.USER_NOT_EXIST[0]);
-        }
 
-        protoManager.sendMsgToUser(res, protoid, result);
+        protoManager.sendMsgToUser(res, protoid, results[0]);
     });
+
+//    cacheManager.getUserBases(req.app, pkg.other, function(err, result) {
+//        if (err != null) {
+//            return cb(DEFINE.ERROR_CODE.USER_NOT_EXIST[0]);
+//        }
+//
+//        protoManager.sendMsgToUser(res, protoid, result);
+//    });
 }
 
 userController.getCopyRank = function(protoid, pkg, req, res, cb) {
