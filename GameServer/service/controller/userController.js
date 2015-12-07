@@ -66,7 +66,7 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
     userModel.genUid(req.app, function(uid) {
         var user = {
             uid : uid,
-            name : req.name,
+            name : pkg.name,
             head_icon : 0,
             max_copy : 0,
             copy_stars : 0,
