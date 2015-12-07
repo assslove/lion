@@ -173,10 +173,10 @@ userController.userSyncTime = function(protoid, pkg, req, res, cb) {
 userController.getOtherUser = function(protoid, pkg, req, res, cb) {
     var uids = [pkg.other];
     cacheManager.getUserBases(uids, function(err, results) {
-        if (results.length == 0)
+        if (err != null || results == null || results.length == 0)
             return cb(DEFINE.ERROR_CODE.USER_NOT_EXIST[0]);
 
-        protoManager.sendMsgToUser(res, protoid, results[0]);
+        protoManager.sendMsgToUser(res, protoid, JSON.parse(results[0]));
     });
 
 //    cacheManager.getUserBases(req.app, pkg.other, function(err, result) {
