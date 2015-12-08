@@ -124,19 +124,30 @@ friendController.getFriendMail = function(protoid, pkg, req, res, cb) {
         if (err != null) return cb(DEFINE.ERROR_CODE.SERV_ERROR[0]);
 
         var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails);
-        var list = [];
+        var uids = [];
         for (var i in mails.mail) {
-            var obj = [mails.mail[i].uid, mails.mail[i].type];
-            list.push(obj);
+            uids.push(mails.mail[i].uid);
         }
 
         var ret = {
-            mail : list,
             get_hp_times : results[0].get_hp_times,
             get_gold_times : results[0].get_gold_times
         };
+        cacheManager.getUserBases(uids, function(err, results) {
+            var list = [];
+            for (var i in results) {
+                var user = JSON.parse(results[i]);
+                var obj = {
+                    user : user,
+                    type : mails.mail[i].type
+                };
+                list.push(obj);
+            }
 
-        protoManager.sendMsgToUser(res, protoid, ret);
+
+            ret.mail = list;
+            protoManager.sendMsgToUser(res, protoid, ret);
+        });
     });
 }
 

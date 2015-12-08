@@ -1,147 +1,112 @@
-
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang='zh-CN'>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
-
-    <title>Bleach GM System</title>
+    <meta name='description' content=''>
+    <meta name='author' content=''>
+    <!--<link rel='icon' href='../../favicon.ico'>-->
+    <title>推广网页</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
     <link href='css/jquery-ui.min.css' rel='stylesheet'>
-
-    <!-- Custom styles for this template -->
-    <link href="css/dashboard.css" rel="stylesheet">
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]>
-    <!--<script src="../../assets/js/ie8-responsive-file-warning.js"></script>-->
-    <!--<![endif]&ndash;&gt;-->
-    <!--<script src="../../assets/js/ie-emulation-modes-warning.js"></script>-->
+    <link href='css/mystyle.css' rel='stylesheet'>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src='http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js'></script>
+    <script src='http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js'></script>
     <![endif]-->
 </head>
-
 <body>
-
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Bleach GM</a>
+<div class="container">
+    <form class='form-horizontal text-center'>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <h1>中国最火消除游戏</h1>
+            </div>
         </div>
-        <!--<div id="navbar" class="navbar-collapse collapse">-->
-            <!--<ul class="nav navbar-nav navbar-right">-->
-                <!--<li>-->
-                    <!--<div class="form-group">-->
-                        <!--<label  class="control-label" style="color:white;margin-top: 15px;"><span id="server_state">正在连接到...</span></label>-->
-                    <!--</div>-->
-                <!--</li>-->
-                <!--<li>-->
-                    <!--<div class="form-group">-->
-                        <!--<select class="form-control" id="server_list" style="margin-top:10px;">-->
-                        <!--</select>-->
-                    <!--</div>-->
-                <!--</li>-->
-                <!--<li class="dropdown">-->
-                    <!--<a id="drop2" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">-->
-                        <!--<span id="caret"></span>-->
-                    <!--</a>-->
-                    <!--<ul class="dropdown-menu" role="menu" aria-labelledby="drop2">-->
-                        <!--&lt;!&ndash;<li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#user_info">修改密码</a></li>&ndash;&gt;-->
-                        <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="logout()">退出</a></li>-->
-                    <!--</ul>-->
-                <!--</li>-->
-                <!--&lt;!&ndash;<li><a href="#">帮助</a></li>&ndash;&gt;-->
-            <!--</ul>-->
-            <!--&lt;!&ndash;<form class="navbar-form navbar-right">&ndash;&gt;-->
-                <!--&lt;!&ndash;<input type="text" class="form-control" placeholder="Search...">&ndash;&gt;-->
-            <!--&lt;!&ndash;</form>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-    </div>
-</nav>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar" id="main_nav">
-            <ul class="nav nav-sidebar">
-                <li id="index" class="menu active"><a href="#">首页</a></li>
-                <li id="tool" class="menu"><a href="#">工具</a></li>
-                <!--<li><a href="#">B</a></li>-->
-            </ul>
-            <!--<ul class="nav nav-sidebar">-->
-                <!--<li><a href="">物品发放</a></li>-->
-                <!--<li><a href="">A</a></li>-->
-                <!--<li><a href="">B</a></li>-->
-                <!--<li><a href="">C</a></li>-->
-            <!--</ul>-->
+        <div class="form-group">
+            <div class="col-sm-12">
+                <img src="img/lion.png" width="256" height="256">
+            </div>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="main">
+        <div class="form-group">
+            <div class="col-sm-12">
+                <h4>我的点点号: <span id="span_uid"></span></h4>
+            </div>
         </div>
-    </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <input type="button" class="btn btn-default" value="安卓下载" id="android_download">&nbsp;&nbsp;
+                <input type="button" class="btn btn-default" value="IOS下载" id="ios_download">
+            </div>
+        </div>
+        <div class="form-group">
+            <hr/>
+            <div class="col-sm-12">
+                当前版本号:<span id="span_version"></span> 包大小:<span id="span_pkg_size"></span>
+            </div>
+            <div class="col-sm-12">
+                更新时间: <span id="span_update_time"></span>
+            </div>
+        </div>
+    </form>
 </div>
-
 <!-- Modal -->
-<div class="modal fade" id="user_info" tabindex="-1" role="dialog" aria-labelledby="user_info_title" aria-hidden="true">
+<div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="info_title" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="user_info_title">修改用户密码</h4>
+                <h4 class="modal-title" id="info_title">信息标题</h4>
             </div>
-            <div class="modal-body" id="user_info_content">
-                <form class='form-horizontal'>
-                    <div class='form-group'>
-                        <label class='col-sm-3 control-label'>旧密码</label>
-                        <div class='col-sm-5'>
-                            <input type='password' class='form-control' id='oldPassword' placeholder='旧密码'>
-                        </div>
-                    </div>
-                    <div class='form-group'>
-                        <label class='col-sm-3 control-label'>新密码</label>
-                        <div class='col-sm-5'>
-                            <input type='password' class='form-control' id='newPassword' placeholder='新密码'>
-                        </div>
-                    </div>
-                    <div class='form-group'>
-                        <label class='col-sm-3 control-label'>重复新密码</label>
-                        <div class='col-sm-5'>
-                            <input type='password' class='form-control' id='rePassword' placeholder='重新输入新密码'>
-                        </div>
-                    </div>
-                </form>
+            <div class="modal-body" id="info_content">
             </div>
-            <div class="modal-footer">
-                <button type='button' class='btn btn-default' onclick='savePassword()'>保存</button>
+            <div class="modal-footer" id="info_footer">
+                <button type='button' class='btn btn-default'>保存</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>
 </div>
+
+
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
-<script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src='http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js'></script>
+<script src='http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+<script src='js/jquery.cookies.2.2.0.min.js'></script>
 <script src='js/jquery-ui.min.js'></script>
-<script src="js/jquery.cookies.2.2.0.min.js"></script>
-<script src="js/local/utils.js"></script>
-<script src="js/local/index.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#span_uid").html(getUrlParam("uid"));
+        $("#span_version").html(getUrlParam("version"));
+        $("#span_pkg_size").html(getUrlParam("pkg_size"));
+        $("#span_update_time").html(getUrlParam("update_time"));
+
+        $("#android_download").click(function() {
+            window.location.href="http://www.baidu.com";
+        });
+
+        $("#ios_download").click(function() {
+            window.location.href="https://appsto.re/cn/FO-m-.i";
+        });
+    });
+
+    function getUrlParam(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var search = decodeURIComponent(window.location.search);
+        var r = search.substr(1).match(reg);
+        if (r!=null) return unescape(r[2]);
+        return null;
+    }
+</script>
 </body>
 </html>
 
