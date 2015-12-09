@@ -12,7 +12,7 @@ var oauth_path = "/api/User/LoginOauth/";
 
 /* @brief 登录验证
  */
-router.post('/verify', function(req, res, next) {
+router.post('/login_verify', function(req, res, next) {
     var opts = {
         host : oauth_host,
         path : oauth_path,
