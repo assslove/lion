@@ -3,7 +3,6 @@
 drop table if exists t_uid;
 create table t_uid (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
-	`flag` tinyint unsigned NOT NULL COMMENT '标志 0-未用 1-已用',
 	`flag` tinyint unsigned NOT NULL COMMENT '标志 0-未用 1-已用'
 	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -12,8 +11,8 @@ create table t_uid (
 drop table if exists t_account;
 create table t_account (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
-	`qq` int unsigned NOT NULL default 0 COMMENT 'qq号',
-	`wechat` varchar(32) default  '0' COMMENT '微信号'
+	`channel` int unsigned NOT NULL COMMENt '渠道id',
+	`channel_uid` varchar(64) NOT NULL COMMENT '渠道用户id',
 	primary key(`uid`),
-	index(`qq`)
+	index(`channel`, `channel_uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
