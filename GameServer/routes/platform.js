@@ -4,9 +4,11 @@ var router = express.Router();
 var http = require('http');
 var logger = require('./../utils/log.js');
 
-var qs = require('querystring');
+var accountDao = require('./../service/dao/accountDao.js');
+
 var oauth_host = "oauth.anysdk.com";
 var oauth_path = "/api/User/LoginOauth/";
+
 
 /* @brief 登录验证
  */
@@ -30,10 +32,16 @@ router.post('/verify', function(req, res, next) {
             logger.debug("#return data:"+data);
             var resJson = JSON.parse(data);
             if (resJson && (resJson.status=="ok")) {
-                var sdk = resJson.common.sdk;
-                var sdk_uid = resJson.common.uid;
+                var channel = resJson.common.channel;
+                var channel_uid = resJson.common.uid;
 
                 var uid = 0;
+                accountDao.getUidByChannel(req.app, channel, channel_uid, function(err, results) {
+                    if (err == null && results.length > 0) {
+                        uid = results[0].uid;
+                    }
+                });
+
                 var ext = {
                     uid : uid //返回已经绑定的id 如果没有绑定，则客户端主动绑定
                 };
