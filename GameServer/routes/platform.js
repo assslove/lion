@@ -43,7 +43,9 @@ router.post('/login_verify', function(req, res, next) {
                 });
 
                 var ext = {
-                    uid : uid //返回已经绑定的id 如果没有绑定，则客户端主动绑定
+                    uid : uid, //返回已经绑定的id 如果没有绑定，则客户端主动绑定
+                    channel : channel,
+                    channel_uid : channel_uid
                 };
                 resJson.ext = ext;
                 res.send(JSON.stringify(resJson));
