@@ -68,3 +68,16 @@ create table t_pet_party (
 	`info` varbinary(2000) NOT NULL COMMENT '宏物派对信息',
 	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#初始化充值记录表
+drop table if exists t_cash_recharge;
+create table t_cash_recharge (
+	`log_t` int unsigned NOT NULL  COMMENT '发生时间',
+	`uid` int unsigned NOT NULL COMMENT '用户id',
+	`product_id` int unsigned NOT NULL COMMENT '商品id',
+	`cost` int unsigned NOT NULL COMMENT '花费',
+	`cash` int unsigned NOT NULL COMMENT '获得钻石',
+	primary key(`log_t`, `uid`),
+	index(`uid`)
+	index(`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
