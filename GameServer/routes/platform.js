@@ -2,13 +2,19 @@ var express = require('express');
 var router = express.Router();
 
 var http = require('http');
-var logger = require('./../utils/log.js');
+var querystring = require('querystring');
+var util = require('util');
+var crypto = require('crypto');
 
+var logger = require('./../utils/log.js');
 var accountDao = require('./../service/dao/accountDao.js');
 
 var oauth_host = "oauth.anysdk.com";
 var oauth_path = "/api/User/LoginOauth/";
-
+//anysdk privatekey
+var private_key = '91CC561CDDDB702653F65179526975EA';
+//anysdk 增强密钥
+var enhanced_key = 'ZWVlN2Q4YTMzN2E3YzBhMTkyYjM';
 
 /* @brief 登录验证
  */
@@ -59,10 +65,71 @@ router.post('/login_verify', function(req, res, next) {
     reqToAnysdk.end();
 });
 
+//md5
+var my_md5 = function(data){
+    //中文字符处理
+    data = new Buffer(data).toString("binary");
+    return crypto.createHash('md5').update(data).digest('hex').toLowerCase();
+}
+
+//通用验签
+var check_sign = function(post,private_key){
+    var source_sign = post.sign;
+    delete post.sign;
+    var new_sign = get_sign(post,private_key);
+
+    if(source_sign == new_sign){
+        return true;
+    }
+    return false;
+}
+
+//增强验签
+var check_enhanced_sign = function(post,enhanced_key){
+    var source_enhanced_sign = post.enhanced_sign;
+    delete post.enhanced_sign;
+    delete post.sign;
+    var new_sign = get_sign(post,enhanced_key);
+
+    if(source_enhanced_sign == new_sign){
+        return true;
+    }
+    return false;
+}
+
+//获取签名
+var get_sign = function(post,sign_key){
+    var keys = [];
+
+    for(var key in post){
+        logger.info("Key:"+key+"\tVaule:"+post[key]);
+        keys.push(key);
+
+    }
+    keys = keys.sort();
+    var paramString = '';
+    for(i in keys){
+        paramString += post[keys[i]];
+    }
+    logger.info("拼接的字符串:"+paramString);
+    logger.info("第一次md5:"+my_md5(paramString));
+    logger.info("加入密钥:"+my_md5(paramString)+sign_key);
+    logger.info("第二次md5:"+my_md5(my_md5(paramString)+sign_key));
+
+    return  my_md5(my_md5(paramString)+sign_key);
+}
+
 /* @brief 充值回馈
  */
 router.post('/pay_notify', function(req, res, next) {
-
+    var payPkg = req.body;
+    logger.info(JSON.stringify(payPkg));
+    if(check_sign(payPkg,private_key) && check_enhanced_sign(payPkg,enhanced_key)){
+        //异步处理游戏支付发放道具逻辑
+        res.end('ok');
+    }else{
+        res.end(util.inspect(post));
+    }
 });
 
 module.exports = router;
