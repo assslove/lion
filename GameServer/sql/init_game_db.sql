@@ -70,8 +70,8 @@ create table t_pet_party (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #初始化充值记录表
-drop table if exists t_cash_recharge;
-create table t_cash_recharge (
+drop table if exists t_recharge;
+create table t_recharge (
 	`log_t` int unsigned NOT NULL  COMMENT '发生时间',
 	`uid` int unsigned NOT NULL COMMENT '用户id',
 	`product_id` int unsigned NOT NULL COMMENT '商品id',
