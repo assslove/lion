@@ -77,7 +77,7 @@ create table t_cash_recharge (
 	`product_id` int unsigned NOT NULL COMMENT '商品id',
 	`cost` int unsigned NOT NULL COMMENT '花费',
 	`cash` int unsigned NOT NULL COMMENT '获得钻石',
+	`order_id` varchar(128) NOT NULL COMMENT '订单号',
 	primary key(`log_t`, `uid`),
-	index(`uid`)
 	index(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
