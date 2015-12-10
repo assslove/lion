@@ -20,6 +20,10 @@ friendController.friendAdd = function(protoid, pkg, req, res, cb) {
     //检查是否申请过,
     var friendId = pkg.friendid;
 
+    if (friendId == pkg.uid) {
+        return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
+    }
+
     friendMailDao.getFriendMail(req.app, friendId, function(err, results) {
         if (err != null) {
             return cb(DEFINE.ERROR_CODE.SERV_ERROR[0]);
@@ -205,6 +209,12 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
 friendController.requestHp = function(protoid, pkg, req, res, cb) {
     var uids = pkg.friendid;
     var i = 0, total = uids.length;
+    for (var i in uids) {
+        if (uids[i] == pkg.uid) {
+            return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
+        }
+    }
+
     async.whilst(
         function() {return i < total;},
         function(callback) {
@@ -212,6 +222,7 @@ friendController.requestHp = function(protoid, pkg, req, res, cb) {
                 var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails).mail;
                 for (var j in mails) {
                     if (mails[j].type == CODE.FRIEND_MAIL_TYPE.GET_HP && mails[j].uid == pkg.uid) { //已经申请过
+                        ++i;
                         return callback(null);
                     }
                 }
@@ -291,6 +302,10 @@ function handleFriendApply(mails, ids, req, protoid, pkg, res) {
 }
 friendController.giveGold = function(protoid, pkg, req, res, cb) {
     var friendid  = pkg.friendid;
+    if (friendid == pkg.uid) {
+        return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
+    }
+
     friendMailDao.getFriendMail(req.app, friendid, function(err, results) {
         var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails).mail;
         for (var j in mails) {

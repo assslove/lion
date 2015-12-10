@@ -10,11 +10,11 @@ var logger = require('./../../utils/log.js');
 
 var accountDao = module.exports;
 
-accountDao.getUidByQQ = function(app, qq, cb)
+accountDao.getUidByChannel = function(app, channel, channel_uid, cb)
 {
     var mysqlCli = mysqlManager.getGlobalMysql();
-    var sql = "select uid from t_account where qq = %u";
-    mysqlCli.query(sql, [qq], function(err, res) {
+    var sql = "select uid from t_account where channel = ? and channel_uid=? limit 1";
+    mysqlCli.query(sql, [channel, channel_uid], function(err, res) {
         if (err !== null) {
             logger.error('get user error: %s', err.message);
             utils.invokeCallback(cb, err.message, null);

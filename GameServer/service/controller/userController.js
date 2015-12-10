@@ -83,7 +83,8 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
 
         async.parallel([
             function(callback) {
-                accountDao.addOrUpdateAccount(req.app, account, callback);
+                //accountDao.addOrUpdateAccount(req.app, account, callback);
+                callback(null, null);
             },
             function(callback) {
                 userDao.addUser(req.app, user, callback);
@@ -217,5 +218,17 @@ userController.getCopyRank = function(protoid, pkg, req, res, cb) {
             friend : copys
         };
         protoManager.sendMsgToUser(res, protoid, ret);
+    });
+}
+
+userController.userBind = function(protoid, pkg, req, res, cb) {
+    var account = {
+        uid : pkg.uid,
+        channel : pkg.channel,
+        channel_uid : pkg.channel_uid
+    };
+
+    accountDao.addOrUpdateAccount(req.app, account, function(err, results) {
+        protoManager.sendErrorToUser(res, protoid, 0);
     });
 }

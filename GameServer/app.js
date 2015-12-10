@@ -30,6 +30,7 @@ var log = require('./utils/log.js');
 
 var routes = require('./routes/index');
 var proto = require('./routes/proto.js');
+var platform = require('./routes/platform.js');
 var gm = require('./routes/gm.js');
 
 var app = express();
@@ -99,6 +100,7 @@ app.use(session({
 app.use('/', routes);
 app.use('/proto', proto);
 app.use('/gm', gm);
+app.use('/platform', platform);
 
 var listen_port = program.port;
 
