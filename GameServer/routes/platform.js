@@ -7,6 +7,7 @@ var util = require('util');
 var crypto = require('crypto');
 
 var logger = require('./../utils/log.js');
+var utils = require('./../utils/utils.js');
 var accountDao = require('./../service/dao/accountDao.js');
 
 var oauth_host = "oauth.anysdk.com";
