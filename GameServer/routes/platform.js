@@ -129,6 +129,7 @@ router.post('/pay_notify', function(req, res, next) {
     for (var i in relIps) {
         if (ip.indexOf(relIps[i]) != -1) {
             isValid = true;
+            break;
         }
     }
 
