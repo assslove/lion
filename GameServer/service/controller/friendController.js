@@ -212,6 +212,7 @@ friendController.requestHp = function(protoid, pkg, req, res, cb) {
                 var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails).mail;
                 for (var j in mails) {
                     if (mails[j].type == CODE.FRIEND_MAIL_TYPE.GET_HP && mails[j].uid == pkg.uid) { //已经申请过
+                        ++i;
                         return callback(null);
                     }
                 }
