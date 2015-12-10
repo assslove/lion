@@ -99,7 +99,6 @@ app.use(session({
 
 app.use('/', routes);
 app.use('/proto', proto);
-app.use('/gm', gm);
 app.use('/platform', platform);
 
 var listen_port = program.port;

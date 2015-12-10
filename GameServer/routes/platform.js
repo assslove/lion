@@ -59,4 +59,10 @@ router.post('/login_verify', function(req, res, next) {
     reqToAnysdk.end();
 });
 
+/* @brief 充值回馈
+ */
+router.post('/pay_notify', function(req, res, next) {
+
+});
+
 module.exports = router;
