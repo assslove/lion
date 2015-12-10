@@ -141,3 +141,9 @@ utils.getCurTime = function() {
 utils.isDiffDay = function(chktm) {
     return new Date().getDate() != new Date(chktm * 1000).getDate();
 }
+
+utils.getClientIp = function(req) {
+    return req.headers['x-forwarded-for'] ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress;
+}

@@ -122,13 +122,26 @@ var get_sign = function(post,sign_key){
 /* @brief 充值回馈
  */
 router.post('/pay_notify', function(req, res, next) {
+    var relIps = ["211.151.20.126","211.151.20.127"];
+    var ip = utils.getClientIp(req);
+    var isValid = false;
+    for (var i in relIps) {
+        if (ip.indexOf(relIps[i]) != -1) {
+            isValid = true;
+        }
+    }
+
+    if (!isValid) {
+        return res.send("falied");
+    }
+
     var payPkg = req.body;
     logger.info(JSON.stringify(payPkg));
     if(check_sign(payPkg,private_key) && check_enhanced_sign(payPkg,enhanced_key)){
         //异步处理游戏支付发放道具逻辑
-        res.end('ok');
+        res.send('ok');
     }else{
-        res.end(util.inspect(post));
+        res.send(util.inspect(post));
     }
 });
 
