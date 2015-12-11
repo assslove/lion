@@ -10,6 +10,7 @@ create table t_user (
 	`cash` int unsigned NOT NULL default 0 COMMENT '钻石',
 	`gold` int unsigned NOT NULL default 0 COMMENT '金币',
 	`hp` int unsigned NOT NULL default 0 COMMENT '体力',
+	`petid` int unsigned NOT NULL default 0 COMMENT '出战宠物',
 	`last_login` int unsigned NOT NULL COMMENT '最后登录时间',
 	`reg_time` int unsigned NOT NULL COMMENT '注册时间',
 	primary key(`uid`)
