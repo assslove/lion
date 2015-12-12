@@ -249,7 +249,8 @@ cacheManager.updateUserBase = function(uid, base, cb) {
         name : base.name,
         head_icon : base.head_icon,
         max_copy : base.max_copy,
-        copy_stars : base.copy_stars
+        copy_stars : base.copy_stars,
+        use_pet : base.use_pet
     };
 
     redis.hset(CODE.CACHE_TYPE.USER_BASE, uid, JSON.stringify(obj), function(err, res) {
