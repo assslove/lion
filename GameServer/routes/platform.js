@@ -146,7 +146,7 @@ router.post('/pay_notify', function(req, res, next) {
         var recharge = {
             log_t : utils.getCurTime(),
             product_id : payPkg.product_id,
-            cost : parseInt(parseFloat(payPkg.amout) * 10),
+            cost : parseInt(parseFloat(payPkg.amount) * 10),
             cash : 0,
             order_id : payPkg.order_id
         };
