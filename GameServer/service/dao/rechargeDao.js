@@ -33,7 +33,7 @@ rechargeDao.addOrUpdateRecharge = function(app, uid, recharge, cb) {
 
     mysqlCli.query(sql, args, function(err, res) {
         if (err !== null) {
-            console.log('insert recharge error: ' + err.message);
+            logger.error('insert recharge error: ' + err.message);
             utils.invokeCallback(cb, err.message, null);
         } else {
             utils.invokeCallback(cb, null, res);
