@@ -9,6 +9,7 @@ var crypto = require('crypto');
 var logger = require('./../utils/log.js');
 var utils = require('./../utils/utils.js');
 var accountDao = require('./../service/dao/accountDao.js');
+var rechargeDao = require('./../service/dao/rechargeDao.js');
 
 var oauth_host = "oauth.anysdk.com";
 var oauth_path = "/api/User/LoginOauth/";
@@ -141,8 +142,18 @@ router.post('/pay_notify', function(req, res, next) {
     logger.info(JSON.stringify(payPkg));
     if(check_sign(payPkg,private_key) && check_enhanced_sign(payPkg,enhanced_key)){
         //异步处理游戏支付发放道具逻辑
-        res.send('ok');
-    }else{
+        var recharge = {
+            log_t : utils.getCurTime(),
+            uid : payPkg.game_user_id,
+            product_id : payPkg.product_id,
+            cost : parseInt(parseFloat(payPkg.amout) * 10),
+            cash : 0,
+            order_id : payPkg.order_id
+        };
+        rechargeDao.addOrUpdateRecharge(req.app, uid, recharge, function(err, results) {
+            res.send('ok');
+        });
+    } else {
         res.send(util.inspect(post));
     }
 });
