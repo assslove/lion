@@ -142,9 +142,9 @@ router.post('/pay_notify', function(req, res, next) {
     logger.info(JSON.stringify(payPkg));
     if(check_sign(payPkg,private_key) && check_enhanced_sign(payPkg,enhanced_key)){
         //异步处理游戏支付发放道具逻辑
+        var uid = payPkg.game_user_id;
         var recharge = {
             log_t : utils.getCurTime(),
-            uid : payPkg.game_user_id,
             product_id : payPkg.product_id,
             cost : parseInt(parseFloat(payPkg.amout) * 10),
             cash : 0,
