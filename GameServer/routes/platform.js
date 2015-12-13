@@ -150,7 +150,7 @@ router.post('/pay_notify', function(req, res, next) {
             cash : 0,
             order_id : payPkg.order_id
         };
-        rechargeDao.addOrUpdateRecharge(req.app, recharge.uid, recharge, function(err, results) {
+        rechargeDao.addOrUpdateRecharge(req.app, uid, recharge, function(err, results) {
             res.send('ok');
         });
     } else {
