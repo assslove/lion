@@ -25,6 +25,7 @@ copyController.userSyncCopy = function(protoid, pkg, req, res, cb) {
         }
 
         for (var i in copys) {
+			if (copys[i][1] == null)  continue;
             copyMap[copys[i][0]] = [copys[i][1], copys[i][2]];
         }
 
