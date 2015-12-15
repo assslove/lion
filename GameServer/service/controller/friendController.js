@@ -34,8 +34,8 @@ friendController.friendAdd = function(protoid, pkg, req, res, cb) {
         }
 
         var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails);
-        for (var j in mails) {
-            if (mails[j].type == CODE.FRIEND_MAIL_TYPE.APPLY && mails[j].uid == pkg.uid) { 
+        for (var j in mails.mail) {
+            if (mails.mail[j].type == CODE.FRIEND_MAIL_TYPE.APPLY && mails.mail[j].uid == pkg.uid) { 
                 return cb(0);
             }
         }
