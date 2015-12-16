@@ -11,6 +11,7 @@ var utils = require('./../../utils/utils.js');
 var protoManager = require('./../manager/protoManager.js');
 var userDao = require('./../dao/userDao.js');
 var accountDao = require('./../dao/accountDao.js');
+var signDao = require('./../dao/signDao.js');
 var userModel = require('./../model/user.js');
 var async = require('async');
 
@@ -31,6 +32,9 @@ userController.userLogin = function(protoid, pkg, req, res, cb) {
 
             if (utils.isDiffDay(results.user.last_login)) {
                 userModel.initData(req.app, pkg.uid);
+            }
+            if (utils.isDiffWeek(results.user.last_login)) {
+                userModel.initWeekData(req.app, pkg.uid);
             }
 
             //标记登录时间
@@ -100,6 +104,9 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
             },
             function(callback) {
                 userModel.addPetParty(req.app, uid, callback);
+            },
+            function(callback) {
+                userModel.addSign(req.app, uid, callback);
             },
             function(callback) {
                 cacheManager.updateUserBase(uid, user, callback);
@@ -232,5 +239,48 @@ userController.userBind = function(protoid, pkg, req, res, cb) {
 
     accountDao.addOrUpdateAccount(req.app, account, function(err, results) {
         protoManager.sendErrorToUser(res, protoid, 0);
+    });
+}
+
+userController.userGetSignInfo = function(protoid, pkg, req, res, cb) {
+    var dayOfWeek = new Date().getDay();
+    if (dayOfWeek == 0) dayOfWeek = 7;
+    signDao.getSign(req.app, pkg.uid, function(err, results) {
+        if (err != null || results.length == 0) {
+            return cb(DEFINE.ERROR_CODE.SIGN_DATA_ERROR[0]);
+        }
+
+        var obj = results[0];
+        //获取奖励
+        obj.item = [[1031,1],[1031,2],[1031,3],[1031,4],[1031,5],[1031,6],[1031,7]];
+        protoManager.sendMsgToUser(res, protoid, obj);
+    });
+}
+
+userController.userSign = function(protoid, pkg, req, res, cb) {
+    signDao.getSign(req.app, pkg.uid, function(err, results) {
+        if (err != null || results.length == 0) {
+            return cb(DEFINE.ERROR_CODE.SIGN_DATA_ERROR[0]);
+        }
+
+        var dayOfWeek = new Date().getDay();
+        if (dayOfWeek == 0) dayOfWeek = 7;
+
+        var obj = results[0];
+
+        if (obj.sign_flag == 1) {
+            if (obj.sign_day > dayOfWeek) {
+                return cb(DEFINE.ERROR_CODE.SIGN_ALREADY);
+            }
+            obj.fill_check += 1;
+            obj.sign_day += 1;
+        } else {
+            obj.sign_day += 1;
+            obj.sign_flag = 1;
+        }
+
+        signDao.addOrUpdateSign(req.app, uid, obj, function(err, results) {
+            protoManager.sendMsgToUser(res, protoid, obj);
+        });
     });
 }
