@@ -269,7 +269,7 @@ userController.userSign = function(protoid, pkg, req, res, cb) {
         var obj = results[0];
 
         if (obj.sign_flag == 1) {
-            if (obj.sign_day > dayOfWeek) {
+            if (obj.sign_day >= dayOfWeek) {
                 return cb(DEFINE.ERROR_CODE.SIGN_ALREADY[0]);
             }
             obj.fill_check += 1;
