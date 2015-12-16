@@ -82,3 +82,12 @@ create table t_recharge (
 	primary key(`log_t`, `uid`),
 	index(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+#初始化签到表
+drop table if exists t_sign;
+create table t_sign (
+	`uid` int unsigned NOT NULL COMMENT '用户id',
+	`sign_day` tinyint unsigned NOT NULL default 0 COMMENT '已经签到天数',
+	`sign_flag` tinyint unsigned NOT NULL default 0 COMMENT '今天是否已经签到 0-未签 1-已签',
+	`fill_check` tinyint unsigned NOT NULL default 0 COMMENT '补签天数',
+	primary key(`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
