@@ -279,6 +279,8 @@ userController.userSign = function(protoid, pkg, req, res, cb) {
             obj.sign_flag = 1;
         }
 
+        delete obj.uid;
+
         signDao.addOrUpdateSign(req.app, pkg.uid, obj, function(err, results) {
             protoManager.sendMsgToUser(res, protoid, obj);
         });
