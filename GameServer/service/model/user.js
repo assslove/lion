@@ -273,7 +273,7 @@ user.addSign = function(app, uid, callback) {
         fill_check : 0
     };
 
-    signDao.addOrUpdateSign(req.app, uid, obj, function(err, results) {
+    signDao.addOrUpdateSign(app, uid, obj, function(err, results) {
         callback(err, results);
     });
 }
@@ -284,7 +284,7 @@ user.initSign = function(app, uid, callback) {
         fill_check : 0
     };
 
-    signDao.addOrUpdateSign(req.app, uid, obj, function(err, results) {
+    signDao.addOrUpdateSign(app, uid, obj, function(err, results) {
         callback(err, results);
     });
 }
@@ -294,7 +294,7 @@ user.initWeekSign = function(app, uid, callback) {
         sign_day : 0
     };
 
-    signDao.addOrUpdateSign(req.app, uid, obj, function(err, results) {
+    signDao.addOrUpdateSign(app, uid, obj, function(err, results) {
         callback(err, results);
     });
 }
