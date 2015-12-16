@@ -13,6 +13,7 @@ var copyDao = require('../dao/copyDao.js');
 var friendMailDao = require('./../dao/friendMailDao.js');
 var friendDao = require('./../dao/friendDao.js');
 var petPartyDao = require('./../dao/petPartyDao.js');
+var signDao = require('./../dao/signDao.js');
 var utils = require("./../../utils/utils.js");
 
 
@@ -203,11 +204,23 @@ user.initData = function(app, uid) {
         function(callback) {
             user.initPetParty(app, uid, callback);
         },
+        function(callback) {
+            user.initSign(app, uid, callback);
+        },
     ], function(err, results) {
         logger.info("init every date date [uid=%ld]", uid);
     });
 }
 
+user.initWeekData = function(app, uid) {
+    async.parallel([
+        function(callback) {
+            user.initWeekSign(app, uid, callback);
+        },
+    ], function(err, results) {
+        logger.info("init every week data [uid=%ld]", uid);
+    });
+}
 user.addPetParty = function(app, uid, cb) {
     var obj = {
         melike : [],
@@ -251,4 +264,37 @@ user.initPetParty = function(app, uid, callback) {
           callback(err, results);
       });
   });
+}
+
+user.addSign = function(app, uid, callback) {
+    var obj = {
+        sign_day : 0,
+        sign_flag : 0,
+        fill_check : 0
+    };
+
+    signDao.addOrUpdateSign(req.app, uid, obj, function(err, results) {
+        callback(err, results);
+    });
+}
+
+user.initSign = function(app, uid, callback) {
+    var obj = {
+        sign_flag : 0,
+        fill_check : 0
+    };
+
+    signDao.addOrUpdateSign(req.app, uid, obj, function(err, results) {
+        callback(err, results);
+    });
+}
+
+user.initWeekSign = function(app, uid, callback) {
+    var obj = {
+        sign_day : 0
+    };
+
+    signDao.addOrUpdateSign(req.app, uid, obj, function(err, results) {
+        callback(err, results);
+    });
 }

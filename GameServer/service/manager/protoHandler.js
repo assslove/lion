@@ -52,6 +52,8 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_GIFTBOX_GET] = [petController.giftBoxGet];
     this.protoHandlers[DEFINE.PROTO.USER_LIKE_PETPARTY] = [petController.userLikePetParty];
     this.protoHandlers[DEFINE.PROTO.USER_GET_FRIEND_PET] = [petController.userGetFriendPet];
+    this.protoHandlers[DEFINE.PROTO.USER_GET_SIGN_INFO] = [userController.userGetSignInfo];
+    this.protoHandlers[DEFINE.PROTO.USER_SIGN] = [userController.userSign];
 
     logger.info("init proto handlers success");
 }

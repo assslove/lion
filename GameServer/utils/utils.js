@@ -147,3 +147,25 @@ utils.getClientIp = function(req) {
         req.connection.remoteAddress ||
         req.socket.remoteAddress;
 }
+
+utils.isDiffWeek = function(chktm) {
+    var curTm = new Date();
+    curTm.setHours(0);
+    curTm.setMinutes(0);
+    curTm.setSeconds(0);
+    var curDay = curTm.getDay();
+    if (curDay == 0) curDay = 7;
+
+    var cur = Math.floor(curTm.getTime()/1000) - 3600 * 24 * curDay;
+
+    var chkTm = new Date(chktm);
+    chkTm.setHours(0);
+    chkTm.setMinutes(0);
+    chkTm.setSeconds(0);
+    var chkDay = chkTm.getDay();
+    if (chkDay == 0) chkDay = 7;
+
+    var chk = Math.floor(chkTm.getTime()/1000) - 3600 * 24 * chkDay;
+
+    return cur === chk;
+}

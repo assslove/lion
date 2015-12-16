@@ -1,6 +1,8 @@
 {
     "development" : {
+        "server_time" : "2015-12-14 00:00:00"
     },
     "production" : {
+        "server_time" : "2015-12-14 00:00:00"
     }
 }
