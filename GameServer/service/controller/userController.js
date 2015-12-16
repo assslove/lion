@@ -270,7 +270,7 @@ userController.userSign = function(protoid, pkg, req, res, cb) {
 
         if (obj.sign_flag == 1) {
             if (obj.sign_day > dayOfWeek) {
-                return cb(DEFINE.ERROR_CODE.SIGN_ALREADY);
+                return cb(DEFINE.ERROR_CODE.SIGN_ALREADY[0]);
             }
             obj.fill_check += 1;
             obj.sign_day += 1;
@@ -279,7 +279,7 @@ userController.userSign = function(protoid, pkg, req, res, cb) {
             obj.sign_flag = 1;
         }
 
-        signDao.addOrUpdateSign(req.app, uid, obj, function(err, results) {
+        signDao.addOrUpdateSign(req.app, pkg.uid, obj, function(err, results) {
             protoManager.sendMsgToUser(res, protoid, obj);
         });
     });
