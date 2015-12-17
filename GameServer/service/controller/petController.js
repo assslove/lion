@@ -12,6 +12,7 @@ var utils = require('./../../utils/utils.js');
 var protoManager = require('./../manager/protoManager.js');
 var petDao = require('./../dao/petDao.js');
 var petPartyDao = require('./../dao/petPartyDao.js');
+var friendDao = require('./../dao/friendDao.js');
 
 var petController = module.exports;
 
@@ -177,18 +178,21 @@ petController.getPetParty = function(protoid, pkg, req, res, cb){
 }
 
 petController.getFriendPetParty = function(protoid, pkg, req, res, cb){
-    var uids = pkg.friendid;
-    cacheManager.getPetParty(uids, function(err, results) {
-        for (var i in uids) {
-            results[i] = JSON.parse(results[i]);
-            results[i].uid = uids[i];
-        }
+    //var uids = pkg.friendid;
+    friendDao.getFriend(req.app, pkg.uid, function(err, results) {
+        var uids = cacheManager.parseFromPb("FriendList", results[0].friendlist).uid;
+        cacheManager.getPetParty(uids, function (err, results) {
+            for (var i in uids) {
+                results[i] = JSON.parse(results[i]);
+                results[i].uid = uids[i];
+            }
 
-        var msg = {
-           party : results
-        };
+            var msg = {
+                party: results
+            };
 
-        protoManager.sendMsgToUser(res, protoid, msg);
+            protoManager.sendMsgToUser(res, protoid, msg);
+        });
     });
 }
 
