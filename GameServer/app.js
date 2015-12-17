@@ -25,13 +25,14 @@ var ProtoHandler = require('./service/manager/protoHandler.js');
 var protoManager = require('./service/manager/protoManager.js');
 
 var mysqlManager = require('./service/dao/mysqlManager.js');
+var confManager = require('./service/manager/confManager.js');
 
 var log = require('./utils/log.js');
 
 var routes = require('./routes/index');
 var proto = require('./routes/proto.js');
 var platform = require('./routes/platform.js');
-var gm = require('./routes/gm.js');
+//var gm = require('./routes/gm.js');
 
 var app = express();
 
@@ -75,6 +76,8 @@ if (app.get('env') == "development") {
     app.set('redis', configJson('config/redis.json', app.get('env')).production);
     app.set('server', configJson('config/server.json', app.get('env')).production);
 }
+
+confManager.initConf();
 
 //设置session地址
 var RedisStore = require('connect-redis')(session);

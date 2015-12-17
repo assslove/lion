@@ -15,6 +15,8 @@ var signDao = require('./../dao/signDao.js');
 var userModel = require('./../model/user.js');
 var async = require('async');
 
+var confManager = require('./../manager/confManager.js');
+
 var userController = module.exports;
 
 /* @brief 用户登录
@@ -252,7 +254,12 @@ userController.userGetSignInfo = function(protoid, pkg, req, res, cb) {
 
         var obj = results[0];
         //获取奖励
-        obj.item = [[1031,1],[1031,2],[1031,3],[1031,4],[1031,5],[1031,6],[1031,7]];
+        var tmStr = req.app.get('server').server_time;
+        var serv_tm = Math.floor(new Date(tmStr).getTime()/1000);
+        var cur = Math.floor(new Date().getTime()/1000);
+        var order = Math.floor((cur - serv_tm) / 604800) % 3;
+
+        obj.item = confManager.getMarkDateReward(order);
         protoManager.sendMsgToUser(res, protoid, obj);
     });
 }
