@@ -293,7 +293,7 @@ cacheManager.getPetParty = function(uids, cb) {
     });
 }
 cacheManager.checkUser = function(key, cb) {
-    redis.keys(CODE.CACHE_TYPE.USER + key, function(err, res) {
+    redis.exists(CODE.CACHE_TYPE.USER + key, function(err, res) {
         if (err !== null) {
             logger.error("check user failed");
         }

@@ -240,10 +240,10 @@ redisClient.zadd = function(key, uid, score, cb) {
 	});
 }
 
-redisClient.keys = function(key, cb) {
-    handler.keys(key, function(err, res) {
+redisClient.exists = function(key, cb) {
+    handler.exists(key, function(err, res) {
 		if (err !== null) {
-			logger.error("exec zadd failed");
+			logger.error("exec exists failed");
 			utils.invokeCallback(cb, err.message, null);
 		} else {
 			utils.invokeCallback(cb, null, res);
