@@ -74,12 +74,13 @@ ProtoHandler.prototype.handle = function(protoid, pkg, req, res, cb) {
         if (protoid != DEFINE.PROTO.USER_CREATE && protoid != DEFINE.PROTO.USER_LOGIN) {
             //  if (req.session == null || req.session.uid != pkg.uid) { //检测session是否过期
             // }
+            var tmpProtoHandlers = this.protoHandlers;
             cacheManager.checkUser(pkg.uid, function(err, result) {
-                if (err != null || result == null) {
+                if (err != null || result == 0) {
                     return cb(DEFINE.ERROR_CODE.USER_SESSION_EXPIRE[0]);
                 }
 
-                this.protoHandlers[protoid][0](protoid, pkg, req, res, cb);
+                tmpProtoHandlers[protoid][0](protoid, pkg, req, res, cb);
             });
         }
     } catch (e) {
