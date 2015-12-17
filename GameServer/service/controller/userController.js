@@ -26,9 +26,9 @@ userController.userLogin = function(protoid, pkg, req, res, cb) {
         if (err != null || results == null) {
             protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_NOT_EXIST[0]);
         } else {
-            req.session.uid = pkg.uid;
-            req.session.cookie.expires = false;
-            req.session.save();
+            //req.session.uid = pkg.uid;
+            //req.session.cookie.expires = false;
+            //req.session.save();
 
             logger.info("%d user login", pkg.uid);
 

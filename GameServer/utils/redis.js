@@ -239,3 +239,14 @@ redisClient.zadd = function(key, uid, score, cb) {
 		}
 	});
 }
+
+redisClient.keys = function(key, cb) {
+    handler.keys(key, function(err, res) {
+		if (err !== null) {
+			logger.error("exec zadd failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, res);
+		}
+	});
+}

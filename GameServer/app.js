@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var configJson = require('config.json');
 var program = require('commander');
-var session = require('express-session');
+//var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var log4js = require('log4js');
 
@@ -96,25 +96,25 @@ if (app.get('env') == "development") {
 confManager.initConf();
 
 //设置session地址
-var RedisStore = require('connect-redis')(session);
-app.use(session({
-    store : new RedisStore({
-        host : app.get('redis').host,
-        port : app.get('redis').port,
-        ttl  : 3600,
-        db : 2
-    }),
-    secret : 'keyboard cat',
-    resave : false,
-    saveUninitialized : false,
-    cookie: {
-        //secure: true,
-        path : "/",
-        httpOnly : true,
-        signed : false,
-        expires : false
-    }
-}));
+//var RedisStore = require('connect-redis')(session);
+//app.use(session({
+//    store : new RedisStore({
+//        host : app.get('redis').host,
+//        port : app.get('redis').port,
+//        ttl  : 3600,
+//        db : 2
+//    }),
+//    secret : 'keyboard cat',
+//    resave : false,
+//    saveUninitialized : false,
+//    cookie: {
+//        //secure: true,
+//        path : "/",
+//        httpOnly : true,
+//        signed : false,
+//        expires : false
+//    }
+//}));
 
 app.use('/', routes);
 app.use('/proto', proto);

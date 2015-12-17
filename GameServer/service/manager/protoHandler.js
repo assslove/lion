@@ -11,6 +11,7 @@ var itemController = require('./../controller/itemController.js');
 var copyController = require('./../controller/copyController.js');
 var petController = require('./../controller/petController.js');
 var friendController = require('./../controller/friendController.js');
+var cacheManager = require(./cacheManager.js);
 
 module.exports = function(app) {
     return new ProtoHandler(app);
@@ -71,12 +72,16 @@ ProtoHandler.prototype.handle = function(protoid, pkg, req, res, cb) {
     }
     try {
         if (protoid != DEFINE.PROTO.USER_CREATE && protoid != DEFINE.PROTO.USER_LOGIN) {
-            if (req.session == null || req.session.uid != pkg.uid) { //检测session是否过期
-                return cb(DEFINE.ERROR_CODE.USER_SESSION_EXPIRE[0]);
-            }
-        }
+            //  if (req.session == null || req.session.uid != pkg.uid) { //检测session是否过期
+            // }
+            cacheManager.checkUser(pkg.uid, function(err, result) {
+                if (err != null || result == null) {
+                    return cb(DEFINE.ERROR_CODE.USER_SESSION_EXPIRE[0]);
+                }
 
-        this.protoHandlers[protoid][0](protoid, pkg, req, res, cb);
+                this.protoHandlers[protoid][0](protoid, pkg, req, res, cb);
+            });
+        }
     } catch (e) {
         logger.error("proto error %s", e);
         cb(DEFINE.ERROR_CODE.PROTO_NOT_FOUND[0]);
