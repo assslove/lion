@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var configJson = require('config.json');
 var program = require('commander');
 //var session = require('express-session');
-var RedisStore = require('connect-redis')(session);
+//var RedisStore = require('connect-redis')(session);
 var log4js = require('log4js');
 
 var redisClient = require('./utils/redis.js');

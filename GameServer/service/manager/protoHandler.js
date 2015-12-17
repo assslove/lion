@@ -11,7 +11,7 @@ var itemController = require('./../controller/itemController.js');
 var copyController = require('./../controller/copyController.js');
 var petController = require('./../controller/petController.js');
 var friendController = require('./../controller/friendController.js');
-var cacheManager = require(./cacheManager.js);
+var cacheManager = require("./cacheManager.js");
 
 module.exports = function(app) {
     return new ProtoHandler(app);
