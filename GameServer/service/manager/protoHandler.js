@@ -70,10 +70,11 @@ ProtoHandler.prototype.handle = function(protoid, pkg, req, res, cb) {
         return ;
     }
     try {
-//        if (req.session == null || req.session.uid != pkg.uid) { //检测session是否过期
-//            cb(DEFINE.ERROR_CODE.USER_SESSION_EXPIRE);
-//            return ;
-//        }
+        if (protoid != DEFINE.PROTO.USER_CREATE) {
+            if (req.session == null || req.session.uid != pkg.uid) { //检测session是否过期
+                return cb(DEFINE.ERROR_CODE.USER_SESSION_EXPIRE);
+            }
+        }
 
         this.protoHandlers[protoid][0](protoid, pkg, req, res, cb);
     } catch (e) {
