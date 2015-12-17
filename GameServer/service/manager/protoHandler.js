@@ -70,7 +70,7 @@ ProtoHandler.prototype.handle = function(protoid, pkg, req, res, cb) {
         return ;
     }
     try {
-        if (protoid != DEFINE.PROTO.USER_CREATE) {
+        if (protoid != DEFINE.PROTO.USER_CREATE && protoid != DEFINE.PROTO.USER_LOGIN) {
             if (req.session == null || req.session.uid != pkg.uid) { //检测session是否过期
                 return cb(DEFINE.ERROR_CODE.USER_SESSION_EXPIRE[0]);
             }
