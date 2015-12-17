@@ -8,17 +8,6 @@ var program = require('commander');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var log4js = require('log4js');
-log4js.configure("./config/log4js.json");
-
-var logger = log4js.getLogger("logInfo");
-logger.debug("test log4js");
-
-
-program.version('0.0.1')
-	   .option("-p --port [port]", "Listen Port")
-	   .option("-h --help", "Output usage");
-
-program.parse(process.argv);
 
 var redisClient = require('./utils/redis.js');
 var ProtoHandler = require('./service/manager/protoHandler.js');
@@ -35,6 +24,33 @@ var platform = require('./routes/platform.js');
 //var gm = require('./routes/gm.js');
 
 var app = express();
+
+program.version('0.0.1')
+	   .option("-p --port [port]", "Listen Port")
+	   .option("-h --help", "Output usage");
+
+program.parse(process.argv);
+//log4js.configure("./config/log4js.json");
+
+log4js.configure({
+    "appenders": [
+        {"type" : "console", "category" : "console"},
+        {
+            "type": "dateFile",
+            "filename": "log/"+program.port+"/gameserver_",
+            "pattern" : "yyyyMMdd.log",
+            "alwaysIncludePattern": true,
+            "maxLogSize": 20480,
+            "backups": 10,
+            "category": "logInfo"
+        }
+    ],
+    "levels" : {"logInfo" : "DEBUG"},
+    "replaceConsole" : true
+});
+
+var logger = log4js.getLogger("logInfo");
+logger.debug("test log4js");
 
 //init logger
 app.set("logger", logger);
