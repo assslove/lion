@@ -82,6 +82,8 @@ ProtoHandler.prototype.handle = function(protoid, pkg, req, res, cb) {
 
                 tmpProtoHandlers[protoid][0](protoid, pkg, req, res, cb);
             });
+        } else {
+            this.protoHandlers[protoid][0](protoid, pkg, req, res, cb);
         }
     } catch (e) {
         logger.error("proto error %s", e);
