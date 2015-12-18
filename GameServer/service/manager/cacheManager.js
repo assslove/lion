@@ -250,7 +250,8 @@ cacheManager.updateUserBase = function(uid, base, cb) {
         head_icon : base.head_icon,
         max_copy : base.max_copy,
         copy_stars : base.copy_stars,
-        use_pet : base.use_pet
+        use_pet : base.use_pet,
+        total_like : 0
     };
 
     redis.hset(CODE.CACHE_TYPE.USER_BASE, uid, JSON.stringify(obj), function(err, res) {
@@ -265,6 +266,15 @@ cacheManager.getUserBases = function(uids, cb) {
     redis.hmget(CODE.CACHE_TYPE.USER_BASE, uids, function(err, res) {
         if (err !== null) {
             logger.error("get user bases failed");
+        }
+        utils.invokeCallback(cb, err, res);
+    });
+}
+
+cacheManager.getUserBase = function(uid, cb) {
+    redis.hget(CODE.CACHE_TYPE.USER_BASE, uid, function(err, res) {
+        if (err !== null) {
+            logger.error("get user base failed");
         }
         utils.invokeCallback(cb, err, res);
     });
