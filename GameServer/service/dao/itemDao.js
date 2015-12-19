@@ -74,7 +74,7 @@ itemDao.addOrUpdateItem = function(app, uid, item, cb) {
     for (var i in item) {
         key += i + ",";
         value += "?,";
-        update += i + "=" + item[i] + ",";
+        update += i + "=?,";
         args.push(item[i]);
     }
     for (var i in item) {
@@ -89,7 +89,7 @@ itemDao.addOrUpdateItem = function(app, uid, item, cb) {
 
     mysqlCli.query(sql, args, function(err, res) {
         if (err !== null) {
-            console.log('insert item error: ' + err.message);
+            console.log('add or update item error: ' + err.message);
             utils.invokeCallback(cb, err.message, null);
         } else {
             utils.invokeCallback(cb, null, res);

@@ -11,7 +11,7 @@ var copyDao = module.exports;
 
 copyDao.getCopy = function(app, uid, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
-    var sql = "select * from t_copy where uid = ?";
+    var sql = "select * from t_copy where uid = ? limit 1";
     mysqlCli.query(sql, [uid], function(err, res) {
         if (err !== null) {
             console.log('get copy error: ' + err.message);

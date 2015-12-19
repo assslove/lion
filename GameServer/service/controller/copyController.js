@@ -21,50 +21,46 @@ copyController.userSyncCopy = function(protoid, pkg, req, res, cb) {
     cacheManager.getCopy(req.app, pkg.uid, function(err, results) {
         var copyMap = {};
         for (var i in results) {
-            copyMap[results[i][0]] = [results[i][1], results[i][2]];
+            copyMap[results[i].copyid] = [results[i].max_score, results[i].star];
         }
 
-        for (var i in copys) {
-			if (copys[i][1] == null)  continue;
-            copyMap[copys[i][0]] = [copys[i][1], copys[i][2]];
+        for (var i = 0; i < copys.length;) {
+			if (copys[i][1] == null || copys[i][2] == null)  {
+                delete copys[i];
+            } else {
+                copyMap[copys[i][0]] = [copys[i][1], copys[i][2]];
+                ++i;
+            }
         }
 
         var allCopys = [];
         for (var i in copyMap) {
-            allCopys.push([i, copyMap[i][0], copyMap[i][1]]);
+            allCopys.push({
+                copyid: parseInt(i),
+                max_score : copyMap[i][0],
+                star : copyMap[i][1]
+            });
         }
 
-        //检验道具合法性 TODO
+        //检验副本合法性 TODO
+        var info = cacheManager.serializeToPb("CopyList", {copy: allCopys});
         async.parallel([
             function(callback) {
                 cacheManager.updateCopyScore(pkg.uid, copys, callback);
             },
             function(callback) {
-                cacheManager.updateCopy(pkg.uid, allCopys, callback);
+                cacheManager.updateCopy(pkg.uid, info, callback);
             },
             function(callback){
-                var i = 0, total = copys.length;
-                async.whilst(
-                    function() {return i < total;},
-                    function(callback1) {
-                        var saveCopy = {
-                            copyid : copys[i][0],
-                            max_score : copys[i][1],
-                            star : copys[i][2]
-                        };
-                        copyDao.addOrUpdateCopy(req.app, pkg.uid, saveCopy, function(err, res) {
-                            ++i;
-                            callback1(err, res);
-                        });
-                    },
-                    function(err) {
-                        callback(err, null);
-                    }
-                )
+                copyDao.addOrUpdateCopy(req.app, pkg.uid, {info : info}, callback);
             }
         ], function(err, results) {
             if (err == null || err == undefined) {
-                protoManager.sendMsgToUser(res, protoid, allCopys);
+                var copys = [];
+                for (var i in allCopys) {
+                    copys.push([allCopys[i].copyid, allCopys[i].max_score, allCopys[i].star]);
+                }
+                protoManager.sendMsgToUser(res, protoid, copys);
             } else {
                 cb(DEFINE.ERROR_CODE.COPY_SAVE_ERROR[0]);
             }

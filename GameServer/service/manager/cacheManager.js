@@ -104,14 +104,14 @@ cacheManager.getItem = function(app, uid, cb) {
                 }
             });
         } else {
-            var items = cacheManager.parseFromPb("ItemList", res).item;
+            var items = cacheManager.parseFromPb("ItemList", new Buffer(res, 'binary')).item;
             utils.invokeCallback(cb, err, items);
         }
     });
 }
 
 cacheManager.updateItem = function(uid, item, cb) {
-    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.ITEM, item, function(err, res) {
+    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.ITEM, item.toString('binary'), function(err, res) {
         if (err !== null) {
            logger.error("cache item failed [uid=%ld]", uid);
         }
@@ -123,25 +123,24 @@ cacheManager.getCopy = function(app, uid, cb) {
     redis.hget(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.COPY, function(err, res) {
         if (err == null && res == null) {
             copyDao.getCopy(app, uid, function(err, res) {
-                var vals = [];
-                for (var i in res) {
-                    vals.push([res[i].copyid, res[i].max_score, res[i].star]);
-                }
                 if (err == null) {
-                    cacheManager.updateCopy(uid, vals, function(err, result){
-                        utils.invokeCallback(cb, err, vals);
+                    cacheManager.updateCopy(uid, res[0].info, function(err, result){
+                        var copys = cacheManager.parseFromPb("CopyList", res[0].info).copy;
+                        utils.invokeCallback(cb, err, copys);
                     });
+                } else {
+                    utils.invokeCallback(cb, err, []);
                 }
             });
         } else {
-            res = JSON.parse(res);
-            utils.invokeCallback(cb, err, res);
+            var copys = cacheManager.parseFromPb("CopyList", new Buffer(res, 'binary')).copy;
+            utils.invokeCallback(cb, err, copys);
         }
     });
 }
 
 cacheManager.updateCopy = function(uid, copy, cb) {
-    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.COPY, JSON.stringify(copy), function(err, res) {
+    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.COPY, copy.toString('binary'), function(err, res) {
         if (err !== null) {
            logger.error("cache copy failed [uid=%ld]", uid);
         }
@@ -154,11 +153,15 @@ cacheManager.getUserInfo = function(app, uid, cb) {
         for (var i in results) {
             switch (i) {
                 case CODE.CACHE_KEY_TYPE.USER:
-                case CODE.CACHE_KEY_TYPE.COPY:
                     results[i] = JSON.parse(results[i]);
                     break;
                 case CODE.CACHE_KEY_TYPE.ITEM:
-                    results[i] = cacheManager.parseFromPb("ItemList", results[i]).item;
+                    results[i] = cacheManager.parseFromPb("ItemList",
+                        new Buffer(results[i], "binary").slice(0, results[i].length)).item;
+                    break;
+                case CODE.CACHE_KEY_TYPE.COPY:
+                    results[i] = cacheManager.parseFromPb("CopyList",
+                        new Buffer(results[i], "binary").slice(0, results[i].length)).copy;
                     break;
                 default:
                     break;
@@ -171,10 +174,13 @@ cacheManager.getUserInfo = function(app, uid, cb) {
 cacheManager.updateUserInfo = function(app, uid, res, cb) {
     var fields = [CODE.CACHE_KEY_TYPE.USER, CODE.CACHE_KEY_TYPE.ITEM, CODE.CACHE_KEY_TYPE.COPY];
     var vals = [res.user, res.item, res.copy];
-    for (var i in vals) {
-        switch (i) {
+    for (var i in fields) {
+        switch (fields[i]) {
             case CODE.CACHE_KEY_TYPE.ITEM:
-                vals[i] = cacheManager.serializeToPb("ItemList", {item : vals[i]});
+                vals[i] = cacheManager.serializeToPb("ItemList", {item : vals[i]}).toString('binary');
+                break;
+            case CODE.CACHE_KEY_TYPE.COPY:
+                vals[i] = cacheManager.serializeToPb("CopyList", {copy : vals[i]}).toString('binary');
                 break;
             default:
                 vals[i] = JSON.stringify(vals[i]);

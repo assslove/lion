@@ -125,17 +125,19 @@ user.getUserInfoFromDB = function(app, uid, cb) {
             copyDao.getCopy(app, uid, callback);
         }
     ], function(err, results) {
-        var tmpItems = cacheManager.parseFromPb("ItemList", result[1][0]).item;
-        var items=[], copys = [];
-        for (var i in tmpItems) {
-            var item = tmpItems[i];
-            items.push([item.itemid, item.count, item.expire]);
-        }
-
-        for (var i in results[2]) {
-            var copy = results[2][i];
-            copys.push(copy.copyid, copy.star, copy.score);
-        }
+        var items = cacheManager.parseFromPb("ItemList", results[1][0].info).item;
+        var copys = cacheManager.parseFromPb("CopyList", results[2][0].info).copy;
+        //var items=[], copys = [];
+        //for (var i in tmpItems) {
+        //    var item = tmpItems[i];
+        //    items.push([item.itemid, item.count, item.expire]);
+        //}
+        //
+        //var tmpCopys = cacheManager.parseFromPb("CopyList", results[2][0].info).copy;
+        //for (var i in tmpCopys) {
+        //    var copy = tmpCopys[i];
+        //    copys.push([copy.copyid, copy.max_score, copy.star]);
+        //}
         cb(err, {
             "user" : results[0] != null && results[0].length != 0 ? results[0][0]  : null,
             "item" : items,
@@ -311,5 +313,5 @@ user.addCopy = function(app, uid, callback) {
         copy :[]
     };
     var buffer = cacheManager.serializeToPb("CopyList", obj);
-    copyDao.addOrUpdateItem(app, uid, {info: buffer}, callback);
+    copyDao.addOrUpdateCopy(app, uid, {info: buffer}, callback);
 }

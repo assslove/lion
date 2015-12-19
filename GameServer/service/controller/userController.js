@@ -98,6 +98,9 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
                 userModel.addItem(req.app, uid, callback);
             },
             function(callback) {
+                userModel.addCopy(req.app, uid, callback);
+            },
+            function(callback) {
                 userModel.addFriendMail(req.app, uid, callback);
             },
             function(callback) {
@@ -134,9 +137,16 @@ userController.userGetInfo = function(protoid, pkg, req, res, cb) {
 
         var obj = {
             user : results.user,
-            item : results.item,
-            copy : results.copy
+            item : [],
+            copy : [],
         };
+        //去掉描述信息
+        for (var i in results.item) {
+            obj.item.push([results.item[i].itemid, results.item[i].count, results.item[i].expire]);
+        }
+        for (var i in results.copy) {
+            obj.copy.push([results.copy[i].copyid, results.copy[i].max_score, results.copy[i].star]);
+        }
 
         protoManager.sendMsgToUser(res, protoid, obj);
     });

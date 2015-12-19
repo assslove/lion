@@ -45,9 +45,9 @@ itemController.userSyncItem = function(protoid, pkg, req, res, cb) {
         for (var i in itemMap) {
             if (itemMap[i][0] == 0) continue;
             allItems.push({
-                itemid : j,
-                count : itemMap[j][0],
-                expire : itemMap[j][1],
+                itemid : parseInt(i),
+                count : itemMap[i][0],
+                expire : itemMap[i][1],
             });
         }
 
@@ -58,11 +58,15 @@ itemController.userSyncItem = function(protoid, pkg, req, res, cb) {
                 cacheManager.updateItem(pkg.uid, info, callback);
             },
             function(callback){
-                itemDao.addOrUpdateItem(req.app, {info : info}, callback);
+                itemDao.addOrUpdateItem(req.app, pkg.uid, {info : info}, callback);
             }
         ], function(err, results) {
+            var items = [];
+            for (var i in allItems) {
+                items.push([allItems[i].itemid, allItems[i].count, allItems[i].expire]);
+            }
             if (err == null || err == undefined) {
-                protoManager.sendMsgToUser(res, protoid, allItems);
+                protoManager.sendMsgToUser(res, protoid, {item : items});
             } else {
                 cb(DEFINE.ERROR_CODE.ITEM_SAVE_ERROR[0]);
             }
