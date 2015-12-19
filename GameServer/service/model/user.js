@@ -171,7 +171,9 @@ user.addFriendMail = function(app, uid, cb) {
 
     var buffer = cacheManager.serializeToPb("FriendMailList", obj);
     var friendMail = {
-        mails : buffer
+        mails : buffer,
+        get_hp_times : 0,
+        get_gold_times : 0
     };
 
     friendMailDao.addOrUpdateFriendMail(app, uid, friendMail, function(err, results) {
@@ -186,10 +188,7 @@ user.addFriend = function(app, uid, cb) {
 
     var buffer = cacheManager.serializeToPb("FriendList", obj);
     var friend = {
-        friendlist : buffer,
-        get_hp_times : 0,
-        get_gold_times : 0,
-        oper_time : utils.getCurTime()
+        friendlist : buffer
     };
 
     friendDao.addOrUpdateFriend(app, uid, friend, function(err, results) {
