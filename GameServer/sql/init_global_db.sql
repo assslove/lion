@@ -3,7 +3,7 @@
 drop table if exists t_uid;
 create table t_uid (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
-	`flag` tinyint unsigned NOT NULL COMMENT '标志 0-未用 1-已用'
+	`flag` tinyint unsigned NOT NULL COMMENT '标志 0-未用 1-已用',
 	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
