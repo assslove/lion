@@ -17,6 +17,9 @@ var copyController = module.exports;
 
 copyController.userSyncCopy = function(protoid, pkg, req, res, cb) {
     var copys = pkg.copy;
+    if (copys == null) {
+        return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
+    }
     //校验关卡的正确性 TODO
     cacheManager.getCopy(req.app, pkg.uid, function(err, results) {
         var copyMap = {};
