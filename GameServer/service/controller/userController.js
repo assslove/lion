@@ -65,6 +65,10 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
         return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
     }
 
+    if (pkg.name == "" || pkg.name == null) {
+        return cb(DEFINE.ERROR_CODE.USER_NICK_NULL[0]);
+    }
+
     userModel.genUid(req.app, function(uid) {
         var user = {
             uid : uid,
