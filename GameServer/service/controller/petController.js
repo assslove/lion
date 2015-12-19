@@ -163,14 +163,15 @@ petController.getPetParty = function(protoid, pkg, req, res, cb){
     petPartyDao.getPetParty(req.app, pkg.uid, function(err, results) {
         if (err == null && results.length > 0) {
             var petParty = cacheManager.parseFromPb("PetParty", results[0].info);
-            if (checkPetPartyGiftBox(petParty)) { //有变化
-                var buffer = cacheManager.serializeToPb("PetParty", petParty);
-                petPartyDao.addOrUpdatePetParty(req.app, pkg.uid, {info : buffer}, function(err, results) {
-                    protoManager.sendMsgToUser(res, protoid, petParty);
-                });
-            } else {
+            //TODO 宠物派对没有开放
+            //if (checkPetPartyGiftBox(petParty)) { //有变化
+            //    var buffer = cacheManager.serializeToPb("PetParty", petParty);
+            //    petPartyDao.addOrUpdatePetParty(req.app, pkg.uid, {info : buffer}, function(err, results) {
+            //        protoManager.sendMsgToUser(res, protoid, petParty);
+            //    });
+            //} else {
                 protoManager.sendMsgToUser(res, protoid, petParty);
-            }
+            //}
         } else {
             protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PET_PARTY_DATA_ERROR[0]);
         }
@@ -307,6 +308,9 @@ petController.userLikePetParty = function(protoid, pkg, req, res, cb) {
                 });
             },
             function(callback) { //修改好友数据
+                if (pkg.friendid == 101 || pkg.friendid == 102) { //机器人
+                    return callback(null, null);
+                }
                 async.waterfall([
                     function(callback1) {
                         petPartyDao.getPetParty(req.app, pkg.friendid, function(err, results) {
@@ -323,7 +327,7 @@ petController.userLikePetParty = function(protoid, pkg, req, res, cb) {
                         });
                     },
                     function(friendPetParty, callback1) {
-                        cacheManager.updatePetParty(pkg.friendid, friendPetParty, function(err, results) {
+                        cacheManager.updateTotalLike(pkg.friendid, friendPetParty.total_like, function(err, results) {
                             callback(err, results);
                         });
                     }

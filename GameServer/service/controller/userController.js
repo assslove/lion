@@ -107,7 +107,7 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
                 userModel.addSign(req.app, uid, callback);
             },
             function(callback) {
-                cacheManager.updateUserBase(uid, user, callback);
+                cacheManager.updateUserBaseBaseInfo(uid, user, callback);
             }
         ], function(err, results) {
             if (err != null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_EXIST[0]);
@@ -156,7 +156,7 @@ userController.userSyncInfo = function(protoid, pkg, req, res, cb) {
                     userDao.updateUser(req.app, user, callback);
                 },
                 function(callback) {
-                    cacheManager.updateUserBase(pkg.uid, user, callback);
+                    cacheManager.updateUserBaseBaseInfo(pkg.uid, user, callback);
                 }
             ], function(err, results) {
                 if (err != null || err != undefined) cb(DEFINE.ERROR_CODE.USER_SAVE_ERROR[0]);

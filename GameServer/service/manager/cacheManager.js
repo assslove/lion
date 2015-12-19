@@ -243,17 +243,7 @@ cacheManager.updateCopyScore = function(uid, cpy, cb) {
     )
 }
 
-cacheManager.updateUserBase = function(uid, base, cb) {
-    var obj = {
-        uid : base.uid,
-        name : base.name,
-        head_icon : base.head_icon,
-        max_copy : base.max_copy,
-        copy_stars : base.copy_stars,
-        use_pet : base.use_pet,
-        total_like : 0
-    };
-
+cacheManager.updateUserBase = function(uid, obj, cb) {
     redis.hset(CODE.CACHE_TYPE.USER_BASE, uid, JSON.stringify(obj), function(err, res) {
         if (err !== null) {
            logger.error("cache user base failed [uid=%ld]", uid);
@@ -308,5 +298,35 @@ cacheManager.checkUser = function(key, cb) {
             logger.error("check user failed");
         }
         utils.invokeCallback(cb, err, res);
+    });
+}
+
+cacheManager.updateTotalLike = function(uid, total_like, cb) {
+    cacheManager.getUserBase(uid, function(err, result) {
+        if (result == null) return cb(err, result);
+        result = JSON.parse(result);
+        result.total_like = total_like;
+        cacheManager.updateUserBase(uid, result, cb);
+    });
+}
+
+cacheManager.updateUserBaseBaseInfo = function(uid, base, cb) {
+    cacheManager.getUserBase(uid, function(err, result) {
+        var obj = {
+            uid : base.uid,
+            name : base.name,
+            head_icon : base.head_icon,
+            max_copy : base.max_copy,
+            copy_stars : base.copy_stars,
+            use_pet : base.use_pet,
+            total_like : 0
+        };
+        if (result != null) {
+            result = JSON.parse(result);
+            //其它数据
+            obj.total_like = result.total_like;
+        }
+
+        cacheManager.updateUserBase(uid, obj, cb);
     });
 }
