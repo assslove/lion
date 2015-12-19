@@ -11,7 +11,7 @@ var itemDao = module.exports;
 
 itemDao.getItem = function(app, uid, cb) {
     var mysqlCli = mysqlManager.getMysqlCli(uid);
-    var sql = "select * from t_item where uid = ?";
+    var sql = "select * from t_item where uid = ? limit 1";
     mysqlCli.query(sql, [uid], function(err, res) {
         if (err !== null) {
             console.log('get item error: ' + err.message);

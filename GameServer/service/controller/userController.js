@@ -84,15 +84,18 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
         };
 
         async.parallel([
-            function(callback) {
-                //accountDao.addOrUpdateAccount(req.app, account, callback);
-                callback(null, null);
-            },
+            //function(callback) {
+            //    //accountDao.addOrUpdateAccount(req.app, account, callback);
+            //    callback(null, null);
+            //},
             function(callback) {
                 userDao.addUser(req.app, user, callback);
             },
             function(callback) {
                 userModel.delUidFromCache(req.app, uid, callback);
+            },
+            function(callback) {
+                userModel.addItem(req.app, uid, callback);
             },
             function(callback) {
                 userModel.addFriendMail(req.app, uid, callback);

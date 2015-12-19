@@ -19,7 +19,7 @@ itemController.userSyncItem = function(protoid, pkg, req, res, cb) {
     cacheManager.getItem(req.app, pkg.uid, function(err, results) {
         var itemMap = {};
         for (var i in results) {
-            itemMap[results[i][0]] = [results[i][1], results[i][2]];
+            itemMap[results[i].itemid] = [results[i].count, results[i].expire];
         }
 
         //校验是是否足够
@@ -44,33 +44,21 @@ itemController.userSyncItem = function(protoid, pkg, req, res, cb) {
         var allItems = [];
         for (var i in itemMap) {
             if (itemMap[i][0] == 0) continue;
-            allItems.push([i, itemMap[i][0], itemMap[i][1]]);
+            allItems.push({
+                itemid : j,
+                count : itemMap[j][0],
+                expire : itemMap[j][1],
+            });
         }
 
+        var info = cacheManager.serializeToPb("ItemList", {item : allItems});
         //检验道具合法性 TODO
         async.parallel([
             function(callback) {
-                cacheManager.updateItem(pkg.uid, allItems, callback);
+                cacheManager.updateItem(pkg.uid, info, callback);
             },
             function(callback){
-                var i = 0, total = items.length;
-                async.whilst(
-                    function() {return i < total;},
-                    function(callback1) {
-                            var saveItem = {
-                                itemid : items[i][0],
-                                count : items[i][1],
-                                expire : items[i][2]
-                            };
-                        itemDao.addOrUpdateItem(req.app, pkg.uid, saveItem, function(err, res) {
-                            ++i;
-                            callback1(err, res);
-                        });
-                    },
-                    function(err) {
-                        callback(err, null);
-                    }
-                )
+                itemDao.addOrUpdateItem(req.app, {info : info}, callback);
             }
         ], function(err, results) {
             if (err == null || err == undefined) {

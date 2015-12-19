@@ -94,28 +94,24 @@ cacheManager.getItem = function(app, uid, cb) {
     redis.hget(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.ITEM, function(err, res) {
         if (err == null && res == null) {
             itemDao.getItem(app, uid, function(err, res) {
-                //delete the name
-                var vals = [];
-                for (var i in res) {
-                    vals.push([res[i].itemid, res[i].count, res[i].expire]);
-                }
                 if (err == null) {
-                    cacheManager.updateItem(uid, vals, function(err, result) {
-                        utils.invokeCallback(cb, err, vals);
+                    cacheManager.updateItem(uid, res[0].info, function(err, result) {
+                        var items = cacheManager.parseFromPb("ItemList", res[0].info).item;
+                        utils.invokeCallback(cb, err, items);
                     });
                 } else {
                     utils.invokeCallback(cb, err, null);
                 }
             });
         } else {
-            res = JSON.parse(res);
-            utils.invokeCallback(cb, err, res);
+            var items = cacheManager.parseFromPb("ItemList", res).item;
+            utils.invokeCallback(cb, err, items);
         }
     });
 }
 
 cacheManager.updateItem = function(uid, item, cb) {
-    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.ITEM, JSON.stringify(item), function(err, res) {
+    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.ITEM, item, function(err, res) {
         if (err !== null) {
            logger.error("cache item failed [uid=%ld]", uid);
         }
@@ -156,8 +152,17 @@ cacheManager.updateCopy = function(uid, copy, cb) {
 cacheManager.getUserInfo = function(app, uid, cb) {
     redis.hgetall(CODE.CACHE_TYPE.USER + uid, function(err, results) {
         for (var i in results) {
-            if (i == CODE.CACHE_KEY_TYPE.PET) continue;
-            results[i] = JSON.parse(results[i]);
+            switch (i) {
+                case CODE.CACHE_KEY_TYPE.USER:
+                case CODE.CACHE_KEY_TYPE.COPY:
+                    results[i] = JSON.parse(results[i]);
+                    break;
+                case CODE.CACHE_KEY_TYPE.ITEM:
+                    results[i] = cacheManager.parseFromPb("ItemList", results[i]).item;
+                    break;
+                default:
+                    break;
+            }
         }
         cb(err, results);
     });
@@ -167,7 +172,14 @@ cacheManager.updateUserInfo = function(app, uid, res, cb) {
     var fields = [CODE.CACHE_KEY_TYPE.USER, CODE.CACHE_KEY_TYPE.ITEM, CODE.CACHE_KEY_TYPE.COPY];
     var vals = [res.user, res.item, res.copy];
     for (var i in vals) {
-        vals[i] = JSON.stringify(vals[i]);
+        switch (i) {
+            case CODE.CACHE_KEY_TYPE.ITEM:
+                vals[i] = cacheManager.serializeToPb("ItemList", {item : vals[i]});
+                break;
+            default:
+                vals[i] = JSON.stringify(vals[i]);
+                break;
+        }
     }
     redis.hmset(CODE.CACHE_TYPE.USER + uid,
         fields,

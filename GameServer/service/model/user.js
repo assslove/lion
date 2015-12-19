@@ -125,9 +125,10 @@ user.getUserInfoFromDB = function(app, uid, cb) {
             copyDao.getCopy(app, uid, callback);
         }
     ], function(err, results) {
-        var items = [], copys = [];
-        for (var i in results[1]) {
-            var item = results[1][i];
+        var tmpItems = cacheManager.parseFromPb("ItemList", result[1][0]).item;
+        var items=[], copys = [];
+        for (var i in tmpItems) {
+            var item = tmpItems[i];
             items.push([item.itemid, item.count, item.expire]);
         }
 
@@ -260,9 +261,7 @@ user.initPetParty = function(app, uid, callback) {
 
       var buffer = cacheManager.serializeToPb("PetParty", petParty);
 
-      petPartyDao.addOrUpdatePetParty(app, uid, {info : buffer}, function(err, results) {
-          callback(err, results);
-      });
+      petPartyDao.addOrUpdatePetParty(app, uid, {info : buffer}, callback);
   });
 }
 
@@ -297,4 +296,20 @@ user.initWeekSign = function(app, uid, callback) {
     signDao.addOrUpdateSign(app, uid, obj, function(err, results) {
         callback(err, results);
     });
+}
+
+user.addItem = function(app, uid, callback) {
+    var obj = {
+        item :[]
+    };
+    var buffer = cacheManager.serializeToPb("ItemList", obj);
+    itemDao.addOrUpdateItem(app, uid, {info: buffer}, callback);
+}
+
+user.addCopy = function(app, uid, callback) {
+    var obj = {
+        copy :[]
+    };
+    var buffer = cacheManager.serializeToPb("CopyList", obj);
+    copyDao.addOrUpdateItem(app, uid, {info: buffer}, callback);
 }

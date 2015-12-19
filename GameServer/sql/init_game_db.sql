@@ -21,10 +21,7 @@ drop table if exists t_copy;
 create table  t_copy(
 	`uid` int unsigned NOT NULL COMMENT '用户id',
 	`info` varbinary(2048) NOT NULL COMMENT '副本信息',
-	--`copyid` int unsigned NOT NULL COMMENT '关卡id',
-	--`max_score` int unsigned NOT NULL COMMENT '最高积分',
-	--`star` tinyint unsigned NOT NULL COMMENT '星数',
-	primary key(`uid`, `copyid`)
+	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #初始化道具表
@@ -32,10 +29,7 @@ drop table if exists t_item;
 create table t_item (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
 	`info` varbinary(2048) NOT NULL COMMENT '道具信息',
-	--`itemid` int unsigned NOT NULL COMMENT '道具id',
-	--`count` int unsigned NOT NULL COMMENT '数量',
-	--`expire` int unsigned NOT NULL COMMENT '到期时间',
-	primary key(`uid`, `itemid`)
+	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;;
 
 #初始化宠物表
