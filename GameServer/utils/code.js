@@ -20,7 +20,7 @@ var code = {
     },
 
     MIN_UID : 100000000,
-    USER_EXPIRE : 18000,  //一个小时间
+    USER_EXPIRE : 3600,  //一个小时间
     FRIEND_MAIL_TYPE : {
         APPLY : 1,    //好友申请
         GET_HP : 2,   //索取体力
