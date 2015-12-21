@@ -286,6 +286,8 @@ petController.giftBoxGet = function(protoid, pkg, req, res, cb){
 }
 
 petController.userLikePetParty = function(protoid, pkg, req, res, cb) {
+	pkg.uid = parseInt(pkg.uid);
+	pkg.friendid = parseInt(pkg.friendid);
     petPartyDao.getPetParty(req.app, pkg.uid, function(err, results) {
         var petParty = cacheManager.parseFromPb("PetParty", results[0].info);
 
