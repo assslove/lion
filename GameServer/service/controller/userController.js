@@ -227,18 +227,18 @@ userController.getCopyRank = function(protoid, pkg, req, res, cb) {
            return a[1] < b[1];
         });
 
-        var rank = 0;
-        for (var i in copys) {
-            if (copys[i][0] == pkg.uid) {
-                rank = parseInt(i) + 1;
-                break;
-            }
-        }
+//        var rank = 0;
+//        for (var i in copys) {
+//            if (copys[i][0] == pkg.uid) {
+//                rank = parseInt(i) + 1;
+//                break;
+//            }
+//        }
 
         copys.slice(0, 10);
 
         var ret = {
-            rank : rank,
+            copyid : copyid,
             friend : copys
         };
         protoManager.sendMsgToUser(res, protoid, ret);
