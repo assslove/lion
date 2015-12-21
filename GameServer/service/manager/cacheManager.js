@@ -83,7 +83,7 @@ cacheManager.updateUser = function(uid, user, cb) {
         if (err !== null) {
            logger.error("cache user failed [uid=%ld]", uid);
         }
-        redis.expire(CODE.CACHE_KEY_TYPE.USER + uid, CODE.USER_EXPIRE, function() {});
+        redis.expire(CODE.CACHE_TYPE.USER + uid, CODE.USER_EXPIRE, function() {});
         utils.invokeCallback(cb, err, res);
     });
 }
