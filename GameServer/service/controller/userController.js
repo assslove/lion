@@ -22,6 +22,7 @@ var userController = module.exports;
 /* @brief 用户登录
  */
 userController.userLogin = function(protoid, pkg, req, res, cb) {
+	pkg.uid = parseInt(pkg.uid);
     userModel.getUserInfo(req.app, pkg.uid, function(err, results) {
         if (err != null || results == null) {
             protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_NOT_EXIST[0]);
