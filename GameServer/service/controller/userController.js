@@ -215,6 +215,13 @@ userController.getCopyRank = function(protoid, pkg, req, res, cb) {
     var copyid = pkg.copyid;
     var ids = pkg.friendid;
 	ids.push(pkg.uid);
+	if (ids.length == 0) {
+        var ret = {
+            copyid : copyid,
+            friend : []
+        };
+        return protoManager.sendMsgToUser(res, protoid, ret);
+	}
     cacheManager.getUserCopyScore(copyid, ids, function(err, results) {
         var copys = [];
         for (var i in ids) {
