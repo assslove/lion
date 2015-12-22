@@ -93,7 +93,9 @@ ProtoHandler.prototype.handle = function(protoid, pkg, req, res, cb) {
 
 ProtoHandler.prototype.sendErrorToUser = function(res, proto_id, err) {
     var obj = {p : proto_id, r : err};
-    res.send(JSON.stringify(obj));
+	var msg = JSON.stringify(obj);
+	logger.debug(msg);
+    res.send(msg);
 }
 
 ProtoHandler.prototype.sendMsgToUser = function(res, protoid, msg) {
@@ -103,6 +105,8 @@ ProtoHandler.prototype.sendMsgToUser = function(res, protoid, msg) {
     }
 
     var obj = {p : protoid, r : 0, m : msg};
-    res.send(JSON.stringify(obj));
+	var msg = JSON.stringify(obj);
+	logger.debug(msg);
+    res.send(msg);
 }
 
