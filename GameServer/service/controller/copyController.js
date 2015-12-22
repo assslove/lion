@@ -31,7 +31,7 @@ copyController.userSyncCopy = function(protoid, pkg, req, res, cb) {
 			if (copys[i][1] == null || copys[i][2] == null)  {
                 delete copys[i];
             } else {
-                copyMap[copys[i][0]] = [copys[i][1], copys[i][2]];
+                copyMap[parseInt(copys[i][0])] = [parseInt(copys[i][1]), parseInt(copys[i][2])];
                 ++i;
             }
         }
