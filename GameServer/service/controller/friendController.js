@@ -117,6 +117,9 @@ friendController.getFriends  = function(protoid, pkg, req, res, cb) {
         if (err != null || results.length == 0) return cb(DEFINE.ERROR_CODE.SERV_ERROR[0]);
 
         var uids = cacheManager.parseFromPb("FriendList", results[0].friendlist).uid;
+		if (uids.length == 0) {
+			return protoManager.sendMsgToUser(res, protoid, {user : []});
+		}
 
         cacheManager.getUserBases(uids, function(err, results) {
             var users = [];
