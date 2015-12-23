@@ -16,3 +16,16 @@ create table t_account (
 	primary key(`uid`),
 	index(`channel`, `channel_uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#系统邮件
+drop table if exists t_sys_mail;
+create table if exists t_sys_mail(
+	`id` int unsigned NOT NULL COMMENT '系统邮件id 时间',
+	`title` varchar(64) COMMENT '标题',
+	`content` varchar(256) COMMENT '内容',
+	`items` varbinary(64) COMMENT '附件',
+	`expire` int unsigned NOT NULL COMMENT '过期时间'
+	primary key('id'),
+	index(`expire`)
+) ENGIGN=InnoDB DEFAULT CHARSET=utf8;
+

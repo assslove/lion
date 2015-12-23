@@ -87,3 +87,11 @@ create table t_sign (
 	`fill_check` tinyint unsigned NOT NULL default 0 COMMENT '补签天数',
 	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+drop table if exists t_mail;
+create table t_mail(
+	`uid` int unsigned NOT NULL COMMENT '用户id',
+	`check_tm` int unsigned NOT NULL COMMENT '检查时间',
+	`info` varbinary(4096) NOT NULL COMMENT '邮件内容',
+	primary key(`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
