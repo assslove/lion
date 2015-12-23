@@ -146,6 +146,11 @@ friendController.getFriendMail = function(protoid, pkg, req, res, cb) {
             get_hp_times : results[0].get_hp_times,
             get_gold_times : results[0].get_gold_times
         };
+
+		if (uids.length == 0) {
+			ret.mail = [];
+			return protoManager.sendMsgToUser(res, protoid, ret);
+		}
         cacheManager.getUserBases(uids, function(err, results) {
             var list = [];
             for (var i in results) {
