@@ -210,7 +210,7 @@ user.initData = function(app, uid) {
             user.initSign(app, uid, callback);
         },
     ], function(err, results) {
-        logger.info("init every date date [uid=%ld]", uid);
+        logger.info("init every date date [uid=%d]", uid);
     });
 }
 
