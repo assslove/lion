@@ -38,11 +38,12 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist" id="server_tool_tab">
         <li role="presentation"><a href="#proto_cmd" aria-controls="proto_cmd" role="tab" data-toggle="tab">协议测试</a></li>
+        <li role="presentation"><a href="#sysmail_cmd" aria-controls="sysmail_cmd" role="tab" data-toggle="tab">系统邮件</a></li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="proto_cmd" style="width: 95%;">
+        <div role="tabpanel" class="tab-pane" id="proto_cmd" style="width: 95%;">
             <br/>
             <form class='form-horizontal'>
                 <div class="form-group">
@@ -67,6 +68,17 @@
                     <label class="col-sm-2 control-label">返回消息:</label>
                     <div class="col-sm-10">
                         <textarea id="res" cols="100" rows="10"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="sys_cmd" style="width: 95%;">
+            <br/>
+            <form class='form-horizontal'>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">标题:</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="title"></select>
                     </div>
                 </div>
             </form>
