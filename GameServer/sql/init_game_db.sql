@@ -47,6 +47,7 @@ create table t_friend_mail (
 	`mails` varbinary(2000) NOT NULL COMMENT '邮件信息',
 	`get_hp_times` tinyint unsigned NOT NULL COMMENT '领取体力的次数',
 	`get_gold_times` tinyint unsigned NOT NULL COMMENT '领取金币的次数',
+	`friendid` varbinary(64) '领取体力成功的好友列表',
 	primary key(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
