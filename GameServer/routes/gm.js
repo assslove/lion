@@ -12,6 +12,7 @@ var uidDao = require('../service/dao/uidDao.js');
 var cacheManager = require('../service/manager/cacheManager.js');
 var CODE = require('../utils/code.js');
 var utils = require('../utils/utils.js');
+var sysMailDao = require('../service/dao/sysMailDao.js');
 
 router.get('/gen_uid', function(req, res, next) {
     var count = req.query.count;
@@ -51,6 +52,23 @@ router.get('/gen_uid', function(req, res, next) {
                 }
             }
         );
+    });
+});
+
+router.post('/sysmail/add', function(req, res, next) {
+    var data = JSON.parse(req.body.json);
+    var id = utils.getCurTime();
+    var obj = {
+        title : data.title,
+        content : data.content
+    };
+
+    obj.expire = id + 3600 * 24 * data.expire;
+    obj.item = cacheManager.serializeToPb("ItemList", {item : data.item});
+
+    sysMailDao.addOrUpdateSysMail(req.app, obj.id, obj, function(err, results) {
+        if (err == null) res.send("发送系统邮件成功");
+        else res.send("发送系统邮件失败");
     });
 });
 

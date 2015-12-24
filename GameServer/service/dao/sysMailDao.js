@@ -22,12 +22,12 @@ sysMailDao.getSysMail = function(app, check_tm, cur, cb) {
     });
 }
 
-sysMailDao.addOrUpdateSysMail = function(app, uid, sysMail, cb) {
+sysMailDao.addOrUpdateSysMail = function(app, id, sysMail, cb) {
     var mysqlCli = mysqlManager.getGlobalMysql();
 
-    var sql = "", key = "uid,", value = "?,", update="";
+    var sql = "", key = "id,", value = "?,", update="";
     var args = [];
-    args.push(uid);
+    args.push(id);
     for (var i in sysMail) {
         key += i + ",";
         value += "?,";
