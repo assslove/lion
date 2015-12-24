@@ -78,7 +78,7 @@ mailController.getSysMail = function(protoid, pkg, req, res, cb) {
 
 mailController.readSysMail = function(protoid, pkg, req, res, cb) {
     mailDao.getMail(req.app, pkg.uid, function(err, results) {
-        if (err != null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.DB_ERROR);
+        if (err != null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.DB_ERROR[0]);
 
         var mails = cacheManager.parseFromPb("SysMailList", results[0].info).mail;
         if (pkg.id == 0) {
@@ -92,12 +92,12 @@ mailController.readSysMail = function(protoid, pkg, req, res, cb) {
                     break;
                 }
             }
-            if (!isExist) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.MAIL_NOT_FOUND);
+            if (!isExist) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.MAIL_NOT_FOUND[0]);
         }
 
         var buffer = cacheManager.serializeToPb("SysMailList", {mail : mails});
         mailDao.addOrUpdateMail(req.app, pkg.uid, {info : buffer}, function(err, results) {
-            res.sendErrorToUser(res, protoid, 0);
+            protoManager.sendErrorToUser(res, protoid, 0);
         });
     });
 }
