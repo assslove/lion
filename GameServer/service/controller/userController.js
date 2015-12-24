@@ -118,6 +118,9 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
                 userModel.addSign(req.app, uid, callback);
             },
             function(callback) {
+                userModel.addMail(req.app, uid, callback);
+            },
+            function(callback) {
                 cacheManager.updateUserBaseBaseInfo(uid, user, callback);
             }
         ], function(err, results) {

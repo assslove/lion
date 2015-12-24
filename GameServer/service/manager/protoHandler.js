@@ -11,6 +11,7 @@ var itemController = require('./../controller/itemController.js');
 var copyController = require('./../controller/copyController.js');
 var petController = require('./../controller/petController.js');
 var friendController = require('./../controller/friendController.js');
+var mailController = require('./../controller/mailController.js');
 var cacheManager = require("./cacheManager.js");
 
 module.exports = function(app) {
@@ -55,6 +56,8 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_GET_FRIEND_PET] = [petController.userGetFriendPet];
     this.protoHandlers[DEFINE.PROTO.USER_GET_SIGN_INFO] = [userController.userGetSignInfo];
     this.protoHandlers[DEFINE.PROTO.USER_SIGN] = [userController.userSign];
+    this.protoHandlers[DEFINE.PROTO.USER_GET_SYSMAIL] = [mailController.getSysMail];
+    this.protoHandlers[DEFINE.PROTO.USER_READ_SYSMAIL] = [mailController.readSysMail];
 
     logger.info("init proto handlers success");
 }

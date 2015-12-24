@@ -14,6 +14,7 @@ var friendMailDao = require('./../dao/friendMailDao.js');
 var friendDao = require('./../dao/friendDao.js');
 var petPartyDao = require('./../dao/petPartyDao.js');
 var signDao = require('./../dao/signDao.js');
+var mailDao = require('./../dao/mailDao.js');
 var utils = require("./../../utils/utils.js");
 
 
@@ -313,4 +314,20 @@ user.addCopy = function(app, uid, callback) {
     };
     var buffer = cacheManager.serializeToPb("CopyList", obj);
     copyDao.addOrUpdateCopy(app, uid, {info: buffer}, callback);
+}
+
+user.addMail = function(app, uid, cb) {
+    var obj = {
+        mail : []
+    };
+
+    var buffer = cacheManager.serializeToPb("SysMailList", obj);
+    var mail = {
+        info : buffer,
+        check_tm: utils.getCurTime()
+    };
+
+    mailDao.addOrUpdateMail(app, uid, mail, function(err, results) {
+        cb(err, results);
+    });
 }
