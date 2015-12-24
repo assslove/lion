@@ -183,6 +183,7 @@ app.use(function(err, req, res, next) {
 });
 
 process.on('uncaughtException', function (err) {
+    logger.error(err);
     console.log(err);
 });
 
