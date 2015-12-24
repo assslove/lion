@@ -58,8 +58,8 @@ friendMailDao.addOrUpdateFriendMail = function(app, uid, friendMail, cb) {
 friendMailDao.initData = function(app, uid, callback) {
     var friendMail = {
         get_hp_times : 0,
-        get_gold_times : 0
-		friendid : "",
+        get_gold_times : 0,
+		friendid : ""
     };
 
     friendMailDao.addOrUpdateFriendMail(app, uid, friendMail, callback);
