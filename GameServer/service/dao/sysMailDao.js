@@ -12,7 +12,7 @@ var sysMailDao = module.exports;
 sysMailDao.getSysMail = function(app, check_tm, cur, cb) {
     var mysqlCli = mysqlManager.getGlobalMysql();
     var sql = "select * from t_sys_mail where id > ? and expire > ? limit 10";
-    mysqlCli.query(sql, [uid, cur], function(err, res) {
+    mysqlCli.query(sql, [check_tm, cur], function(err, res) {
         if (err !== null) {
             console.log('get sysMail error: ' + err.message);
             utils.invokeCallback(cb, err.message, null);
