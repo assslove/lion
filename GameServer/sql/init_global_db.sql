@@ -24,7 +24,7 @@ create table t_sys_mail(
 	`title` varchar(64) COMMENT '标题',
 	`content` varchar(256) COMMENT '内容',
 	`expire` int unsigned NOT NULL COMMENT '过期时间',
-	`items` varbinary(128) COMMENT '附件',
+	`item` varbinary(128) COMMENT '附件',
 	primary key(`id`),
 	index(`expire`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
