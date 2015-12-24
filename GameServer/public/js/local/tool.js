@@ -71,3 +71,22 @@ function handleResponse(data) {
     //rdata.m 为包体
     $("#res").val(JSON.stringify(rdata, null, '\t'));
 }
+
+function sendSysMail() {
+    var obj = {
+        title : $("#title").val(),
+        content : $("#content").val(),
+        expire : $("#expire").val(),
+        item : []
+    };
+
+    var itemStr = $("#item").val();
+    var tmpArr = JSON.parse(itemStr);
+    for (var i in tmpArr) {
+        obj.item.push({itemid : tmpArr[i][0], count : tmpArr[i][1]});
+    }
+
+    $.post("/gm/sysmail/add", obj, function(data) {
+        alert(data);
+    }, "text");
+}

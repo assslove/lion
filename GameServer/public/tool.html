@@ -78,7 +78,31 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">标题:</label>
                     <div class="col-sm-4">
-                        <select class="form-control" id="title"></select>
+                        <input type="text" class="form-control" id="title">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">内容:</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="content">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">有效期:</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="expire" placeholder="以天为单位">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">附件</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="item" placeholder="格式为:[[itemid, count], [itemid, count], ...]">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4">
+                    <div class="col-sm-2">
+                        <input type="button" class="btn btn-default" value="发送" onclick="sendSysMail()">
                     </div>
                 </div>
             </form>
