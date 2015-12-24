@@ -64,6 +64,13 @@ mailController.getSysMail = function(protoid, pkg, req, res, cb) {
             }
         ], function(err, results) {
             //发给前端
+            for (var i in mails) {
+                var tmp = [];
+                for (var j in mails[i].item) {
+                    tmp.push([mails[i].item[j].itemid, mails[i].item[j].count]);
+                }
+                mails[i].item = tmp;
+            }
             protoManager.sendMsgToUser(res, protoid, {mail : mails});
         });
     });

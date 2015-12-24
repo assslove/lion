@@ -76,17 +76,19 @@ function sendSysMail() {
     var obj = {
         title : $("#title").val(),
         content : $("#content").val(),
-        expire : $("#expire").val(),
+        expire : parseInt($("#expire").val()),
         item : []
     };
 
     var itemStr = $("#item").val();
     var tmpArr = JSON.parse(itemStr);
     for (var i in tmpArr) {
-        obj.item.push({itemid : tmpArr[i][0], count : tmpArr[i][1]});
+        obj.item.push({itemid : parseInt(tmpArr[i][0]), count : parseInt(tmpArr[i][1])});
     }
 
-    $.post("/gm/sysmail/add", obj, function(data) {
+    $.post("/gm/sysmail/add", {
+        json : JSON.stringify(obj)
+    }, function(data) {
         alert(data);
     }, "text");
 }

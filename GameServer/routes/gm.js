@@ -66,7 +66,7 @@ router.post('/sysmail/add', function(req, res, next) {
     obj.expire = id + 3600 * 24 * data.expire;
     obj.item = cacheManager.serializeToPb("ItemList", {item : data.item});
 
-    sysMailDao.addOrUpdateSysMail(req.app, obj.id, obj, function(err, results) {
+    sysMailDao.addOrUpdateSysMail(req.app, id, obj, function(err, results) {
         if (err == null) res.send("发送系统邮件成功");
         else res.send("发送系统邮件失败");
     });
