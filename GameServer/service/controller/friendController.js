@@ -231,40 +231,45 @@ friendController.requestHp = function(protoid, pkg, req, res, cb) {
         }
     }
 
-    async.whilst(
-        function() {return i < total;},
-        function(callback) {
-            friendMailDao.getFriendMail(req.app, uids[i], function(err, results) {
-                var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails).mail;
-                //TODO 检查是否索要成功
-                var friendid = cacheManager.parseFromPb("FriendList", results[0].friendid).uid;
-                for (var j in friendid) {
-                    if (friendid[j] == uids[i]) {
-                        ++i;
-                        return callback(null);
-                    }
-                }
-
-                for (var j in mails) {
-                    if (mails[j].type == CODE.FRIEND_MAIL_TYPE.GET_HP && mails[j].uid == pkg.uid) { //已经申请过
-                        ++i;
-                        return callback(null);
-                    }
-                }
-
-                mails.push({type : CODE.FRIEND_MAIL_TYPE.GET_HP, uid : parseInt(pkg.uid)});
-
-                var buffer = cacheManager.serializeToPb("FriendMailList", {mail : mails});
-                friendMailDao.addOrUpdateFriendMail(req.app, uids[i], {mails : buffer}, function(err, results) {
+    friendMailDao.getFriendMail(req.app, pkg.uid, function(err, results) {
+        //TODO 检查是否索要成功
+        var friendid = cacheManager.parseFromPb("FriendList", results[0].friendid).uid;
+        for (var i in uids) {
+            for (var j in friendid) {
+                if (friendid[j] == uids[i]) {
                     ++i;
-                    callback(err);
-                });
-            });
-        },
-        function(err) {
-            protoManager.sendErrorToUser(res, protoid, 0);
+                    return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.GET_HP_ALREADY[0]);
+                }
+            }
         }
-    );
+        async.whilst(
+            function() {return i < total;},
+            function(callback) {
+                friendMailDao.getFriendMail(req.app, uids[i], function(err, results) {
+                    var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails).mail;
+
+
+                    for (var j in mails) {
+                        if (mails[j].type == CODE.FRIEND_MAIL_TYPE.GET_HP && mails[j].uid == pkg.uid) { //已经申请过
+                            ++i;
+                            return callback(null);
+                        }
+                    }
+
+                    mails.push({type : CODE.FRIEND_MAIL_TYPE.GET_HP, uid : parseInt(pkg.uid)});
+
+                    var buffer = cacheManager.serializeToPb("FriendMailList", {mail : mails});
+                    friendMailDao.addOrUpdateFriendMail(req.app, uids[i], {mails : buffer}, function(err, results) {
+                        ++i;
+                        callback(err);
+                    });
+                });
+            },
+            function(err) {
+                protoManager.sendErrorToUser(res, protoid, 0);
+            }
+        );
+    });
 }
 
 /* @brief 公共函数定义
