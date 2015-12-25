@@ -144,7 +144,8 @@ friendController.getFriendMail = function(protoid, pkg, req, res, cb) {
 
         var ret = {
             get_hp_times : results[0].get_hp_times,
-            get_gold_times : results[0].get_gold_times
+            get_gold_times : results[0].get_gold_times,
+            friendid : cacheManager.parseFromPb("FriendList", results[0].friendid).uid
         };
 
 		if (uids.length == 0) {
@@ -432,7 +433,7 @@ function handleFriendGiveHp(mails, ids, friendids, total_times, req, protoid, pk
         var uids = [];
         for (var i in ids) {
             uids.push(mails[ids[i]].uid);
-            friendids.push(mails[ids[i].uid]);
+            friendids.push(mails[ids[i]].uid);
         }
 
         friendMail.get_hp_times = total_times;
