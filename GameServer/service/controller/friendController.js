@@ -173,6 +173,7 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
     var type = pkg.type, friendId = pkg.friendid, answer = pkg.answer;
     friendMailDao.getFriendMail(req.app, pkg.uid, function (err, results) {
         var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails).mail;
+        var friendids = cacheManager.parseFromPb("FriendList", results[0].friendid).uid;
         var ids = [];
         if (friendId == 0) { //读取所有好友邮件
             for (var i in mails) {
@@ -201,7 +202,7 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
                     total_times = 20;
                 }
                 if (ids.length == 0) return cb(DEFINE.ERROR_CODE.REWARD_DAY_LIMIT[0]);
-                handleFriendGiveHp(mails, ids, total_times, req, protoid, pkg, res);
+                handleFriendGiveHp(mails, ids, friendids, total_times, req, protoid, pkg, res);
                 break;
             }
             case CODE.FRIEND_MAIL_TYPE.GIVE_GOLD:
@@ -234,6 +235,15 @@ friendController.requestHp = function(protoid, pkg, req, res, cb) {
         function(callback) {
             friendMailDao.getFriendMail(req.app, uids[i], function(err, results) {
                 var mails = cacheManager.parseFromPb("FriendMailList", results[0].mails).mail;
+                //TODO 检查是否索要成功
+                var friendid = cacheManager.parseFromPb("FriendList", results[0].friendid).uid;
+                for (var j in friendid) {
+                    if (friendid[j] == uids[i]) {
+                        ++i;
+                        return callback(null);
+                    }
+                }
+
                 for (var j in mails) {
                     if (mails[j].type == CODE.FRIEND_MAIL_TYPE.GET_HP && mails[j].uid == pkg.uid) { //已经申请过
                         ++i;
@@ -415,16 +425,19 @@ function handleFriendGetHp(mails, ids, req, protoid, pkg, res)
 
 /* @brief 领取赠送体力
  */
-function handleFriendGiveHp(mails, ids, total_times, req, protoid, pkg, res)
+function handleFriendGiveHp(mails, ids, friendids, total_times, req, protoid, pkg, res)
 {
     var friendMail = {};
     if (pkg.answer == 1) {
         var uids = [];
         for (var i in ids) {
             uids.push(mails[ids[i]].uid);
+            friendids.push(mails[ids[i].uid]);
         }
 
         friendMail.get_hp_times = total_times;
+        //TODO 增加进已经领取的好友列表里面
+        friendMail.friendid = cacheManager.serializeToPb("FriendList",{uid : friendids});
         delFriendMail(mails, ids, friendMail);
         saveFriendMail(friendMail, protoid, pkg, req, res);
     } else { //删除邮件

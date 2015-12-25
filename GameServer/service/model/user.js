@@ -174,7 +174,8 @@ user.addFriendMail = function(app, uid, cb) {
     var friendMail = {
         mails : buffer,
         get_hp_times : 0,
-        get_gold_times : 0
+        get_gold_times : 0,
+        friendid : ""
     };
 
     friendMailDao.addOrUpdateFriendMail(app, uid, friendMail, function(err, results) {
