@@ -198,7 +198,7 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
             case CODE.FRIEND_MAIL_TYPE.GIVE_HP:
             {
                 var total_times = results[0].get_hp_times + ids.length;
-                if (total_times > 20) {
+                if (total_times >= 20) {
                     ids = ids.slice(0, total_times - 20);
                     total_times = 20;
                 }
@@ -209,7 +209,7 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
             case CODE.FRIEND_MAIL_TYPE.GIVE_GOLD:
             {
                 var total_times = results[0].get_gold_times + ids.length;
-                if (total_times > 20) {
+                if (total_times >= 20) {
                     ids = ids.slice(0, total_times - 20);
                     total_times = 20;
                 }
