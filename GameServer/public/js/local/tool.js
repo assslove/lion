@@ -74,6 +74,7 @@ function handleResponse(data) {
 
 function sendSysMail() {
     var obj = {
+        uid : $("#uid").val(),
         title : $("#title").val(),
         content : $("#content").val(),
         expire : parseInt($("#expire").val()),

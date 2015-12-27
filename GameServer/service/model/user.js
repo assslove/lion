@@ -52,7 +52,7 @@ user.addUidToCache = function(app, cb) {
     uidDao.getMaxUid(app, function(err, results) {
         var start = CODE.MIN_UID + 1;
         if (results[0].uid != null) start = results[0].uid + 1;
-        var end = start + 5000;
+        var end = start + 1000;
 
         var before_cb = cb;
         async.whilst(
