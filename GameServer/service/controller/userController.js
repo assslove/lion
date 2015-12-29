@@ -163,8 +163,17 @@ userController.userGetInfo = function(protoid, pkg, req, res, cb) {
 userController.userSyncInfo = function(protoid, pkg, req, res, cb) {
     cacheManager.getUser(req.app, pkg.uid, function(err, result) {
         if (err == null || res != null) {
-            //TODO check user info
             var user = result;
+            //TODO check user info
+            //var add = 0;
+            //for (var i in pkg.cash_ext) {
+            //    add += pkg.cash_ext[i];
+            //}
+            //
+            //if (user.cash + add != pkg.cash) {
+            //    return cb(DEFINE.ERROR_CODE.USER_DATA_ERROR[0]);
+            //}
+
             for (var i in pkg) {
                 user[i] = pkg[i];
             }

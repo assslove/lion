@@ -197,23 +197,27 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
                 break;
             case CODE.FRIEND_MAIL_TYPE.GIVE_HP:
             {
-                var total_times = results[0].get_hp_times + ids.length;
-                if (total_times > 20) {
-                    ids = ids.slice(0, total_times - 20);
-                    total_times = 20;
+                if (results[0].get_hp_times >= CODE.GET_HP_MAXTIMES) {
+                    return cb(DEFINE.ERROR_CODE.REWARD_DAY_LIMIT[0]);
                 }
-                if (ids.length == 0) return cb(DEFINE.ERROR_CODE.REWARD_DAY_LIMIT[0]);
+                var total_times = results[0].get_hp_times + ids.length;
+                if (total_times > CODE.GET_HP_MAXTIMES) {
+                    ids = ids.slice(0, total_times - CODE.GET_HP_MAXTIMES);
+                    total_times = CODE.GET_HP_MAXTIMES;
+                }
                 handleFriendGiveHp(mails, ids, friendids, total_times, req, protoid, pkg, res);
                 break;
             }
             case CODE.FRIEND_MAIL_TYPE.GIVE_GOLD:
             {
-                var total_times = results[0].get_gold_times + ids.length;
-                if (total_times > 20) {
-                    ids = ids.slice(0, total_times - 20);
-                    total_times = 20;
+                if (results[0].get_gold_times >= CODE.GET_GOLD_MAXTIMES) {
+                    return cb(DEFINE.ERROR_CODE.REWARD_DAY_LIMIT[0]);
                 }
-                if (ids.length == 0) return cb(DEFINE.ERROR_CODE.REWARD_DAY_LIMIT[0]);
+                var total_times = results[0].get_gold_times + ids.length;
+                if (total_times > CODE.GET_GOLD_MAXTIMES) {
+                    ids = ids.slice(0, total_times - CODE.GET_GOLD_MAXTIMES);
+                    total_times = CODE.GET_GOLD_MAXTIMES;
+                }
                 handleFriendGiveGold(mails, ids, total_times, req, protoid, pkg, res);
                 break;
             }
@@ -224,7 +228,7 @@ friendController.readFriendMail  = function(protoid, pkg, req, res, cb) {
 
 friendController.requestHp = function(protoid, pkg, req, res, cb) {
     var uids = pkg.friendid;
-    var i = 0, total = uids.length;
+    if (uids == undefined || uids.length == 0) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0])
     for (var i in uids) {
         if (uids[i] == pkg.uid) {
             return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
@@ -242,6 +246,7 @@ friendController.requestHp = function(protoid, pkg, req, res, cb) {
                 }
             }
         }
+        var i = 0, total = uids.length;
         async.whilst(
             function() {return i < total;},
             function(callback) {
