@@ -2,4 +2,4 @@
 #上传版本
 
 cd ../
-cp -r app.js  bin  package.json  proto  public  routes  script  service  sql  utils ~/tmp/server/
+cp -r app.js  bin  package.json  public  routes  script  service  sql  utils ~/tmp/server/
