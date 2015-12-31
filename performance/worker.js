@@ -17,8 +17,8 @@ var mysqlCli = MysqlCli({
     db : 'performance'
 });
 
-var totalUid = 1;
-var interval = 5 * 1000;
+var totalUid = 1000;
+var interval = 10 * 1000;
 var totalSync = 100;
 
 var uids = [];
