@@ -22,9 +22,9 @@ router.get('/gen_uid', function(req, res, next) {
         if (err !== null) return res.send(err.message);
 
         var start = 0;
-        if (results.length != 0 && results[0] != null)  start = results[0] + 1;
+        if (results.length != 0 && results[0] != null)  start = parseInt(results[0].uid) + 1;
         else start = CODE.MIN_UID + 1;
-        var end = start + count;
+        var end = start + parseInt(count);
         async.whilst(
             function() { return start < end;},
             function(callback) {
