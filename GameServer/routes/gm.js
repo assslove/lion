@@ -35,7 +35,7 @@ router.get('/gen_uid', function(req, res, next) {
                             });
                         },
                         function(cb){
-                            cacheManager.addUid(req.app, start, function(err, res) {
+                            cacheManager.addUid(start, function(err, res) {
                                 cb(err, res);
                             })
                         }
