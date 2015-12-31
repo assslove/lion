@@ -17,7 +17,7 @@ var mysqlCli = MysqlCli({
     db : 'performance'
 });
 
-var totalUid = 1000;
+var totalUid = 100;
 var interval = 10 * 1000;
 var totalSync = 100;
 
@@ -61,6 +61,8 @@ async.series([
     }
 ], function(err, results) {
     console.log('all performance test success :' + process.pid);
+
+    mysqlCli.destroy(function() {});
 });
 
 function addLog(p, t) {
