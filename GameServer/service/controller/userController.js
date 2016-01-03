@@ -190,7 +190,8 @@ userController.userSyncInfo = function(protoid, pkg, req, res, cb) {
                 }
             ], function(err, results) {
                 if (err != null || err != undefined) cb(DEFINE.ERROR_CODE.USER_SAVE_ERROR[0]);
-                protoManager.sendMsgToUser(res, protoid, user);
+                //protoManager.sendMsgToUser(res, protoid, user);
+                cb(0);
             });
         } else {
             cb(DEFINE.ERROR_CODE.USER_NOT_EXIST[0]);
