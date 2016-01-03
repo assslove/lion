@@ -7,7 +7,7 @@ user=root
 passwd=8459328
 
 src=/data/mysql
-dest=ubuntu@127.0.0.1:/data/mysql
+dest=houbin@192.168.1.105:/data/mysql/backup
 mkdir -p $src && cd $src
 dir=`date +"%Y%m%d"`
 mkdir -p $dir
@@ -17,5 +17,9 @@ do
 	#echo $i;
 	mysqldump -h$host -P$port -u$user -p$passwd game_db_new $i > $src/$dir/$i.sql
 done
+
+tar -zcvf $dir.tar.gz $dir
+scp $src/$dir.tar.gz $dest
+rm -f $src/$dir.tar.gz
 
 echo "back mysql success"
