@@ -4,6 +4,8 @@
  */
 
 var async = require('async');
+var later = require('later');
+
 var model = require('./model.js');
 var util = require('util');
 var MysqlCli = require('./mysqlCli.js');
@@ -11,17 +13,37 @@ var DEFINE = require('./proto/define.js')
 
 var mysqlCli = MysqlCli({
     host : '127.0.0.1',
-    port : 10003,
+    port : 3306,
     user : 'root',
     password : '8459328',
     db : 'performance'
 });
 
-var totalUid = 1;
-var interval = 10 * 1000;
-var totalSync = 1;
+var totalUid = 50;
+var interval = 10;
+var totalSync = 50;
 
 var uids = [];
+
+function syncAllUsersInfo(callback)
+{
+    var i = 0;
+    var start = new Date().getTime();
+    async.whilst(
+        function() {return i < totalUid;},
+        function(cb) {
+            synAllUserInfo(uids[i], function(err, res) {
+                ++i;
+                cb(err);
+            });
+        },
+        function(err) {
+            var end = new Date().getTime();
+            console.log("sync user info total time :" + (end-start) + " pid: " + process.pid);
+            callback();
+        }
+    );
+}
 
 async.series([
     function(callback) {
@@ -35,35 +57,21 @@ async.series([
         });
     },
     function(callback) {
-        var loop = 0;
-        var timer = setInterval(function() {
-            if (loop == totalSync) {
-                clearInterval(timer);
-                callback(null, 3);
-            }
-
-            ++loop;
-            var i = 0;
-            var start = new Date().getTime();
-            async.whilst(
-                function() {return i < totalUid;},
-                function(cb) {
-                    synAllUserInfo(uids[i], function(err, res) {
-                        ++i;
-                        cb(err);
-                    });
-                },
-                function(err) {
-                    var end = new Date().getTime();
-                    console.log("sync user info total time :" + (end-start));
+        var cron = later.parse.cron('0/'+interval+' * * * * *', true);
+        var t = later.setInterval(function() {
+            syncAllUsersInfo(function() {
+                totalSync -= 1;
+                if (totalSync == 0)  {
+                    t.clear();
+                    callback(null, 3);
                 }
-            );
-        }, interval);
+            });
+        }, cron);
     }
 ], function(err, results) {
     console.log('all performance test success :' + process.pid);
-
-    mysqlCli.destroy(function() {});
+    process.exit();
+   // mysqlCli.destroy(function() {});
 });
 
 function addLog(p, t) {
@@ -111,7 +119,7 @@ function userLogin(cb) {
             });
         },
         function(err) {
-            console.log("success sync item");
+            console.log("success all user login");
             cb();
         }
     );

@@ -66,7 +66,8 @@ itemController.userSyncItem = function(protoid, pkg, req, res, cb) {
                 items.push([allItems[i].itemid, allItems[i].count, allItems[i].expire]);
             }
             if (err == null || err == undefined) {
-                protoManager.sendMsgToUser(res, protoid, {item : items});
+          //      protoManager.sendMsgToUser(res, protoid, {item : items});
+                cb(0);
             } else {
                 cb(DEFINE.ERROR_CODE.ITEM_SAVE_ERROR[0]);
             }

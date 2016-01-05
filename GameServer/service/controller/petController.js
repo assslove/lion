@@ -80,7 +80,8 @@ petController.userSyncPet = function(protoid, pkg, req, res, cb) {
                 return cb(DEFINE.ERROR_CODE.PET_SAVE_ERROR[0]);
             }
 
-            protoManager.sendMsgToUser(res, protoid, src);
+            cb(0);
+          //  protoManager.sendMsgToUser(res, protoid, src);
         });
     });
 }
