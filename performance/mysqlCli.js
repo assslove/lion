@@ -32,10 +32,10 @@ MysqlCli.prototype.query = function(sql, args, cb) {
             conn.query(sql, args, function(err, res) {
                 cb(err, res);
             });
+            conn.release();
         } else {
             console.log('cannot get connection');
         }
-        conn.release();
     });
 }
 

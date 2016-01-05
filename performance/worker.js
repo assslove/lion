@@ -17,9 +17,9 @@ var mysqlCli = MysqlCli({
     db : 'performance'
 });
 
-var totalUid = 100;
+var totalUid = 1;
 var interval = 10 * 1000;
-var totalSync = 100;
+var totalSync = 1;
 
 var uids = [];
 
@@ -36,9 +36,10 @@ async.series([
     },
     function(callback) {
         var loop = 0;
-        setInterval(function() {
+        var timer = setInterval(function() {
             if (loop == totalSync) {
-                return callback(null, 3);
+                clearInterval(timer);
+                callback(null, 3);
             }
 
             ++loop;
