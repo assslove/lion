@@ -74,9 +74,10 @@ ProtoHandler.prototype.handle = function(protoid, pkg, req, res, cb) {
         return ;
     }
     try {
-        if (protoid != DEFINE.PROTO.USER_CREATE && protoid != DEFINE.PROTO.USER_LOGIN) {
-            //  if (req.session == null || req.session.uid != pkg.uid) { //检测session是否过期
-            // }
+        if (protoid != DEFINE.PROTO.USER_CREATE 
+			&& protoid != DEFINE.PROTO.USER_LOGIN
+			&& protoid != DEFINE.PROTO.USER_LOGIN_PLATFORM) {
+
             var tmpProtoHandlers = this.protoHandlers;
             cacheManager.checkUser(pkg.uid, function(err, result) {
                 if (err != null || result == 0) {
