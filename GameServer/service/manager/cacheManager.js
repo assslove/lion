@@ -201,22 +201,22 @@ cacheManager.getPet = function(app, uid, cb) {
         if (err == null && res == null) {
             petDao.getPet(app, uid, function(err, res) {
                 if (err == null && res.length != 0) {
-                    cacheManager.updatePet(uid, res[0], function(err, result){
-                        utils.invokeCallback(cb, err, res[0]);
+                    cacheManager.updatePet(uid, res[0].pet, function(err, result){
+                        utils.invokeCallback(cb, err, res[0].pet);
                     });
                 } else {
                     utils.invokeCallback(cb, err, null);
                 }
             });
         } else {
-            res = new Buffer(res);
+            res = new Buffer(res, 'binary').slice(0, res.length);
             utils.invokeCallback(cb, err, res);
         }
     });
 }
 
 cacheManager.updatePet = function(uid, pet, cb) {
-    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.PET, pet, function(err, res) {
+    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.PET, pet.toString('binary'), function(err, res) {
         if (err !== null) {
            logger.error("cache pet failed [uid=%ld]", uid);
         }

@@ -26,7 +26,7 @@ petController.userSyncPet = function(protoid, pkg, req, res, cb) {
             pet_equip : 0,
             pet_suit : []
         };
-        if (results != null) {
+        if (results != null && results.length != 0) {
             var obj = cacheManager.parseFromPb("PetInfo", results);
             src.petid = obj.petid;
             src.pet_equip = obj.pet_equip;
@@ -100,7 +100,7 @@ petController.userGetPet = function(protoid, pkg, req, res, cb){
 
 petController.userGetPet = function(protoid, pkg, req, res, cb){
     cacheManager.getPet(req.app, pkg.uid, function(err, results) {
-        if (err != null || results == null) {
+        if (err != null || results == null || results.length == 0) {
             return protoManager.sendMsgToUser(res, protoid, {pet : null});
         }
 
