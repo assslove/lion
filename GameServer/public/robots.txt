@@ -1,6 +1,8 @@
 # robots.txt generated at http://www.3464.com/ 
 User-agent: *
-Disallow: 
+Disallow: /js
+Disallow: /css
 Disallow: /
+Allow: /index.html
 Sitemap: http://www.qingzhugame.com
 
