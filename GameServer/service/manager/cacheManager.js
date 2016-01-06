@@ -209,14 +209,14 @@ cacheManager.getPet = function(app, uid, cb) {
                 }
             });
         } else {
-            res = new Buffer(res);
+            res = new Buffer(res, 'binary').slice(0, res.length);
             utils.invokeCallback(cb, err, res);
         }
     });
 }
 
 cacheManager.updatePet = function(uid, pet, cb) {
-    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.PET, pet, function(err, res) {
+    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.PET, pet.toString('binary'), function(err, res) {
         if (err !== null) {
            logger.error("cache pet failed [uid=%ld]", uid);
         }
