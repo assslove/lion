@@ -327,3 +327,13 @@ userController.userSign = function(protoid, pkg, req, res, cb) {
         });
     });
 }
+
+userController.userLoginPlatform = function(protoid, pkg, req, res, cb) {
+    switch(pkg.channel) {
+        case DEFINE.CHANNEL.QIHU_360:
+            userModel.login360(protoid, pkg, req, res, cb);
+            break;
+        default:
+            cb(DEFINE.ERROR_CODE.CHANNEL_NOT_EXIST[0]);
+    }
+}

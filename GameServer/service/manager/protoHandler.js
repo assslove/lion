@@ -58,6 +58,7 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_SIGN] = [userController.userSign];
     this.protoHandlers[DEFINE.PROTO.USER_GET_SYSMAIL] = [mailController.getSysMail];
     this.protoHandlers[DEFINE.PROTO.USER_READ_SYSMAIL] = [mailController.readSysMail];
+    this.protoHandlers[DEFINE.PROTO.USER_LOGIN_PLATFORM] = [userController.userLoginPlatform];
 
     logger.info("init proto handlers success");
 }
