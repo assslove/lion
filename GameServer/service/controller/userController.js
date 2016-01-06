@@ -190,7 +190,8 @@ userController.userSyncInfo = function(protoid, pkg, req, res, cb) {
                 }
             ], function(err, results) {
                 if (err != null || err != undefined) cb(DEFINE.ERROR_CODE.USER_SAVE_ERROR[0]);
-                protoManager.sendMsgToUser(res, protoid, user);
+                //protoManager.sendMsgToUser(res, protoid, user);
+                cb(0);
             });
         } else {
             cb(DEFINE.ERROR_CODE.USER_NOT_EXIST[0]);
@@ -325,4 +326,14 @@ userController.userSign = function(protoid, pkg, req, res, cb) {
             protoManager.sendMsgToUser(res, protoid, obj);
         });
     });
+}
+
+userController.userLoginPlatform = function(protoid, pkg, req, res, cb) {
+    switch(pkg.channel) {
+        case DEFINE.CHANNEL.QIHU_360:
+            userModel.login360(protoid, pkg, req, res, cb);
+            break;
+        default:
+            cb(DEFINE.ERROR_CODE.CHANNEL_NOT_EXIST[0]);
+    }
 }

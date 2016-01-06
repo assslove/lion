@@ -63,7 +63,8 @@ copyController.userSyncCopy = function(protoid, pkg, req, res, cb) {
                 for (var i in allCopys) {
                     copys.push([allCopys[i].copyid, allCopys[i].max_score, allCopys[i].star]);
                 }
-                protoManager.sendMsgToUser(res, protoid, copys);
+                cb(0);
+              //  protoManager.sendMsgToUser(res, protoid, copys);
             } else {
                 cb(DEFINE.ERROR_CODE.COPY_SAVE_ERROR[0]);
             }

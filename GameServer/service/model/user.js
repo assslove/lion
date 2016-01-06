@@ -3,7 +3,9 @@
  */
 
 var async = require('async');
+var request = require('request');
 var cacheManager = require('./../manager/cacheManager.js');
+var protoManager = require('./../manager/protoManager.js');
 var logger = require("./../../utils/log.js");
 var uidDao = require('./../dao/uidDao.js');
 var CODE = require('./../../utils/code.js');
@@ -16,6 +18,7 @@ var petPartyDao = require('./../dao/petPartyDao.js');
 var signDao = require('./../dao/signDao.js');
 var mailDao = require('./../dao/mailDao.js');
 var utils = require("./../../utils/utils.js");
+var accountDao = require('./../dao/accountDao.js');
 
 
 var user = module.exports;
@@ -330,5 +333,37 @@ user.addMail = function(app, uid, cb) {
 
     mailDao.addOrUpdateMail(app, uid, mail, function(err, results) {
         cb(err, results);
+    });
+}
+
+
+/*
+ * 360登录
+ */
+user.login360 = function(protoid, pkg, req, res, cb) {
+    var url = "https://openapi.360.cn/user/me";
+    var params = JSON.parse(pkg.msg);
+
+    request.get(url, {
+        form : params
+    }, function(err, response, body) {
+        if (!err && response.statusCode == 200) {
+            var id = body.id;
+            accountDao.getUidByChannel(req.app, pkg.channel, id, function(err, results) {
+                if (err) return cb(DEF_CHAR.ERROR_CODE.DB_ERROR[0]);
+
+                var obj = {};
+                obj.msg = JSON.stringify(body);
+                if (results.length == 0) {
+                    obj.uid = 0;
+                } else {
+                    obj.uid = results[0].uid
+                }
+
+                protoManager.sendMsgToUser(res, protoid, obj);
+            });
+        } else {
+            cb(DEFINE.ERROR_CODE.LOGIN_PLATFORM_FAIL[0]);
+        }
     });
 }
