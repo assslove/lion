@@ -201,8 +201,8 @@ cacheManager.getPet = function(app, uid, cb) {
         if (err == null && res == null) {
             petDao.getPet(app, uid, function(err, res) {
                 if (err == null && res.length != 0) {
-                    cacheManager.updatePet(uid, res[0], function(err, result){
-                        utils.invokeCallback(cb, err, res[0]);
+                    cacheManager.updatePet(uid, res[0].pet, function(err, result){
+                        utils.invokeCallback(cb, err, res[0].pet);
                     });
                 } else {
                     utils.invokeCallback(cb, err, null);
