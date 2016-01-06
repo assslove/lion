@@ -100,7 +100,7 @@ petController.userGetPet = function(protoid, pkg, req, res, cb){
 
 petController.userGetPet = function(protoid, pkg, req, res, cb){
     cacheManager.getPet(req.app, pkg.uid, function(err, results) {
-        if (err != null || results == null || results.length == 0) {
+        if (err != null || results == null) {
             return protoManager.sendMsgToUser(res, protoid, {pet : null});
         }
 
