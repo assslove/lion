@@ -50,12 +50,10 @@ userController.userLogin = function(protoid, pkg, req, res, cb) {
 /* @brief 用户登出
  */
 userController.userLogout = function(protoid, pkg, req, res, cb) {
-    if (req.session) {
-        req.session.destroy(function() {
-            logger.info("%d user logout", pkg.uid);
-            protoManager.sendErrorToUser(res, protoid, 0);
-        });
-    }
+    cacheManager.delUser(pkg.uid, function(err, results) {
+        logger.info("%d user logout", pkg.uid);
+        protoManager.sendErrorToUser(res, protoid, 0);
+    });
 }
 
 /* @brief 用户创建

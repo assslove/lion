@@ -250,3 +250,14 @@ redisClient.exists = function(key, cb) {
 		}
 	});
 }
+
+redisClient.del = function(key, cb) {
+    handler.del(key, function(err, res) {
+		if (err !== null) {
+			logger.error("exec del failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, res);
+		}
+	});
+}
