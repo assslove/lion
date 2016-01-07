@@ -10,6 +10,7 @@ var logger = require('./../utils/log.js');
 var utils = require('./../utils/utils.js');
 var accountDao = require('./../service/dao/accountDao.js');
 var rechargeDao = require('./../service/dao/rechargeDao.js');
+var DEFINE = require('./../proto/define.js');
 
 var oauth_host = "oauth.anysdk.com";
 var oauth_path = "/api/User/LoginOauth/";
@@ -156,6 +157,65 @@ router.post('/pay_notify', function(req, res, next) {
     } else {
         res.send(util.inspect(post));
     }
+});
+
+/* @brief 针对360的充值
+ */
+router.get('/pay_notify/360', function(req, res, next) {
+    var appKey360 = "";
+    var appSecret360 = "";
+    var params = utils.clone(req.query);
+
+    if (params.appKey360 != params.app_key) {
+        return res.send("app key is not right");
+    }
+
+    if (params.gateway_flag != 'success') {
+        return res.send("gateway flag is not success");
+    }
+
+    delete params.sign_return;
+    delete params.sign;
+
+    var keys = [];
+    for (var i in params) {
+        keys.push(i);
+        if (params[i] == null || params[i] == "") {
+            return res.send(i + "params is null");
+        }
+    }
+
+    params.sort(function(a, b) {
+        return a > b;
+    });
+
+    var baseStr = "";
+    for (var i in keys) {
+        baseStr += params[i] + "#";
+    }
+    baseStr += appSecret360;
+
+    var mySign = my_md5(baseStr);
+    if (req.query.sign != mySign) {
+        return res.send("sign is not right");
+    }
+
+    accountDao.getUidByChannel(req.app, DEFINE.CHANNEL.QIHU_360, params.user_id, function(err, results) {
+        if (err == null && results.length == 0) {
+            return res.send("no user");
+        }
+        var uid = results[0].uid;
+        var recharge = {
+            log_t : utils.getCurTime(),
+            product_id : params.product_id,
+            cost : params.amount,
+            cash : 0,
+            order_id : params.order_id
+        };
+        rechargeDao.addOrUpdateRecharge(req.app, uid, recharge, function(err, results) {
+            res.send('ok');
+        });
+    });
 });
 
 module.exports = router;
