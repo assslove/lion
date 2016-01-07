@@ -162,8 +162,8 @@ router.post('/pay_notify', function(req, res, next) {
 /* @brief 针对360的充值
  */
 router.get('/pay_notify/360', function(req, res, next) {
-    var appKey360 = "";
-    var appSecret360 = "";
+    var appKey360 = "a2405e1cfdb0ef56a49053caa887cef8";
+    var appSecret360 = "c083c2533e64710d29b8ee29433d0c6d";
     var params = utils.clone(req.query);
 
     if (params.appKey360 != params.app_key) {
