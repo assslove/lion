@@ -25,7 +25,7 @@ itemController.userSyncItem = function(protoid, pkg, req, res, cb) {
         //校验是是否足够
         for (var i in items) {
             if (items[i][1] < 0) {
-                if (itemMap[items[i][0]] != undefined && itemMap[items[i][0]][0] + items[i][1] < 0) {
+                if (itemMap[items[i][0]] == undefined || itemMap[items[i][0]][0] + items[i][1] < 0) {
                     return cb(DEFINE.ERROR_CODE.ITEM_NOT_ENOUGH[0]);
                 }
             }
