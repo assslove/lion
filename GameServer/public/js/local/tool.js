@@ -63,7 +63,8 @@ function handleResponse(data) {
     var rdata = JSON.parse(data);
     if (rdata.r != 0) { //返回码
         rdata.r = getErrorStr(rdata.r);
-        $("#res").val(JSON.stringify(rdata, null, '\t'));
+//        $("#res").val(JSON.stringify(rdata, null, '\t'));
+        $("#res").val(JSON.stringify(rdata));
         return ;
     }
 
