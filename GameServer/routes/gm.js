@@ -58,7 +58,7 @@ router.get('/gen_uid', function(req, res, next) {
 
 router.post('/sysmail/add', function(req, res, next) {
     var data = JSON.parse(req.body.json);
-    var uid = data.uid;
+    var uid = data.uid.split(',');
     var id = utils.getCurTime();
     var obj = {
         title : data.title,
@@ -67,25 +67,39 @@ router.post('/sysmail/add', function(req, res, next) {
 
     obj.expire = id + 3600 * 24 * data.expire;
 
-    if (uid == 0) { //系统邮件
+    if (uid.length == 1 && uid[0] == 0) { //系统邮件
         obj.item = cacheManager.serializeToPb("ItemList", {item : data.item});
         sysMailDao.addOrUpdateSysMail(req.app, id, obj, function(err, results) {
             if (err == null) res.send("发送系统邮件成功");
             else res.send("发送系统邮件失败");
         });
     } else { //指定用户邮件
-        mailDao.getMail(req.app, uid, function(err, results) {
-            if (err != null) return res.send("数据库出错");
-            var mails = cacheManager.parseFromPb("SysMailList", results[0].info).mail;
-            obj.item = data.item;
-            obj.id = id;
-            mails.push(obj);
+        var i = 0, total = uid.length;
+        async.whilst(
+            function() {return i < total},
+            function(callback) {
+                mailDao.getMail(req.app, uid[i], function(err, results) {
+                    if (err != null) {
+                        ++i;
+                        return callback(err);
+                    }
+                    var mails = cacheManager.parseFromPb("SysMailList", results[0].info).mail;
+                    obj.item = data.item;
+                    obj.id = id;
+                    mails.push(obj);
 
-            var buffer = cacheManager.serializeToPb("SysMailList", {mail : mails});
-            mailDao.addOrUpdateMail(req.app, uid, {info : buffer}, function(err, results) {
-                res.send("发送成功");
-            });
-        });
+                    var buffer = cacheManager.serializeToPb("SysMailList", {mail : mails});
+                    mailDao.addOrUpdateMail(req.app, uid[i], {info : buffer}, function(err, results) {
+                        ++i;
+                        callback(null);
+                    });
+                });
+            },
+            function(err) {
+                if (err != null) res.send("发送邮件失败");
+                else res.send("发送邮件成功");
+            }
+        );
     }
 });
 

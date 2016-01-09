@@ -11,11 +11,11 @@ $(document).ready(function() {
 
     $('#server_tool_tab a[href="#proto_cmd"]').tab('show');
 
-
     for (var i in DEFINE.PROTO) {
         $("#protoids").append("<option value='" + DEFINE.PROTO[i] + "'>" + i + "</option>");
     }
 
+    $("#file_name").change(importUser);
 });
 
 
@@ -82,6 +82,11 @@ function sendSysMail() {
         item : []
     };
 
+    if (obj.uid.split(',').length == 0) {
+        alert("发送用户为空");
+        return ;
+    }
+
     var itemStr = $("#item").val();
     var tmpArr = JSON.parse(itemStr);
     for (var i in tmpArr) {
@@ -94,3 +99,24 @@ function sendSysMail() {
         alert(data);
     }, "text");
 }
+
+function importUser(e)
+{
+    var file = e.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var data = e.target.result;
+        var workbook = XLSX.read(data, {type: 'binary'});
+
+        var csv = "";
+        workbook.SheetNames.forEach(function(sheetName) {
+            csv += XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+            csv = csv.replace(/\n/g,',');
+            return ;
+        });
+        csv = csv.slice(0, csv.length - 1);
+        $("#uid").val(csv);
+    };
+    reader.readAsBinaryString(file);
+}
+

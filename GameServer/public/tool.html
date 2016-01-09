@@ -7,7 +7,7 @@
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <meta name='description' content=''>
     <meta name='author' content=''>
-    <link rel='icon' href='../../favicon.ico'>
+    <!--<link rel='icon' href='../../favicon.ico'>-->
 
     <title>工具</title>
 
@@ -78,7 +78,10 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">用户ID:</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="uid" value="0" placeholder="0表示系统邮件">
+                        <input type="text" class="form-control" id="uid" value="0" placeholder="群发写0,多个以,号分隔">
+                    </div>
+                    <div class='col-sm-2'>
+                        <input type='file' id='file_name' accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'></input>
                     </div>
                 </div>
                 <div class="form-group">
@@ -145,6 +148,9 @@
 <script type="text/javascript" src="js/datetimepicker/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
 <script type="text/javascript" src="js/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
 <script src='js/jquery.isloading.min.js'></script>
+<script src='js/jszip.js'></script>
+<script src='js/ods.js'></script>
+<script src='js/xlsx.js'></script>
 <script src='js/local/utils.js'></script>
 <script src='js/local/proto/define.js'></script>
 <script src='js/local/tool.js'></script>
