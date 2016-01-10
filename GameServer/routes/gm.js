@@ -14,6 +14,7 @@ var CODE = require('../utils/code.js');
 var utils = require('../utils/utils.js');
 var sysMailDao = require('../service/dao/sysMailDao.js');
 var mailDao = require('../service/dao/mailDao.js');
+var sysMailLogDao = require('../service/dao/sysMailLogDao.js');
 
 router.get('/gen_uid', function(req, res, next) {
     var count = req.query.count;
@@ -69,7 +70,16 @@ router.post('/sysmail/add', function(req, res, next) {
 
     if (uid.length == 1 && uid[0] == 0) { //系统邮件
         obj.item = cacheManager.serializeToPb("ItemList", {item : data.item});
-        sysMailDao.addOrUpdateSysMail(req.app, id, obj, function(err, results) {
+        async.series([
+            function(cb) {
+                sysMailDao.addOrUpdateSysMail(req.app, id, obj, cb);
+            },
+            function(cb) {
+                obj.id = id;
+                obj.uid = 0;
+                sysMailLogDao.addOrUpdateSysMailLog(req.app, obj, cb);
+            }
+        ], function(err, results) {
             if (err == null) res.send("发送系统邮件成功");
             else res.send("发送系统邮件失败");
         });
@@ -89,9 +99,19 @@ router.post('/sysmail/add', function(req, res, next) {
                     mails.push(obj);
 
                     var buffer = cacheManager.serializeToPb("SysMailList", {mail : mails});
-                    mailDao.addOrUpdateMail(req.app, uid[i], {info : buffer}, function(err, results) {
+                    async.series([
+                        function(cb) {
+                            mailDao.addOrUpdateMail(req.app, uid[i], {info : buffer}, cb);
+                        },
+                        function(cb) {
+                            var sysMailLog = utils.clone(obj);
+                            sysMailLog.uid = uid[i];
+                            sysMailLog.item = cacheManager.serializeToPb("ItemList", {item : obj.item});
+                            sysMailLogDao.addOrUpdateSysMailLog(req.app, sysMailLog, cb);
+                        }
+                    ], function(err, results) {
                         ++i;
-                        callback(null);
+                        callback(err);
                     });
                 });
             },
@@ -101,6 +121,19 @@ router.post('/sysmail/add', function(req, res, next) {
             }
         );
     }
+});
+
+router.get('/sysmaillog/list', function(req, res, next) {
+    sysMailLogDao.getSysMailLogByCond(req.app, req.query, function(err, data) {
+        res.send(data);
+    });
+});
+
+router.get('/sysmaillog/one', function(req, res, next) {
+    sysMailLogDao.getOneSysMailLog(req.app, req.query.id, req.query.uid, function(err, results) {
+        results[0].item = cacheManager.parseFromPb("ItemList", results[0].item).item;
+        res.send(results[0]);
+    });
 });
 
 module.exports = router;

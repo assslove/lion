@@ -28,6 +28,9 @@ function getDateStr() {
     return year+""+month+""+date;
 }
 
+function getTime(cur) {
+    return Math.floor(new Date(cur).getTime()/1000.0);
+}
 
 /* @brief 各应用模拟列表
  */
