@@ -7,7 +7,7 @@
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <meta name='description' content=''>
     <meta name='author' content=''>
-    <link rel='icon' href='../../favicon.ico'>
+    <!--<link rel='icon' href='../../favicon.ico'>-->
 
     <title>工具</title>
 
@@ -38,7 +38,8 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist" id="server_tool_tab">
         <li role="presentation"><a href="#proto_cmd" aria-controls="proto_cmd" role="tab" data-toggle="tab">协议测试</a></li>
-        <li role="presentation"><a href="#sysmail_cmd" aria-controls="sysmail_cmd" role="tab" data-toggle="tab">系统邮件</a></li>
+        <li role="presentation"><a href="#sysmail_cmd" aria-controls="sysmail_cmd" role="tab" data-toggle="tab">邮件发送</a></li>
+        <li role="presentation"><a href="#maillist_cmd" aria-controls="maillist_cmd" role="tab" data-toggle="tab">邮件列表</a></li>
     </ul>
 
     <!-- Tab panes -->
@@ -78,7 +79,10 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">用户ID:</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="uid" value="0" placeholder="0表示系统邮件">
+                        <input type="text" class="form-control" id="uid" value="0" placeholder="群发写0,多个以,号分隔">
+                    </div>
+                    <div class='col-sm-2'>
+                        <input type='file' id='file_name' accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'></input>
                     </div>
                 </div>
                 <div class="form-group">
@@ -90,7 +94,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">内容:</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="content">
+                        <textarea rows="10" style="width:100%" id="content"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
@@ -110,6 +114,35 @@
                     </div>
                     <div class="col-sm-2">
                         <input type="button" class="btn btn-default" value="发送" onclick="sendSysMail()">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="maillist_cmd" style="width: 95%;">
+            <br/>
+            <form class='form-horizontal'>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="s_uid" placeholder="用户id">
+                    </div>
+                    <div class='col-sm-2'>
+                        <input type="text" class="form-control" id="s_title" placeholder="邮件标题">
+                    </div>
+                    <div class='col-sm-2'>
+                        <input type="text" class="form-control dateform" id="s_begintime" placeholder="开始时间">
+                    </div>
+                    <div class='col-sm-2'>
+                        <input type="text" class="form-control dateform" id="s_endtime" placeholder="结束时间">
+                    </div>
+
+                    <div class='col-sm-2'>
+                        <input type="button" class="btn btn-default" value="搜索" onclick="getMailList()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <hr/>
+                    <div class="col-sm-12">
+                        <div id="mail_list"></div>
                     </div>
                 </div>
             </form>
@@ -145,6 +178,9 @@
 <script type="text/javascript" src="js/datetimepicker/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
 <script type="text/javascript" src="js/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
 <script src='js/jquery.isloading.min.js'></script>
+<script src='js/jszip.js'></script>
+<script src='js/ods.js'></script>
+<script src='js/xlsx.js'></script>
 <script src='js/local/utils.js'></script>
 <script src='js/local/proto/define.js'></script>
 <script src='js/local/tool.js'></script>

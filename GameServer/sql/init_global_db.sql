@@ -29,3 +29,16 @@ create table t_sys_mail(
 	index(`expire`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+#系统邮件log
+drop table if exists t_sysmail_log;
+create table t_sysmail_log (
+	`id` int unsigned NOT NULL COMMENT '系统邮件时间',
+	`uid` int unsigned NOT NULL COMMENT '用户id',
+	`title` varchar(64) COMMENT '标题',
+	`content` varchar(256) COMMENT '内容',
+	`expire` int unsigned NOT NULL COMMENT '过期时间',
+	`item` varbinary(128) COMMENT '附件',
+	primary key(`id`,`uid`),
+	index(`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
