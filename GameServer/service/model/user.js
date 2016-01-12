@@ -363,6 +363,7 @@ user.login360 = function(protoid, pkg, req, res, cb) {
                 protoManager.sendMsgToUser(res, protoid, obj);
             });
         } else {
+            logger.error(body.error);
             cb(DEFINE.ERROR_CODE.LOGIN_PLATFORM_FAIL[0]);
         }
     });
