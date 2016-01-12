@@ -345,9 +345,8 @@ user.login360 = function(protoid, pkg, req, res, cb) {
     var url = "https://openapi.360.cn/user/me";
     var params = JSON.parse(pkg.msg);
 
-    request.get(url, {
-        form : params
-    }, function(err, response, body) {
+    request.get(url,params,
+		function(err, response, body) {
         if (!err && response.statusCode == 200) {
             var id = body.id;
             accountDao.getUidByChannel(req.app, pkg.channel, id, function(err, results) {
