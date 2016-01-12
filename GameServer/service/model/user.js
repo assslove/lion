@@ -342,11 +342,11 @@ user.addMail = function(app, uid, cb) {
  * 360登录
  */
 user.login360 = function(protoid, pkg, req, res, cb) {
-    var url = "https://openapi.360.cn/user/me";
+    var url = "https://openapi.360.cn/user/me.json";
     var params = JSON.parse(pkg.msg);
 
-    request.get(url,params,
-		function(err, response, body) {
+	url = url + "?access_token="+params.access_token;
+    request.get(url, function(err, response, body) {
         if (!err && response.statusCode == 200) {
             var id = body.id;
             accountDao.getUidByChannel(req.app, pkg.channel, id, function(err, results) {
