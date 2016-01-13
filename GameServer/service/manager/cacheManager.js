@@ -79,13 +79,19 @@ cacheManager.getUser = function(app, uid, cb) {
 /* @brief 更新用户
  */
 cacheManager.updateUser = function(uid, user, cb) {
-    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.USER, JSON.stringify(user), function(err, res) {
-        if (err !== null) {
-           logger.error("cache user failed [uid=%ld]", uid);
+    async.parallel([
+        function(callback) {
+            redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.USER, JSON.stringify(user), callback);
+        },
+        function(callback) {
+            redis.expire(CODE.CACHE_TYPE.USER + uid, CODE.USER_EXPIRE, callback);
         }
-        redis.expire(CODE.CACHE_TYPE.USER + uid, CODE.USER_EXPIRE, function() {});
-        utils.invokeCallback(cb, err, res);
-    });
+    ], function(err, results) {
+        if (err !== null) {
+            logger.error("cache user failed [uid=%ld]", uid);
+        }
+        utils.invokeCallback(cb, err, null);
+    })
 }
 
 /* @brief 获取物品
