@@ -55,3 +55,17 @@ accountDao.addOrUpdateAccount = function(app, account, cb) {
         }
     });
 }
+
+accountDao.delAccount = function(app, uid, cb)
+{
+    var mysqlCli = mysqlManager.getGlobalMysql();
+    var sql = "delete from t_account where uid=?";
+    mysqlCli.query(sql, [uid], function(err, res) {
+        if (err !== null) {
+            logger.error('del account error: %s', err.message);
+            utils.invokeCallback(cb, err.message, null);
+        } else {
+            utils.invokeCallback(cb, null, res);
+        }
+    });
+}

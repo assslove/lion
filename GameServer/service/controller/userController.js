@@ -276,6 +276,12 @@ userController.userBind = function(protoid, pkg, req, res, cb) {
     });
 }
 
+userController.userUnbind = function(protoid, pkg, req, res, cb) {
+    accountDao.delAccount(req.app, pkg.uid, function(err, results) {
+        protoManager.sendErrorToUser(res, protoid, 0);
+    });
+}
+
 userController.userGetSignInfo = function(protoid, pkg, req, res, cb) {
     var dayOfWeek = new Date().getDay();
     if (dayOfWeek == 0) dayOfWeek = 7;
