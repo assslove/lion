@@ -348,12 +348,12 @@ user.login360 = function(protoid, pkg, req, res, cb) {
 	url = url + "?access_token="+params.access_token;
     request.get(url, function(err, response, body) {
         if (!err && response.statusCode == 200) {
-            var id = body.id;
+            var id = JSON.parse(body).id;
             accountDao.getUidByChannel(req.app, pkg.channel, id, function(err, results) {
                 if (err) return cb(DEFINE.ERROR_CODE.DB_ERROR[0]);
 
                 var obj = {};
-                obj.msg = JSON.stringify(body);
+                obj.msg = body;
                 if (results.length == 0) {
                     obj.uid = 0;
                 } else {
