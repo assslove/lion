@@ -82,6 +82,10 @@ ProtoHandler.prototype.handle = function(protoid, pkg, req, res, cb) {
 			&& protoid != DEFINE.PROTO.USER_LOGIN_PLATFORM) {
 
             var tmpProtoHandlers = this.protoHandlers;
+
+			if (pkg.uid == null || pkg.uid == "") {
+				return cb(DEFINE.ERROR_CODE.PROTO_DATA_INVALID[0]);
+			}
             cacheManager.checkUser(pkg.uid, function(err, result) {
                 if (err != null || result == 0) {
                     return cb(DEFINE.ERROR_CODE.USER_SESSION_EXPIRE[0]);
