@@ -77,6 +77,7 @@ ProtoHandler.prototype.handle = function(protoid, pkg, req, res, cb) {
     }
     try {
         if (protoid != DEFINE.PROTO.USER_CREATE 
+			&& protoid != DEFINE.PROTO.USER_BIND
 			&& protoid != DEFINE.PROTO.USER_LOGIN
 			&& protoid != DEFINE.PROTO.USER_LOGIN_PLATFORM) {
 
