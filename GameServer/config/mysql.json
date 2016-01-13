@@ -1,12 +1,12 @@
 {
 	"development" : [
-        {"range" : [0, 50], "host" : "182.254.133.117", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new"},
-        {"range" : [51, 99], "host" : "182.254.133.117", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new"},
-        {"range" : [100, 199], "host" : "182.254.133.117", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new", "desc" : "global_db"}
+        {"range" : [0, 50], "host" : "10.105.24.128", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new"},
+        {"range" : [51, 99], "host" : "10.105.24.128", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new"},
+        {"range" : [100, 199], "host" : "10.105.24.128", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new", "desc" : "global_db"}
 	],
 	"production" : [
-		{"range" : [0, 50], "host" : "182.254.133.117", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new"},
-		{"range" : [51, 99], "host" : "182.254.133.117", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new"},
-        {"range" : [100, 199], "host" : "182.254.133.117", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new", "desc" : "global_db"}
+		{"range" : [0, 50], "host" : "10.105.24.128", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new"},
+		{"range" : [51, 99], "host" : "10.105.24.128", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new"},
+        {"range" : [100, 199], "host" : "10.105.24.128", "port" : 3306, "user" : "root", "password" : "root", "db" : "game_db_new", "desc" : "global_db"}
 	]
 }
