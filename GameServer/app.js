@@ -17,6 +17,7 @@ var mysqlManager = require('./service/dao/mysqlManager.js');
 var confManager = require('./service/manager/confManager.js');
 
 var log = require('./utils/log.js');
+var Dirty = require('./utils/dirty.js');
 
 var routes = require('./routes/index');
 var proto = require('./routes/proto.js');
@@ -137,6 +138,11 @@ logger.info("init redis success");
 
 var protoHandler = new ProtoHandler(app);
 protoManager.init(protoHandler);
+
+var dirty = Dirty(path.join(__dirname, './config/json/dirty.json'));
+dirty.init();
+app.set('dirty', dirty);
+//dirty.printTrieTree();
 
 var server = app.listen(listen_port, function() {
     var host = server.address().address;

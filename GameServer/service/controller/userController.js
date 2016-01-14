@@ -172,6 +172,10 @@ userController.userSyncInfo = function(protoid, pkg, req, res, cb) {
             //    return cb(DEFINE.ERROR_CODE.USER_DATA_ERROR[0]);
             //}
 
+            if (pkg.name != user.name) { //更换昵称 脏词校验
+                pkg.name = req.app.get("dirty").replaceDirty(pkg.name);
+            }
+
             for (var i in pkg) {
                 user[i] = pkg[i];
             }
