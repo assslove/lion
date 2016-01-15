@@ -5,6 +5,7 @@
 var path = require("path");
 var DEFINE = require('./../../proto/define');
 var logger = require('./../../utils/log.js');
+var encrypt = require('./../../utils/encrypt.js');
 
 var userController = require('./../controller/userController.js');
 var itemController = require('./../controller/itemController.js');
@@ -106,6 +107,7 @@ ProtoHandler.prototype.sendErrorToUser = function(res, proto_id, err) {
     var obj = {p : proto_id, r : err};
 	var msg = JSON.stringify(obj);
 	logger.debug(msg);
+    //res.send(encrypt.encode(new Buffer(msg).toString('base64'))));
     res.send(msg);
 }
 
@@ -118,6 +120,7 @@ ProtoHandler.prototype.sendMsgToUser = function(res, protoid, msg) {
     var obj = {p : protoid, r : 0, m : msg};
 	var msg = JSON.stringify(obj);
 	logger.debug(msg);
+    //res.send(encrypt.encode(new Buffer(msg).toString('base64'))));
     res.send(msg);
 }
 

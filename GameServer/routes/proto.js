@@ -10,14 +10,17 @@ var path = require("path");
 var DEFINE = require('./../proto/define.js');
 var user = require('./../service/model/user.js');
 var logger = require("./../utils/log.js");
+var encrypt = require("./../utils/encrypt.js");
 var protoManager = require('./../service/manager/protoManager.js');
 
 var router = express.Router();
 
 router.post('/', function(req, res, next) {
     //check proto pkg
-	logger.debug(req.body.b);
-    var body = JSON.parse(req.body.b);
+    //var msg = new Buffer(encrypt.decode(req.body.b), "base64").toString();
+    var msg = req.body.b;
+	logger.debug(msg);
+    var body = JSON.parse(msg);
     if (body.p == undefined) {
         logger.error("proto id is not null protoid=%d", body.p);
         res.send(500);

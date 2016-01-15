@@ -10,6 +10,7 @@ var program = require('commander');
 var log4js = require('log4js');
 
 var redisClient = require('./utils/redis.js');
+var encrypt = require('./utils/encrypt.js');
 var ProtoHandler = require('./service/manager/protoHandler.js');
 var protoManager = require('./service/manager/protoManager.js');
 
@@ -142,6 +143,10 @@ protoManager.init(protoHandler);
 var dirty = Dirty(path.join(__dirname, './config/json/dirty.json'));
 dirty.init();
 app.set('dirty', dirty);
+
+//init encrypt table
+encrypt.init();
+
 //dirty.printTrieTree();
 
 var server = app.listen(listen_port, function() {
