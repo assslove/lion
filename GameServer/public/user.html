@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang='zh-CN'>
 <head>
@@ -7,9 +8,8 @@
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <meta name='description' content=''>
     <meta name='author' content=''>
-    <!--<link rel='icon' href='../../favicon.ico'>-->
 
-    <title>工具</title>
+    <title>系统用户添加</title>
 
     <!-- Bootstrap core CSS -->
     <link href='http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css' rel='stylesheet'>
@@ -33,41 +33,27 @@
     <![endif]-->
 </head>
 <body>
-
 <div role="tabpanel">
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist" id="server_tool_tab">
-        <li role="presentation"><a href="#proto_cmd" aria-controls="proto_cmd" role="tab" data-toggle="tab">协议测试</a></li>
+    <ul class="nav nav-tabs" role="tablist" id="user_tab">
+        <!--<li role="presentation" class="active"><a href="#user_config" aria-controls="user_config" role="tab" data-toggle="tab">新 增</a></li>-->
+        <li role="presentation"><a href="#user_config_list" aria-controls="user_config_list" role="tab" data-toggle="tab">用户列表</a></li>
+        <li role="presentation"><a href="#role_config_list" aria-controls="role_config_list" role="tab" data-toggle="tab">角色配置</a></li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-        <div role="tabpanel" class="tab-pane" id="proto_cmd" style="width: 95%;">
-            <br/>
+        <div role="tabpanel" class="tab-pane" id="user_config_list" style="width:95%;">
             <form class='form-horizontal'>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">协议编号:</label>
-                    <div class="col-sm-2">
-                        <select class="form-control" id="protoids"></select>
-                    </div>
+                <div id="user_config_body">
+                    显示配置列表
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">输入消息:</label>
-                    <div class="col-sm-10">
-                        <textarea id="req" cols="100" rows="10"></textarea>
-                    </div>
-                </div>
-                <div class='form-group'>
-                    <div class="col-sm-6"></div>
-                    <div class="col-sm-1">
-                        <input type='button' class='btn btn-default' value="发送" onclick="sendMsg()">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">返回消息:</label>
-                    <div class="col-sm-10">
-                        <textarea id="res" cols="100" rows="10"></textarea>
-                    </div>
+            </form>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="role_config_list" style="width:95%;">
+            <form class='form-horizontal'>
+                <div id="role_config_body">
+                    显示配置列表
                 </div>
             </form>
         </div>
@@ -83,15 +69,35 @@
                 <h4 class="modal-title" id="info_title">信息标题</h4>
             </div>
             <div class="modal-body" id="info_content">
+                <!--信息内容-->
+                <!--<form class='form-horizontal'>-->
+                    <!--<div class='form-group'>-->
+                        <!--<label class='col-sm-3 control-label'>旧密码</label>-->
+                        <!--<div class='col-sm-5'>-->
+                            <!--<input type='password' class='form-control' id='oldPassword' placeholder='旧密码'>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class='form-group'>-->
+                        <!--<label class='col-sm-3 control-label'>新密码</label>-->
+                        <!--<div class='col-sm-5'>-->
+                            <!--<input type='password' class='form-control' id='newPassword' placeholder='新密码'>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class='form-group'>-->
+                        <!--<label class='col-sm-3 control-label'>重复新密码</label>-->
+                        <!--<div class='col-sm-5'>-->
+                            <!--<input type='password' class='form-control' id='rePassword' placeholder='重新输入新密码'>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</form>-->
             </div>
             <div class="modal-footer" id="info_footer">
-                <button type='button' class='btn btn-default'>保存</button>
+                <button type='button' class='btn btn-default' onclick='savePassword()'>保存</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>
 </div>
-
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
@@ -102,12 +108,9 @@
 <script type="text/javascript" src="js/datetimepicker/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
 <script type="text/javascript" src="js/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
 <script src='js/jquery.isloading.min.js'></script>
-<script src='js/jszip.js'></script>
-<script src='js/ods.js'></script>
-<script src='js/xlsx.js'></script>
 <script src='js/local/utils.js'></script>
-<script src='js/local/proto/define.js'></script>
-<script src='js/local/tool.js'></script>
+<script src='js/local/lang.js'></script>
+<script src='js/local/user.js'></script>
 </body>
 </html>
 
