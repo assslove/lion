@@ -35,7 +35,9 @@ function getTime(cur) {
 /* @brief 各应用模拟列表
  */
 var MODELS = {
-    1 : {name : 'tool', desc : '工具', info : ''}
+    1 : {name : 'tool', desc : '后台工具', info : '后台工具'},
+    2 : {name : 'sysmail', desc : '系统邮件', info : '系统邮件'},
+    3 : {name : 'user', desc : '用户管理', info : '用户管理'}
 };
 
 function arrayBufferConcat () {

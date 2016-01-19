@@ -42,3 +42,22 @@ create table t_sysmail_log (
 	primary key(`id`,`uid`),
 	index(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#gm用户管理
+drop table if exists `t_gm_user`;
+create table `t_gm_user`(
+    `username` varchar(16) COMMENT '用户名',
+    `password` varchar(64) COMMENT '密码',
+    `type` tinyint COMMENT '类型',
+    primary key(username)
+) ENGINE=InnoDB default CHARSET=utf8;
+
+#gm角色管理
+drop table if exists `t_gm_role`;
+create table `t_gm_role` (
+    `type` tinyint unsigned NOT NULL COMMENT '角色类型id',
+    `name` varchar(32) NOT NULL COMMENT '角色名称',
+    `perm` varbinary(128) NOT NULL COMMENT '权限标志位 blob数据',
+    primary key(`type`)
+) ENGINE=InnoDB default CHARSET=utf8;
+
