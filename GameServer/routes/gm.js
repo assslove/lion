@@ -10,6 +10,7 @@ var router = express.Router();
 
 var uidDao = require('../service/dao/uidDao.js');
 var cacheManager = require('../service/manager/cacheManager.js');
+var confManager = require('../service/manager/confManager.js');
 var CODE = require('../utils/code.js');
 var utils = require('../utils/utils.js');
 var sysMailDao = require('../service/dao/sysMailDao.js');
@@ -64,6 +65,11 @@ router.get('/gen_uid', function(req, res, next) {
 
 router.post('/sysmail/add', function(req, res, next) {
     var data = JSON.parse(req.body.json);
+    for (var i in data.item) {
+        if (confManager.getItemInfo(data.item[i].itemid) == undefined) {
+            return res.send("物品id不存在");
+        }
+    }
     var uid = data.uid.split(',');
     var id = utils.getCurTime();
     var obj = {
