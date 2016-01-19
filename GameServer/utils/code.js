@@ -27,8 +27,8 @@ var code = {
         GIVE_HP : 3,  //赠送体力
         GIVE_GOLD : 4 //赠送金币
     },
-    GET_HP_MAXTIMES: 1,
-    GET_GOLD_MAXTIMES: 1
+    GET_HP_MAXTIMES: 20,
+    GET_GOLD_MAXTIMES: 20
 }
 
 module.exports = code;
