@@ -66,7 +66,7 @@ router.get('/gen_uid', function(req, res, next) {
 router.post('/sysmail/add', function(req, res, next) {
     var data = JSON.parse(req.body.json);
     for (var i in data.item) {
-        if (confManager.getItemInfo(data.item[i].itemid) == undefined) {
+        if (confManager.getItemInfo(data.item[i].itemid + ".0") == undefined) {
             return res.send("物品id不存在");
         }
     }
