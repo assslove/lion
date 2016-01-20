@@ -44,7 +44,7 @@ mailController.getSysMail = function(protoid, pkg, req, res, cb) {
                     isUpdate = true;
                     sysMailDao.getSysMail(req.app, mail.check_tm, cur, callback);
                 } else {
-                   callback(err, []);
+                   callback(null, []);
                 }
             },
             function(sysMails, callback) {
@@ -60,6 +60,8 @@ mailController.getSysMail = function(protoid, pkg, req, res, cb) {
                         info : buffer
                     };
                     mailDao.addOrUpdateMail(req.app, pkg.uid, obj, callback);
+                } else {
+                    callback(null, []);
                 }
             }
         ], function(err, results) {

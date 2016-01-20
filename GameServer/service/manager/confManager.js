@@ -9,12 +9,15 @@ var logger = require('./../../utils/log.js');
 
 //签到集合
 var markDate = {};
+//物品集合
+var itemData = {};
 
 var confManager = module.exports;
 
 confManager.initConf = function()
 {
     confManager.initMarkDate();
+    confManager.initItemData();
 }
 
 confManager.initMarkDate = function() {
@@ -35,4 +38,18 @@ confManager.initMarkDate = function() {
  */
 confManager.getMarkDateReward = function(order) {
     return markDate[order+1].rewards;
+}
+
+confManager.initItemData = function()
+{
+    itemData = configJson(path.join(__dirname, "./../../config/json/itemData.json"));
+    var count = 0;
+    for (var i in itemData) {
+        ++count;
+    }
+    logger.info("load itemdata config: " + count);
+}
+
+confManager.getItemInfo = function(id) {
+    return itemData[id];
 }
