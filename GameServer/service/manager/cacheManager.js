@@ -356,5 +356,5 @@ cacheManager.updateUserBaseBaseInfo = function(uid, base, cb) {
 }
 
 cacheManager.delUser = function(uid, cb) {
-    redis.del(CODE.CACHE_TYPE.USER + key, cb);
+    redis.del(CODE.CACHE_TYPE.USER + uid, cb);
 }
