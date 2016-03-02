@@ -286,6 +286,7 @@ user.addSign = function(app, uid, callback) {
 
 user.initSign = function(app, uid, callback) {
     var obj = {
+        sign_day : 0,
         sign_flag : 0,
         fill_check : 0
     };
