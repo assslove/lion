@@ -261,3 +261,14 @@ redisClient.del = function(key, cb) {
 		}
 	});
 }
+
+redisClient.incr = function(key, cb) {
+    handler.incr(key, function(err, res) {
+		if (err !== null) {
+			logger.error("exec incr failed");
+			utils.invokeCallback(cb, err.message, null);
+		} else {
+			utils.invokeCallback(cb, null, res);
+		}
+	});
+}

@@ -13,6 +13,7 @@ var copyController = require('./../controller/copyController.js');
 var petController = require('./../controller/petController.js');
 var friendController = require('./../controller/friendController.js');
 var mailController = require('./../controller/mailController.js');
+var shopController = require('./../controller/shopController.js');
 var cacheManager = require("./cacheManager.js");
 
 module.exports = function(app) {
@@ -61,6 +62,8 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_READ_SYSMAIL] = [mailController.readSysMail];
     this.protoHandlers[DEFINE.PROTO.USER_LOGIN_PLATFORM] = [userController.userLoginPlatform];
     this.protoHandlers[DEFINE.PROTO.USER_UNBIND] = [userController.userUnbind];
+    this.protoHandlers[DEFINE.PROTO.USER_IOS_GET_ORDERID] = [shopController.iosGetOrderId];
+    this.protoHandlers[DEFINE.PROTO.USER_IOS_RECEIPT_VERIFY] = [shopController.iosVerifyReceipt];
 
     logger.info("init proto handlers success");
 }

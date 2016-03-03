@@ -11,6 +11,9 @@ var logger = require('./../../utils/log.js');
 var markDate = {};
 //物品集合
 var itemData = {};
+// 商品表
+var shopData = {};
+
 
 var confManager = module.exports;
 
@@ -18,6 +21,7 @@ confManager.initConf = function()
 {
     confManager.initMarkDate();
     confManager.initItemData();
+    confManager.initShopData();
 }
 
 confManager.initMarkDate = function() {
@@ -50,6 +54,20 @@ confManager.initItemData = function()
     logger.info("load itemdata config: " + count);
 }
 
+confManager.initShopData = function()
+{
+    shopData = configJson(path.join(__dirname, "./../../config/json/storeData.json"));
+    var count = 0;
+    for (var i in shopData) {
+        ++count;
+    }
+    logger.info("load shopdata config: " + count);
+}
+
 confManager.getItemInfo = function(id) {
     return itemData[id];
+}
+
+confManager.getShopInfo = function(id) {
+    return shopData[id];
 }

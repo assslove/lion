@@ -10,6 +10,8 @@ var code = {
         COPY_SCORE : 'h_cpy_score:',  // 玩家关卡通过记录 key : uid, value:max_score
         USER_BASE: 'h_usr_base',    // 用户基本信息,用于好友列表用 key:uid, value:userinfo
         PET_PARTY : "h_pet_party", // 好友宠物派对
+        IOS_ORDERID : "s_ios_orderid", // ios 交易id
+        IOS_ORDERINFO : "s_iosorder:"   // ios 临时交易信息
     },
 
     CACHE_KEY_TYPE : {
@@ -20,7 +22,8 @@ var code = {
     },
 
     MIN_UID : 100000000,
-    USER_EXPIRE : 3600,  //一个小时间
+    USER_EXPIRE : 3600,     //一个小时间
+    IOS_ORDER_EXPIRE : 10,  //交易信息10秒后过期
     FRIEND_MAIL_TYPE : {
         APPLY : 1,    //好友申请
         GET_HP : 2,   //索取体力

@@ -25,6 +25,7 @@
     "mysql": "^2.9.0",
     "protobufjs": "^4.1.2",
     "redis": "^2.2.5",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "in-app-purchase": "^0.6.3"
   }
 }
