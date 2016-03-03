@@ -9,7 +9,7 @@ var redis = require('../../utils/redis.js');
 var DEFINE = require('./../../proto/define.js');
 var CODE = require("./../../utils/code.js");
 var protoManager = require('./../manager/protoManager.js');
-var iap = require('in-app-purcharse');
+var iap = require('in-app-purchase');
 var logger = require("./../../utils/log.js");
 var confManager = require('./../manager/confManager.js');
 
