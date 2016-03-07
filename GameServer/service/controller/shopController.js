@@ -64,7 +64,7 @@ shopController.iosVerifyReceipt = function(protoid, pkg, req, res, cb) {
 					var pidList = ["zs60", "zs180", "zs300", "zs1280"];
 					var index = 0;
 					for (var i in pidList) {
-						if (pidList[i] == productInfo.product_id) {
+						if (pidList[i] == productInfo.productId) {
 							index = i;
 							break;
 						}
@@ -75,7 +75,7 @@ shopController.iosVerifyReceipt = function(protoid, pkg, req, res, cb) {
                     //TODO 增加记录 且解析商品表
                     var jsonObj = {
 						cash : parseInt(shopData.f * 10),
-						productid : shopData.product_id
+						productid : shopData.productId
                     };
 
                     protoManager.sendMsgToUser(res, protoid, jsonObj);
