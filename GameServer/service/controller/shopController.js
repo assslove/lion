@@ -43,9 +43,7 @@ shopController.iosVerifyReceipt = function(protoid, pkg, req, res, cb) {
         iap.config({
             requestDefaults: {
                 timeout: 5000
-            },
-            applePassword: "1234567890abcdef1234567890abcdef",
-            sandbox : false
+            }
         });
 
         iap.setup(function(err) {

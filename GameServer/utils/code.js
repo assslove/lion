@@ -23,7 +23,7 @@ var code = {
 
     MIN_UID : 100000000,
     USER_EXPIRE : 3600,     //一个小时间
-    IOS_ORDER_EXPIRE : 10,  //交易信息10秒后过期
+    IOS_ORDER_EXPIRE : 3600,  //交易信息10秒后过期
     FRIEND_MAIL_TYPE : {
         APPLY : 1,    //好友申请
         GET_HP : 2,   //索取体力
