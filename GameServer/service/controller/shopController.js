@@ -75,7 +75,7 @@ shopController.iosVerifyReceipt = function(protoid, pkg, req, res, cb) {
                     //TODO 增加记录 且解析商品表
                     var jsonObj = {
 						cash : parseInt(shopData.f * 10),
-						productid : shopData.productId
+						productid : productInfo.productId
                     };
 
                     protoManager.sendMsgToUser(res, protoid, jsonObj);
