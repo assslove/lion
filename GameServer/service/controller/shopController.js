@@ -37,7 +37,7 @@ shopController.iosVerifyReceipt = function(protoid, pkg, req, res, cb) {
 
     redis.get(CODE.CACHE_TYPE.IOS_ORDERINFO + uid, function(err, result) {
         if (result == null) {
-            return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.ORDER_NOT_FOUND);
+            return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.ORDER_NOT_FOUND[0]);
         }
 
         iap.config({
@@ -48,7 +48,7 @@ shopController.iosVerifyReceipt = function(protoid, pkg, req, res, cb) {
 
         iap.setup(function(err) {
             if (err) {
-                return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.SERV_ERROR);
+                return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.SERV_ERROR[0]);
             }
 
             iap.validate(iap.APPLE, receipt, function(err, response) {
@@ -79,7 +79,10 @@ shopController.iosVerifyReceipt = function(protoid, pkg, req, res, cb) {
                     };
 
                     protoManager.sendMsgToUser(res, protoid, jsonObj);
-                }
+                } else {
+					logger.error("validate receipt : %s", err.code);
+					return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.SERV_ERROR[0]);
+				}
             });
         });
     });
