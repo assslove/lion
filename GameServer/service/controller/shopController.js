@@ -74,9 +74,8 @@ shopController.iosVerifyReceipt = function(protoid, pkg, req, res, cb) {
 
                     var addCash = parseInt(shopData.f * 10);
                     var dbObj = {
-                        uid : uid,
                         log_t : utils.getCurTime(),
-                        product_id : prodcutInfo.productId,
+                        product_id : productInfo.productId,
                         cost : parseInt(shopData.f),
                         cash : addCash,
                         order_id : productInfo.transactionId
