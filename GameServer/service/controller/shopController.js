@@ -8,10 +8,12 @@ var shopController = module.exports;
 var redis = require('../../utils/redis.js');
 var DEFINE = require('./../../proto/define.js');
 var CODE = require("./../../utils/code.js");
+var utils = require("./../../utils/utils.js");
 var protoManager = require('./../manager/protoManager.js');
 var iap = require('in-app-purchase');
 var logger = require("./../../utils/log.js");
 var confManager = require('./../manager/confManager.js');
+var rechargeDao = require("./../dao/rechargeDao.js");
 
 shopController.iosGetOrderId = function(protoid, pkg, req, res, cb) {
     redis.incr(CODE.CACHE_TYPE.IOS_ORDERID, function(err, result) {
@@ -32,8 +34,6 @@ shopController.iosVerifyReceipt = function(protoid, pkg, req, res, cb) {
     var uid = pkg.uid;
     var receipt = pkg.receipt;
     var orderid = pkg.orderid;
-
-    logger.info("uid=%d, receipt=%s", uid, receipt);
 
     redis.get(CODE.CACHE_TYPE.IOS_ORDERINFO + uid, function(err, result) {
         if (result == null) {
@@ -72,13 +72,25 @@ shopController.iosVerifyReceipt = function(protoid, pkg, req, res, cb) {
 					++index;
                     var shopData = confManager.getShopInfo(index + ".0");
 
-                    //TODO 增加记录 且解析商品表
-                    var jsonObj = {
-						cash : parseInt(shopData.f * 10),
-						product_id : productInfo.productId
+                    var addCash = parseInt(shopData.f * 10);
+                    var dbObj = {
+                        uid : uid,
+                        log_t : utils.getCurTime(),
+                        product_id : prodcutInfo.productId,
+                        cost : parseInt(shopData.f),
+                        cash : addCash,
+                        order_id : productInfo.transactionId
                     };
 
-                    protoManager.sendMsgToUser(res, protoid, jsonObj);
+                    rechargeDao.addOrUpdateRecharge(req.app, uid, dbObj, function(err, results) {
+                        var jsonObj = {
+                            cash : addCash,
+                            product_id : productInfo.productId
+                        };
+
+                        protoManager.sendMsgToUser(res, protoid, jsonObj);
+                    });
+
                 } else {
 					logger.error("validate receipt : %s", err.code);
 					return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.SERV_ERROR[0]);

@@ -72,7 +72,7 @@ drop table if exists t_recharge;
 create table t_recharge (
 	`uid` int unsigned NOT NULL COMMENT '用户id',
 	`log_t` int unsigned NOT NULL  COMMENT '发生时间',
-	`product_id` int unsigned NOT NULL COMMENT '商品id',
+	`product_id` varchar(64) NOT NULL COMMENT '商品id',
 	`cost` int unsigned NOT NULL COMMENT '花费',
 	`cash` int unsigned NOT NULL COMMENT '获得钻石',
 	`order_id` varchar(128) NOT NULL COMMENT '订单号',
