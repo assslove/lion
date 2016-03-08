@@ -42,7 +42,7 @@ shopController.iosVerifyReceipt = function(protoid, pkg, req, res, cb) {
 
         iap.config({
             requestDefaults: {
-                timeout: 5000
+                timeout: 10000
             }
         });
 
