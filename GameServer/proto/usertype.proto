@@ -1,0 +1,126 @@
+/**
+ * Created by bin.hou on 2015/10/28.
+ */
+package game;
+
+//基本用户信息
+message UserBase {
+    required uint32 uid = 1;  //用户id
+    optional string name = 2; //用户昵称
+    required uint32 head_icon = 5; //头像id
+    required uint32 max_copy = 6; //通关数
+    required uint32 copy_stars = 7; //通关总星数
+    required uint32 cash = 8; //钻石
+    required uint32 gold = 9; //金币
+    required uint32 hp = 10;  //体力
+    required uint32 last_login = 11; //上次登录时间
+    required uint32 reg_time = 12;  //注册时间
+    required uint32 last_sync = 13; //上次同步时间
+}
+
+message ItemType {
+    required uint32 itemid = 1; //物品id
+    required int32  count = 2;   //物品数量 可以为负数
+    optional uint32 expire = 3; //过期时间
+}
+
+message CopyType {
+    required uint32 copyid = 1; //关卡id
+    required uint32 max_score = 2; //最大分数
+    required uint32 star = 3; //星数
+}
+
+message ItemList {
+	repeated ItemType item = 1; //物品信息
+}
+
+message CopyList {
+	repeated CopyType copy = 1; //副本信息
+}
+
+message PetSuit {
+    required uint32 suitid = 1; //套装id
+}
+
+message PetInfo {
+    repeated uint32 petid = 1; //宠物列表
+    required uint32 pet_equip = 2; //已装备宠物
+    repeated uint32 pet_suit = 3; //宠物套装领取情况
+}
+
+message FriendMail {
+	required uint32 uid = 1;  //用户id
+	required uint32 type = 2; //邮件类型 1-好友申请 2-索要体力 3-赠送体力 4-赠送金币
+}
+
+message FriendMailInfo {
+	required FriendBase user = 1;   //用户信息
+	required uint32 type = 2; //邮件类型 1-好友申请 2-索要体力 3-赠送体力 4-赠送金币
+}
+
+message FriendMailList {
+	repeated  FriendMail mail = 1; //好友邮件
+}
+
+message FriendList {
+    repeated uint32 uid = 1;
+}
+
+message CopyRank {
+    repeated uint32 uid = 1;
+    required uint32 score = 2;
+}
+
+//好友基本信息
+message FriendBase {
+    required uint32 uid = 1;  //用户id
+    optional string name = 2; //用户昵称
+    required uint32 head_icon = 3; //头像id
+    required uint32 max_copy = 4; //通关数
+    required uint32 copy_stars = 5; //通关总星数
+}
+
+//礼盒信息
+message GiftBox {
+    required uint32  type = 1;  //类型 0-初始 1-体力 2-金币 3-钻石
+	required uint32  begin = 2; //转化开始时间
+	required uint32  lv = 3;	//等级
+}
+
+//宠物派对信息
+message PetParty {
+	repeated uint32 melike = 1;     //我赞过的好友
+	repeated uint32 likeme = 2;     //赞过我的好友
+	required uint32 party_lv = 3;   //派对等级		
+	required uint32 total_like = 4; //收到总赞数
+	repeated GiftBox gift  = 5;		//礼盒
+	required uint32 gift_num = 6;	//已经领取礼盒数
+}
+
+//好友宠物派对信息
+message FriendPetParty {
+    required uint32 uid = 1; //用户id
+    required uint32 party_lv = 2; //派对等级
+    required uint32 total_like = 3; //总赞数
+}
+
+//系统邮件
+message SysMail {
+	required uint32 id = 1; //邮件id
+	required string title = 2; //标题
+	required string content = 3; //内容
+	required uint32 expire = 4; //过期时间
+	repeated ItemType item = 5; //附件
+}
+
+//系统邮件列表
+message SysMailList {
+	repeated SysMail mail = 1;
+}
+
+message RolePermission
+{
+    repeated uint32 flag = 1; //0-无 1-有
+}
+
+

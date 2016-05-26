@@ -1,0 +1,310 @@
+﻿// user proto msg
+
+package game;
+
+import "usertype.proto"
+
+message UserCreateReq {
+    required uint32 uid  = 1;     // 用户id 客户端临时id 小于1000000 服务器用9位数表示
+                                  // 如果发现uidi小于1000000,则需要创建账号
+    required string name = 2;     // 昵称
+}
+
+message UserCreateRet {
+    required uint32 uid = 1;   
+}
+
+message UserLoginReq {	
+	required uint32 uid = 1;    // 用户id
+}
+
+message UserLoginRet {
+}
+
+message UserLogoutReq {
+	required uint32 uid = 1;    // 用户id
+}
+
+message UserLogoutRet {
+}
+
+message UserSyncInfoReq {
+	required uint32 uid = 1;        // 用户id
+    required uint32 head_icon = 5;  //头像id
+    required uint32 max_copy = 6;   //最大通关数
+    required uint32 cash = 7;       //钻石
+    required uint32 gold = 8;       //金币
+    required uint32 hp = 9;           //体力
+    required uint32 copy_stars  = 10;  //通关总星数
+	required string name = 11,		// 昵称
+	required uint32 use_pet = 12,    // 出战宠物
+	repeated int32 cash_ext = 13,   //钻石变化 [1,-2,1,...]
+}
+
+message UserSyncInfoRet {
+    required UserBase base  = 10; // 玩家基本信息
+}
+
+message UserSyncItemReq {
+    required uint32 uid = 1;
+    repeated ItemType item = 2;  //前端缓存消耗增加的物品
+}
+
+message UserSyncItemRet {
+}
+
+message UserSyncCopyReq {
+    required uint32 uid = 1;
+    repeated CopyType copy = 2; //缓存通关的关卡
+}
+
+message UserSyncCopyRet {
+}
+
+message UserGetInfoReq {
+    required uint32 uid = 1;
+}
+
+message UserGetInfoRet {
+    required UserBase user = 1; //基本信息
+    repeated ItemType item = 2; //道具
+    repeated CopyType copy = 3; //关卡数据
+}
+
+message UserSyncTimeReq {
+    required uint32 uid = 1;
+}
+
+message UserSyncTimeRet {
+    required uint32 timestamp = 1; //当前时间戳
+}
+
+message UserSyncPetReq {
+    required uint32 uid = 1;
+    required PetInfo pet = 2; //petid pet_suit都是增量同步
+}
+
+message UserSyncPetRet {
+    required PetInfo pet = 1;
+}
+
+
+message UserGetPetReq {
+    required uint32 uid = 1; //用户id
+}
+
+message UserGetPetRet {
+    required PetInfo pet = 1;
+}
+
+message GetOtherUserReq {
+    required uint32 uid = 1; //用户id
+    required uint32 other = 2; //其它用户id
+}
+
+message GetOtherUserReq {
+    required FriendBase base = 1; //其它用户信息
+}
+
+message FriendAddReq {
+	required uint32 uid = 1; 
+	required uint32 friendid = 2; //好友用户id
+}
+message FriendAddRet {
+}
+
+message FriendDelReq {
+	required uint32 uid = 1; 
+	repeated uint32 friendid = 2; //好友用户id列表
+}
+
+message FriendDelRet {
+}
+
+message UserGetFriendsReq {
+	required uint32 uid = 1; 
+}
+
+message UserGetFriendsRet {
+	repeated FriendBase user  = 1; //用户列表
+}
+
+message UserGetFriendMailReq {
+	required uint32 uid = 1; 
+}
+
+message UserGetFriendMailRet {
+	repeated FriendMailInfo mail = 1;  //好友邮件列表
+	required uint32     get_hp_times = 2; //领取体力次数
+	required uint32     get_gold_times = 3; //领取金币次数
+	repeated uint32		friendid = 4; //已经领取成功的好友列表
+}
+message UserReadFriendMailReq {
+	required uint32 uid = 1;
+	required uint32 type = 2;     //邮件类型 1-好友申请 2-索要体力 3-赠送体力 4-赠送金币
+	required uint32 friendid = 3; //好友id 0表示所有好友
+	required uint32 answer = 4;   //0-忽略 1-同意
+}
+
+message UserReadFriendMailRet {
+
+}
+
+message UserRequestHpReq {
+	required uint32 uid = 1; 
+	repeated uint32 friendid = 2; //好友用户id列表
+}
+
+message UserRequestHpRet {
+}
+
+message UserGiveGoldReq {
+	required uint32 uid = 1;
+	required uint32 friendid = 2; //好友用户id
+}
+message UserGiveGoldRet {
+}
+
+message UserGetCopyRankReq {
+	required uint32 uid = 1;
+	required uint32 copyid = 2;   //关卡id
+	repeated uint32 friendid = 3; //已经过了本关卡的好友id列表
+}
+
+message UserGetCopyRankRet {
+    required uint32 copyid = 1;    // copyid
+    repeated CopyRank friend = 2;  // 前十名好友排名
+}
+
+message UserGetPetPartyInfoReq {
+	required uint32 uid = 1;
+}
+
+message UserGetPetPartyInfoRet {
+    required PetParty party = 1;  //宠物派对信息
+}
+
+message UserPetPartyLevelupReq {
+	required uint32 uid = 1;
+}
+
+message UserPetPartyLevelupRet {
+    required uint32 party_lv = 1;
+}
+
+message UserGetFriendPetPartyReq {
+	required uint32 uid = 1;
+}
+
+message UserGetFriendPetPartyRet {
+    repeated FriendPetParty party = 1; //好友宠物派对信息列表
+}
+
+message UserGiftBoxChangeReq {
+    required uint32 uid = 1;
+	required uint32 giftid = 2; // 礼盒索引 0-3
+}
+
+message UserGiftBoxChangeRet {
+    required GiftBox gift = 1;  // 新的礼盒
+}
+
+message UserGiftBoxGetReq {
+	required uint32 uid = 1;
+	required uint32 giftid = 2; // 礼盒索引 0-3
+}
+
+message UserGiftBoxGetRet {
+    required GiftBox gift = 1;  // 新的礼盒
+}
+
+message UserLikePetPartyReq {
+	required uint32 uid = 1;
+	required uint32 friendid = 2; //已经开启宠物派对的好友
+}
+
+message UserLikePetPartyRet {
+}
+
+message UserGetFriendPetReq {
+ 	required uint32 uid = 1;
+	repeated uint32 friendid = 2; //已经开启宠物派对的好友
+}
+
+message UserGetFriendPetRet {
+    repeated uint32 petid = 1; //好友宠物列表
+}
+
+message UserBindReq {
+ 	required uint32 uid = 1;
+ 	required string channel = 2; //anysdk渠道标识
+ 	required string channel_uid = 3; //绑定渠道用户id
+}
+
+message UserBindRet {
+}
+
+message UserGetSignReq {
+ 	required uint32 uid = 1;
+}
+
+message UserGetSignRet {
+    repeated ItemType item = 2;  //一周奖励
+    required uint32 sign_day = 3; //已经签到天数
+    required uint32 sign_flag = 4; //今天是否已签 0-未签 1-已签
+    required uint32 fill_check = 5; //今天补签天数
+}
+
+message UserSignReq {
+ 	required uint32 uid = 1;
+}
+
+message UserSignRet {
+    required uint32 sign_day = 3; //已经签到天数
+    required uint32 sign_flag = 4; //今天是否已签 0-未签 1-已签
+    required uint32 fill_check = 5; //今天补签天数
+}
+
+
+message UserGetSysMailReq {
+ 	required uint32 uid = 1;
+}
+
+message UserGetSysMailRet {
+    repeated SysMail mail = 1; //邮件列表
+}
+
+message UserReadSysMailReq {
+    required uint32 uid = 1;
+    required uint32 id = 2; // 0表示全部领取 否则单个领取的id
+}
+
+message UserReadSysMailRet {
+}
+
+message UserLoginPlatformReq {
+	required uint32 channel = 1;	//渠道编号
+	required string msg = 2;		//渠道请求的json串
+}
+message UserLoginPlatformRet {
+	required uint32 uid = 1;		// 如果是0,说明没有账号 需要创建账号并绑定,如果不为0,则说明已经绑定账号
+	required string msg = 2;		// 渠道返回的串
+}
+
+message UserIOSGetOrderIdReq {
+    required uint32 uid = 1;
+}
+
+message UserIOSGetOrderIdRet {
+	required uint32 orderid = 1;   //交易id
+}
+
+message UserIOSReceiptVerifyReq {
+    required uint32 uid = 1;
+	required uint32 orderid = 2;    //交易id
+	required string receipt = 3;	// 验证信息
+}
+
+message UserIOSReceiptVerifyRet {
+	required uint32 cash = 1;    //增加的钻石数量
+}
