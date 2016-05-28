@@ -14,6 +14,7 @@ var petController = require('./../controller/petController.js');
 var friendController = require('./../controller/friendController.js');
 var mailController = require('./../controller/mailController.js');
 var shopController = require('./../controller/shopController.js');
+var limitController = require('./../controller/limitController.js');
 var cacheManager = require("./cacheManager.js");
 
 module.exports = function(app) {
@@ -64,6 +65,7 @@ ProtoHandler.prototype.init = function() {
     this.protoHandlers[DEFINE.PROTO.USER_UNBIND] = [userController.userUnbind];
     this.protoHandlers[DEFINE.PROTO.USER_IOS_GET_ORDERID] = [shopController.iosGetOrderId];
     this.protoHandlers[DEFINE.PROTO.USER_IOS_RECEIPT_VERIFY] = [shopController.iosVerifyReceipt];
+    this.protoHandlers[DEFINE.PROTO.USER_GET_SOME_LIMIT] = [limitController.getSomeLimit];
 
     logger.info("init proto handlers success");
 }

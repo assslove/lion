@@ -123,4 +123,13 @@ message RolePermission
     repeated uint32 flag = 1; //0-无 1-有
 }
 
+message LimitType 
+{
+    required uint32 key = 1; // 键
+    required uint32 value = 2; // 值
+}
 
+message LimitList 
+{
+	repeated LimitType limit = 1; //key value信息
+}

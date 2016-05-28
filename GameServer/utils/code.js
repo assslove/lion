@@ -18,7 +18,8 @@ var code = {
         USER : "k_usr",  //用户
         ITEM : "k_itm", //物品
         COPY : "k_cpy",  //副本
-        PET : 'k_pet'    //宠物
+        PET : 'k_pet',    //宠物
+        LIMIT : 'k_limit'    //limit
     },
 
     MIN_UID : 100000000,

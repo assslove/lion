@@ -20,6 +20,7 @@ var signDao = require('./../dao/signDao.js');
 var mailDao = require('./../dao/mailDao.js');
 var utils = require("./../../utils/utils.js");
 var accountDao = require('./../dao/accountDao.js');
+var limitDao = require('./../dao/limitDao.js');
 
 
 var user = module.exports;
@@ -215,6 +216,9 @@ user.initData = function(app, uid) {
         function(callback) {
             user.initSign(app, uid, callback);
         },
+        function(callback) {
+            user.initLimit(app, uid, callback);
+        }
     ], function(err, results) {
         logger.info("init every date date [uid=%d]", uid);
     });
@@ -322,6 +326,14 @@ user.addCopy = function(app, uid, callback) {
     copyDao.addOrUpdateCopy(app, uid, {info: buffer}, callback);
 }
 
+user.addLimit = function(app, uid, callback) {
+    var obj = {
+        limit :[]
+    };
+    var buffer = cacheManager.serializeToPb("LimitList", obj);
+    limitDao.addOrUpdateLimit(app, uid, {info: buffer}, callback);
+}
+
 user.addMail = function(app, uid, cb) {
     var obj = {
         mail : []
@@ -338,6 +350,36 @@ user.addMail = function(app, uid, cb) {
     });
 }
 
+user.updateLimit = function(app, uid, limits, cb) {
+    if (limits.length == 0) {
+       return cb(0);
+    }
+
+    var allLimits = [];
+    for (var i in limits) {
+        allLimits.push({
+            key: parseInt(i),
+            value: limits[i]
+        });
+    }
+
+    var info = cacheManager.serializeToPb("LimitList", {limit: allLimits});
+
+    async.parallel([
+        function(callback) {
+            cacheManager.updateLimit(pkg.uid, info, callback);
+        },
+        function(callback){
+            limitDao.addOrUpdateLimit(req.app, pkg.uid, {info : info}, callback);
+        }
+    ], function(err, results) {
+        if (err == null || err == undefined) {
+            cb(0);
+        } else {
+            cb(DEFINE.ERROR_CODE.COPY_SAVE_ERROR[0]);
+        }
+    });
+}
 
 /*
  * 360登录
@@ -367,5 +409,20 @@ user.login360 = function(protoid, pkg, req, res, cb) {
             logger.error("login360: " + body);
             cb(DEFINE.ERROR_CODE.LOGIN_PLATFORM_FAIL[0]);
         }
+    });
+}
+
+user.initLimit = function(app, uid, callback) {
+    cacheManager.getLimit(req.app, pkg.uid, function(err, results) {
+        var limitMap = {};
+        for (var i in results) {
+            if (results[i].key >= DEFINE.LIMIT_RANGE.LIMIT_DAILY_BEGIN &&
+                    results[i].key <= DEFINE.LIMIT_RANGE.LIMIT_DAILY_END) {
+                continue;
+            }
+            limitMap[results[i].key] = results[i].value;
+        }
+
+        user.updateLimit(app, uid, limitMap, callback);
     });
 }

@@ -14,6 +14,7 @@ var CODE = require('../../utils/code.js');
 var userDao = require('./../dao/userDao.js');
 var itemDao = require('./../dao/itemDao.js');
 var copyDao = require('./../dao/copyDao.js');
+var limitDao = require('./../dao/limitDao.js');
 var petDao = require('./../dao/petDao.js');
 var DEFINE = require('./../../proto/define.js');
 
@@ -154,6 +155,35 @@ cacheManager.updateCopy = function(uid, copy, cb) {
     });
 }
 
+cacheManager.getLimit = function(app, uid, cb) {
+    redis.hget(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.LIMIT, function(err, res) {
+        if (err == null && res == null) {
+            limitDao.getLimit(app, uid, function(err, res) {
+                if (err == null) {
+                    cacheManager.updateLimit(uid, res[0].info, function(err, result){
+                        var limits = cacheManager.parseFromPb("LimitList", res[0].info).limit;
+                        utils.invokeCallback(cb, err, limits);
+                    });
+                } else {
+                    utils.invokeCallback(cb, err, []);
+                }
+            });
+        } else {
+            var limits = cacheManager.parseFromPb("LimitList", new Buffer(res, 'binary')).limit;
+            utils.invokeCallback(cb, err, limits);
+        }
+    });
+}
+
+cacheManager.updateLimit = function(uid, limit, cb) {
+    redis.hset(CODE.CACHE_TYPE.USER + uid, CODE.CACHE_KEY_TYPE.LIMIT, limit.toString('binary'), function(err, res) {
+        if (err !== null) {
+           logger.error("cache limit failed [uid=%ld]", uid);
+        }
+        utils.invokeCallback(cb, err, res);
+    });
+}
+
 cacheManager.getUserInfo = function(app, uid, cb) {
     redis.hgetall(CODE.CACHE_TYPE.USER + uid, function(err, results) {
         for (var i in results) {
@@ -168,6 +198,10 @@ cacheManager.getUserInfo = function(app, uid, cb) {
                 case CODE.CACHE_KEY_TYPE.COPY:
                     results[i] = cacheManager.parseFromPb("CopyList",
                         new Buffer(results[i], "binary").slice(0, results[i].length)).copy;
+                    break;
+                case CODE.CACHE_KEY_TYPE.LIMIT:
+                    results[i] = cacheManager.parseFromPb("LimitList",
+                        new Buffer(results[i], "binary").slice(0, results[i].length)).limit;
                     break;
                 default:
                     break;

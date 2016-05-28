@@ -308,3 +308,12 @@ message UserIOSReceiptVerifyReq {
 message UserIOSReceiptVerifyRet {
 	required uint32 cash = 1;    //增加的钻石数量
 }
+
+message UserGetSomeLimitReq {
+    required uint32 uid = 1;
+    repeated uint32 key = 2;    // key集合
+}
+
+message UserGetSomeLimitRet {
+    repeated LimitType limit = 1; // 一些limit信息
+}

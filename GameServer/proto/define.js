@@ -47,6 +47,7 @@
         USER_UNBIND : 34,               // 解绑账号(用于测试)
 		USER_IOS_GET_ORDERID : 35,		// 获取本地交易id
 		USER_IOS_RECEIPT_VERIFY : 36,	// 验证receipt
+        USER_GET_SOME_LIMIT: 37,        // 根据key 获取limit信息
 		
     };
 
@@ -104,8 +105,20 @@
         BIND_TYPE : BIND_TYPE,
         CHANNEL : CHANNEL
     };
+    // limit 范围限定
+    var LIMIT_RANGE = {
+        LIMIT_FOREVER_BEGIN : 1,
+        LIMIT_FOREVER_END: 10000,
+        LIMIT_DAILY_BEGIN : 10001,
+        LIMIT_DAILY_END : 20000,
+    };
 
+    // limit key 定义
+    var LIMIT_KEY = {
+        // 永久key
 
+        // 每日key
+    };
 
     return DEFINE;
 });

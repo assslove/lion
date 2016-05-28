@@ -120,6 +120,9 @@ userController.userCreate = function(protoid, pkg, req, res, cb) {
             },
             function(callback) {
                 cacheManager.updateUserBaseBaseInfo(uid, user, callback);
+            },
+            function(callback) {
+                userModel.addLimit(req.app, uid, callback);
             }
         ], function(err, results) {
             if (err != null) return protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_EXIST[0]);
@@ -145,6 +148,7 @@ userController.userGetInfo = function(protoid, pkg, req, res, cb) {
             user : results.user,
             item : [],
             copy : [],
+            limit : [],
         };
         //去掉描述信息
         for (var i in results.item) {
@@ -152,6 +156,9 @@ userController.userGetInfo = function(protoid, pkg, req, res, cb) {
         }
         for (var i in results.copy) {
             obj.copy.push([results.copy[i].copyid, results.copy[i].max_score, results.copy[i].star]);
+        }
+        for (var i in results.limit) {
+            obj.limit.push([results.limit[i].key, results.limit[i].value]);
         }
 
         protoManager.sendMsgToUser(res, protoid, obj);
