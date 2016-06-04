@@ -413,7 +413,7 @@ user.login360 = function(protoid, pkg, req, res, cb) {
 }
 
 user.initLimit = function(app, uid, callback) {
-    cacheManager.getLimit(app, pkg.uid, function(err, results) {
+    cacheManager.getLimit(app, uid, function(err, results) {
         var limitMap = {};
         for (var i in results) {
             if (results[i].key >= DEFINE.LIMIT_RANGE.LIMIT_DAILY_BEGIN &&
