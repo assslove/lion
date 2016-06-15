@@ -218,4 +218,46 @@ router.get('/pay_notify/360', function(req, res, next) {
     });
 });
 
+/* @brief 移动咪咕充值回调
+ */
+router.get('/pay_notify/yidongmigu', function(req, res, next) {
+	console.log(req.body);
+	var msg = req.body;
+	var consumeId = msg.consumeId;
+	var consumCode = msg.consumeCode;
+	var status = msg.status;
+	var channalId = msg.channalId;
+	var ret = msg.hRet;
+	var cpparam = msg.cpparam;
+
+	logger.info(util.format("yidongmigu: channelId=%s,cpparam=%s,consumeId=%d,ret=%d,status=%d", channalId, cpparam, consumeId, ret, status));
+
+	var retObj = {};
+	if (ret == 0 && status == 1800) {
+		retObj.hRet = 0;	
+		retObj.message = "successful";
+	} else {
+		retObj.hRet = 1;
+		retObj.message = "failure";
+	}
+
+	res.send(retObj.toString());
+});
+
+/* @brief 爱游戏充值回调
+ */
+router.get('/pay_notify/aiyouxi', function(req, res, next) {
+	console.log(req.body);
+
+});
+
+/* @brief 沃商店充值回调
+ */
+router.get('/pay_notify/woshandian', function(req, res, next) {
+	console.log(req.body);
+
+});
+
+
+
 module.exports = router;

@@ -77,7 +77,7 @@ app.set('view engine', 'jade');
 //        next();
 //    });
 //});
-
+app.use(bodyParser.text({type: 'text/xml'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
