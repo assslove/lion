@@ -5,6 +5,7 @@ var http = require('http');
 var querystring = require('querystring');
 var util = require('util');
 var crypto = require('crypto');
+var xml2js = require('xml2js');
 
 var logger = require('./../utils/log.js');
 var utils = require('./../utils/utils.js');
@@ -223,14 +224,15 @@ router.get('/pay_notify/360', function(req, res, next) {
 router.get('/pay_notify/yidongmigu', function(req, res, next) {
 	console.log(req.body);
 	var msg = req.body;
+	var userid = msg.userId;
 	var consumeId = msg.consumeId;
-	var consumCode = msg.consumeCode;
+	var consumeCode = msg.consumeCode;
 	var status = msg.status;
 	var channalId = msg.channalId;
 	var ret = msg.hRet;
 	var cpparam = msg.cpparam;
 
-	logger.info(util.format("yidongmigu: channelId=%s,cpparam=%s,consumeId=%d,ret=%d,status=%d", channalId, cpparam, consumeId, ret, status));
+	logger.info(util.format("yidongmigu: userid=%d,channelId=%s,cpparam=%s,consumeId=%d,consumeCode=%s, ret=%d,status=%d", userid, channalId, cpparam, consumeId, consumeCode, ret, status));
 
 	var retObj = {};
 	if (ret == 0 && status == 1800) {
@@ -240,7 +242,9 @@ router.get('/pay_notify/yidongmigu', function(req, res, next) {
 		retObj.hRet = 1;
 		retObj.message = "failure";
 	}
-
+	
+	var builder = new xml2js.Builder();
+	var xmlObj = builder.buildObject(retObj);
 	res.send(retObj.toString());
 });
 

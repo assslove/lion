@@ -24,6 +24,7 @@ var routes = require('./routes/index');
 var proto = require('./routes/proto.js');
 var platform = require('./routes/platform.js');
 var gm = require('./routes/gm.js');
+var xmlparser = require('express-xml-bodyparser');
 
 var app = express();
 
@@ -77,7 +78,8 @@ app.set('view engine', 'jade');
 //        next();
 //    });
 //});
-app.use(bodyParser.text({type: 'text/xml'}));
+//app.use(bodyParser.text({type: 'text/xml'}));
+app.use(xmlparser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
