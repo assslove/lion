@@ -29,6 +29,11 @@ userController.userLogin = function(protoid, pkg, req, res, cb) {
         } else {
             logger.info("%d user login", pkg.uid);
 
+			if (results.user == null || results.user == undefined) {
+				protoManager.sendErrorToUser(res, protoid, DEFINE.ERROR_CODE.USER_NOT_EXIST[0]);
+				return ;
+			}
+
             if (utils.isDiffDay(results.user.last_login)) {
                 userModel.initData(req.app, pkg.uid);
             }
