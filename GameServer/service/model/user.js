@@ -373,10 +373,10 @@ user.updateLimit = function(app, uid, limits, cb) {
 
     async.parallel([
         function(callback) {
-            cacheManager.updateLimit(pkg.uid, info, callback);
+            cacheManager.updateLimit(uid, info, callback);
         },
         function(callback){
-            limitDao.addOrUpdateLimit(req.app, pkg.uid, {info : info}, callback);
+            limitDao.addOrUpdateLimit(req.app, uid, {info : info}, callback);
         }
     ], function(err, results) {
         if (err == null || err == undefined) {
