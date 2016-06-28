@@ -131,8 +131,14 @@ user.getUserInfoFromDB = function(app, uid, cb) {
             copyDao.getCopy(app, uid, callback);
         }
     ], function(err, results) {
-        var items = cacheManager.parseFromPb("ItemList", results[1][0].info).item;
-        var copys = cacheManager.parseFromPb("CopyList", results[2][0].info).copy;
+		var items = [], copys = [];
+		if (results[1][0].info != undefined) {
+			items = cacheManager.parseFromPb("ItemList", results[1][0].info).item;
+		}
+
+		if (results[2][0] != undefined) {
+			copys = cacheManager.parseFromPb("CopyList", results[2][0].info).copy;
+		}
         //var items=[], copys = [];
         //for (var i in tmpItems) {
         //    var item = tmpItems[i];
