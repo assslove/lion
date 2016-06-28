@@ -132,7 +132,7 @@ user.getUserInfoFromDB = function(app, uid, cb) {
         }
     ], function(err, results) {
 		var items = [], copys = [];
-		if (results[1][0].info != undefined) {
+		if (results[1][0] != undefined) {
 			items = cacheManager.parseFromPb("ItemList", results[1][0].info).item;
 		}
 
