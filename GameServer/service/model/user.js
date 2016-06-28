@@ -376,7 +376,7 @@ user.updateLimit = function(app, uid, limits, cb) {
             cacheManager.updateLimit(uid, info, callback);
         },
         function(callback){
-            limitDao.addOrUpdateLimit(req.app, uid, {info : info}, callback);
+            limitDao.addOrUpdateLimit(app, uid, {info : info}, callback);
         }
     ], function(err, results) {
         if (err == null || err == undefined) {
