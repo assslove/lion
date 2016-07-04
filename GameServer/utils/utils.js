@@ -148,7 +148,7 @@ utils.getClientIp = function(req) {
         req.socket.remoteAddress;
 }
 
-utils.isDiffWeek = function(chktm) {
+utils.isSameWeek = function(chktm) {
     var curTm = new Date();
     curTm.setHours(0);
     curTm.setMinutes(0);

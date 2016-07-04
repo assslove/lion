@@ -37,7 +37,7 @@ userController.userLogin = function(protoid, pkg, req, res, cb) {
             if (utils.isDiffDay(results.user.last_login)) {
                 userModel.initData(req.app, pkg.uid);
             }
-            if (utils.isDiffWeek(results.user.last_login)) {
+            if (!utils.isSameWeek(results.user.last_login)) {
                 userModel.initWeekData(req.app, pkg.uid);
             }
 
