@@ -158,7 +158,7 @@ utils.isSameWeek = function(chktm) {
 
     var cur = Math.floor(curTm.getTime()/1000) - 3600 * 24 * curDay;
 
-    var chkTm = new Date(chktm);
+    var chkTm = new Date(chktm*1000);
     chkTm.setHours(0);
     chkTm.setMinutes(0);
     chkTm.setSeconds(0);
